@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
+import 'package:rumutai_app/providers/local_data_provider.dart';
 
 import '../widgets/my_game_widget.dart';
 import '../widgets/main_pop_up_menu.dart';
 
 import '../providers/local_data.dart';
 
-class MyGameScreen extends StatefulWidget {
+class MyGameScreen extends ConsumerStatefulWidget {
   static const routeName = "/my-game-screen";
 
   const MyGameScreen({super.key});
 
   @override
-  State<MyGameScreen> createState() => _MyGameScreenState();
+  ConsumerState<MyGameScreen> createState() => _MyGameScreenState();
 }
 
-class _MyGameScreenState extends State<MyGameScreen> {
+class _MyGameScreenState extends ConsumerState<MyGameScreen> {
   bool _isInit = true;
   bool _isLoading = false;
   //bool _dialogIsLoading = false;
@@ -37,7 +38,7 @@ class _MyGameScreenState extends State<MyGameScreen> {
 
   Future _loadData() async {
     if (_isInit) {
-      _targetPerson = Provider.of<LocalData>(context, listen: false).pickedPersonForMyGame;
+      _targetPerson = ref.read(pickedPersonForMyGameProvider);
     }
     if (_targetPerson == "") {
       _targetPerson = null;
@@ -284,7 +285,7 @@ class _MyGameScreenState extends State<MyGameScreen> {
                         await LocalData.saveLocalData<String>("pickedPersonForMyGame", _targetPersonController.text);
 
                         if (!mounted) return;
-                        await Provider.of<LocalData>(context, listen: false).setDataFromLocal();
+                        await LocalDataManager.setLoginDataFromLocal(ref);
                         setState(() {
                           _targetPerson = _targetPersonController.text;
                           if (_targetPerson != "") {

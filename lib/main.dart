@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-//import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rumutai_app/screens/drawer/publish_drive.dart';
 import 'package:rumutai_app/screens/staff/my_place_game_screen.dart';
@@ -17,7 +16,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'screens/home_screen.dart';
 
 import 'providers/local_data.dart';
-import 'providers/game_data.dart';
+import 'providers/game_data_provider.dart';
 import "providers/dashboard_data.dart";
 
 import 'screens/schedule/pick_schedule_screen.dart';
@@ -53,8 +52,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   await _init();
-  //runApp(const ProviderScope(child: MyApp()));
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 Future<void> _init() async {
@@ -103,53 +101,46 @@ class MyApp extends StatelessWidget {
             isMyGame: true,
           ));
     });
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => LocalData()),
-        ChangeNotifierProvider(create: (ctx) => GameData()),
-        ChangeNotifierProvider(create: (ctx) => DashboardNotifier()),
-      ],
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        title: 'Rumutai',
-        debugShowCheckedModeBanner: false,
-        theme: appTheme(),
-        themeMode: ThemeMode.system,
-        initialRoute: HomeScreen.routeName,
-        routes: {
-          HomeScreen.routeName: (ctx) => const HomeScreen(),
-          PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
-          SignInScreen.routeName: (ctx) => const SignInScreen(),
-          NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
-          DetailScreen.routeName: (ctx) => const DetailScreen(),
-          ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
-          PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
-          GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
-          MapScreen.routeName: (ctx) => MapScreen(),
-          SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
-          AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
-          RumutaiStaffScreen.routeName: (ctx) => const RumutaiStaffScreen(),
-          NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
-          RuleBookScreen.routeName: (ctx) => const RuleBookScreen(),
-          MyGameScreen.routeName: (ctx) => const MyGameScreen(),
-          SettingScreen.routeName: (ctx) => const SettingScreen(),
-          PrivacyPolicyScreen.routeName: (ctx) => const PrivacyPolicyScreen(),
-          TermsOfServiceScreen.routeName: (ctx) => const TermsOfServiceScreen(),
-          ContactScreen.routeName: (ctx) => const ContactScreen(),
-          PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
-          CheerScreen.routeName: (ctx) => const CheerScreen(),
-          PickOmikujiScreen.routeName: (ctx) => const PickOmikujiScreen(),
-          DrawOmikujiScreen.routeName: (ctx) => const DrawOmikujiScreen(),
-          MakeOmikujiScreen.routeName: (ctx) => const MakeOmikujiScreen(),
-          TimelineScreen.routeName: (ctx) => const TimelineScreen(),
-          DashboardScreen.routeName: (ctx) => const DashboardScreen(),
-          MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
-          PublishDriveScreen.routeName: (ctx) => const PublishDriveScreen(),
-          PickAwardScreen.routeName: (ctx) => const PickAwardScreen(),
-          GameAwardScreen.routeName: (ctx) => const GameAwardScreen(),
-          CheerAwardScreen.routeName: (ctz) => const CheerAwardScreen(),
-        },
-      ),
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      title: 'Rumutai',
+      debugShowCheckedModeBanner: false,
+      theme: appTheme(),
+      themeMode: ThemeMode.system,
+      initialRoute: HomeScreen.routeName,
+      routes: {
+        HomeScreen.routeName: (ctx) => const HomeScreen(),
+        PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
+        SignInScreen.routeName: (ctx) => const SignInScreen(),
+        NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
+        DetailScreen.routeName: (ctx) => const DetailScreen(),
+        ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
+        PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
+        GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
+        MapScreen.routeName: (ctx) => MapScreen(),
+        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
+        AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
+        RumutaiStaffScreen.routeName: (ctx) => const RumutaiStaffScreen(),
+        NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
+        RuleBookScreen.routeName: (ctx) => const RuleBookScreen(),
+        MyGameScreen.routeName: (ctx) => const MyGameScreen(),
+        SettingScreen.routeName: (ctx) => const SettingScreen(),
+        PrivacyPolicyScreen.routeName: (ctx) => const PrivacyPolicyScreen(),
+        TermsOfServiceScreen.routeName: (ctx) => const TermsOfServiceScreen(),
+        ContactScreen.routeName: (ctx) => const ContactScreen(),
+        PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
+        CheerScreen.routeName: (ctx) => const CheerScreen(),
+        PickOmikujiScreen.routeName: (ctx) => const PickOmikujiScreen(),
+        DrawOmikujiScreen.routeName: (ctx) => const DrawOmikujiScreen(),
+        MakeOmikujiScreen.routeName: (ctx) => const MakeOmikujiScreen(),
+        TimelineScreen.routeName: (ctx) => const TimelineScreen(),
+        DashboardScreen.routeName: (ctx) => const DashboardScreen(),
+        MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
+        PublishDriveScreen.routeName: (ctx) => const PublishDriveScreen(),
+        PickAwardScreen.routeName: (ctx) => const PickAwardScreen(),
+        GameAwardScreen.routeName: (ctx) => const GameAwardScreen(),
+        CheerAwardScreen.routeName: (ctz) => const CheerAwardScreen(),
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LocalData with ChangeNotifier {
+  /*
   bool? isLoggedInAdmin;
   bool? isLoggedInRumutaiStaff;
   //bool? isLoggedInResultEditor;
@@ -16,6 +17,7 @@ class LocalData with ChangeNotifier {
     pickedPersonForMyGame = await readLocalData<String>("pickedPersonForMyGame");
     notifyListeners();
   }
+
 
   static Future<List<String>> listOfStringThatPasswordDidChange() async {
     bool? adminIsLoggedIn = await readLocalData<bool>("isLoggedInAdmin");
@@ -41,7 +43,7 @@ class LocalData with ChangeNotifier {
     }
     return listToReturn;
   }
-
+*/
   static Future saveLocalData<T>(String name, T value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     switch (T) {

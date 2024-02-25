@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rumutai_app/providers/local_data_provider.dart';
 import 'package:rumutai_app/screens/staff/dashboard_screen.dart';
 
 import '../themes/app_color.dart';
@@ -25,16 +26,16 @@ import "staff/timeline_screen.dart";
 
 final FlutterLocalNotificationsPlugin flnp = FlutterLocalNotificationsPlugin();
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   static const routeName = "/home-screen";
 
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     final fbm = FirebaseMessaging.instance;
@@ -70,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     LocalNotification.initializeLocNotification();
 
     //認証コードが変更された場合の処理
+    /*
     LocalData.listOfStringThatPasswordDidChange().then((list) {
       if (list != []) {
         if (list.contains("ルム対スタッフ")) {
@@ -95,10 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         Provider.of<LocalData>(context, listen: false).setDataFromLocal();
       }
-    });
+    });*/
 
     //ローカルデータ初期化
-    Provider.of<LocalData>(context, listen: false).setDataFromLocal();
+    LocalDataManager.setLoginDataFromLocal(ref);
     super.initState();
   }
 
@@ -273,8 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool? isLoggedInAdmin = Provider.of<LocalData>(context).isLoggedInAdmin;
-    bool? isLoggedInStaff = Provider.of<LocalData>(context).isLoggedInRumutaiStaff;
+    bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
+    bool isLoggedInStaff = ref.read(isLoggedInRumutaiStaffProvider);
     final double buttonWidth = MediaQuery.of(context).size.width * 4 / 5;
 
     return Scaffold(

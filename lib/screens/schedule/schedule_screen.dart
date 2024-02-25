@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../themes/app_color.dart';
 import '../../widgets/schedule_widget.dart';
 
-import 'package:provider/provider.dart';
-
-import '../../providers/game_data.dart';
+import '../../providers/game_data_provider.dart';
 import '../../widgets/main_pop_up_menu.dart';
 
-class ScheduleScreen extends StatefulWidget {
+class ScheduleScreen extends ConsumerStatefulWidget {
   static const routeName = "/schedule-detail-screen";
 
   const ScheduleScreen({super.key});
 
   @override
-  State<ScheduleScreen> createState() => _ScheduleScreenState();
+  ConsumerState<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> {
+class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   bool _isInit = true;
   bool _isLoading = false;
   late Map _gameData;
@@ -26,7 +26,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<GameData>(context, listen: false).loadGameDataForSchedule(classNumber: classNumber);
+      await GameDataManager.loadGameDataForSchedule(classNumber: classNumber, ref: ref);
       setState(() {
         _isLoading = false;
       });
@@ -44,21 +44,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               width: 40,
               child: Divider(
                 thickness: 1,
-                color: Colors.brown.shade800,
+                color: AppColors.themeColor.shade800,
               )),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3),
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.brown.shade800,
+                color: AppColors.themeColor.shade800,
               ),
             ),
           ),
           Expanded(
             child: Divider(
               thickness: 1,
-              color: Colors.brown.shade800,
+              color: AppColors.themeColor.shade800,
             ),
           ),
         ],
@@ -79,7 +79,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: 20,
-              color: Colors.brown.shade900,
+              color: AppColors.themeColor.shade900,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -92,7 +92,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     List day2sortedGameData = [];
     gameData.forEach((gameId, data) {
       if (data["startTime"]["date"] == "1") {
-        print(gameId);
         day1sortedGameData.add({
           "createdAt": DateTime(
             2023,
@@ -126,7 +125,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: 20,
-              color: Colors.brown.shade900,
+              color: AppColors.themeColor.shade900,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -144,7 +143,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           "※タップで詳細を確認できます。",
           textAlign: TextAlign.start,
           style: TextStyle(
-            color: Colors.brown.shade700,
+            color: AppColors.themeColor.shade700,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -200,7 +199,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     //      .loadGameData2(collection: "gameData");
 
     if (!_isLoading) {
-      _gameData = Provider.of<GameData>(context).getGameDataForSchedule(classNumber: classNumber) as Map;
+      _gameData = GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: classNumber);
     }
 
     return DefaultTabController(

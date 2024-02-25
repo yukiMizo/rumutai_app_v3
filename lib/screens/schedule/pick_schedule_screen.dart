@@ -3,41 +3,10 @@ import 'package:flutter/material.dart';
 import 'schedule_screen.dart';
 import '../../widgets/main_pop_up_menu.dart';
 
-//import '../providers/game_data.dart';
-//import 'package:provider/provider.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
-
 class PickScheduleScreen extends StatelessWidget {
   static const routeName = "/schedule-screen";
 
   const PickScheduleScreen({super.key});
-/*
-  Widget _scheduleButton1({
-    required context,
-    required String title,
-    required IconData icon,
-    required String text,
-    required Schedule schedule,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(title, style: const TextStyle(fontSize: 18)),
-        const SizedBox(width: 10),
-        OutlinedButton.icon(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.black,
-            shape: const StadiumBorder(),
-            side: const BorderSide(color: Colors.black),
-          ),
-          onPressed: () => Navigator.of(context)
-              .pushNamed(ScheduleDetailScreen.routeName, arguments: schedule),
-          label: SizedBox(width: 80, child: Text(text)),
-          icon: Icon(icon),
-        ),
-      ],
-    );
-  }*/
 
   Widget _scheduleButton({required context, required String classNumber}) {
     return SizedBox(
@@ -45,8 +14,7 @@ class PickScheduleScreen extends StatelessWidget {
       height: 40,
       child: TextButton(
         style: TextButton.styleFrom(foregroundColor: Colors.black),
-        onPressed: () => Navigator.of(context)
-            .pushNamed(ScheduleScreen.routeName, arguments: classNumber),
+        onPressed: () => Navigator.of(context).pushNamed(ScheduleScreen.routeName, arguments: classNumber),
         child: Row(
           children: [
             Expanded(
@@ -82,12 +50,6 @@ class PickScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Provider.of<GameData>(context, listen: false)
-    //  .loadGameData2(collection: "gameData");
-    // FirebaseFirestore.instance
-    //     .collection('refereesAndStaffs')
-    //     .doc("refereesAndStaffsDoc")
-    //     .set({"refereesAndStaffsList": mapToUpload});
     return Scaffold(
       appBar: AppBar(
         title: const Text("スケジュール"),
@@ -104,8 +66,7 @@ class PickScheduleScreen extends StatelessWidget {
                 child: Card(
                   elevation: 3,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     child: Column(children: [
                       _gradeLable("1年"),
                       _scheduleButton(context: context, classNumber: "101"),
@@ -140,8 +101,7 @@ class PickScheduleScreen extends StatelessWidget {
                 child: Card(
                   elevation: 3,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     child: Column(children: [
                       _gradeLable("2年"),
                       _scheduleButton(context: context, classNumber: "201"),
@@ -176,8 +136,7 @@ class PickScheduleScreen extends StatelessWidget {
                 child: Card(
                   elevation: 3,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     child: Column(children: [
                       _gradeLable("3年"),
                       _scheduleButton(context: context, classNumber: "301"),

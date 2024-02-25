@@ -1,26 +1,26 @@
 import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:rumutai_app/utilities/lable_utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../utilities/tournament_type_utilities.dart';
 
-import '../providers/game_data.dart';
+import '../providers/game_data_provider.dart';
 
-class RumutaiStaffScreen extends StatefulWidget {
+class RumutaiStaffScreen extends ConsumerStatefulWidget {
   static const routeName = "/game-rumutai-staff-screen";
 
   const RumutaiStaffScreen({super.key});
 
   @override
-  State<RumutaiStaffScreen> createState() => _RumutaiStaffScreenState();
+  ConsumerState<RumutaiStaffScreen> createState() => _RumutaiStaffScreenState();
 }
 
-class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
+class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   bool _isLoadingDialog = false;
   bool _isInit = true;
   bool _isReverse = false;
@@ -216,25 +216,25 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
     return const Text("");
   }
 
-  CategoryToGet? _gameDataToGet(String gameDataId) {
+  GameDataCategory? _gameDataToGet(String gameDataId) {
     if (gameDataId.contains("1d")) {
-      return CategoryToGet.d1;
+      return GameDataCategory.d1;
     } else if (gameDataId.contains("1j")) {
-      return CategoryToGet.j1;
+      return GameDataCategory.j1;
     } else if (gameDataId.contains("1k")) {
-      return CategoryToGet.k1;
+      return GameDataCategory.k1;
     } else if (gameDataId.contains("2d")) {
-      return CategoryToGet.d2;
+      return GameDataCategory.d2;
     } else if (gameDataId.contains("2j")) {
-      return CategoryToGet.j2;
+      return GameDataCategory.j2;
     } else if (gameDataId.contains("2k")) {
-      return CategoryToGet.k2;
+      return GameDataCategory.k2;
     } else if (gameDataId.contains("3d")) {
-      return CategoryToGet.d3;
+      return GameDataCategory.d3;
     } else if (gameDataId.contains("3j")) {
-      return CategoryToGet.j3;
+      return GameDataCategory.j3;
     } else if (gameDataId.contains("3k")) {
-      return CategoryToGet.k3;
+      return GameDataCategory.k3;
     }
     return null;
   }
@@ -538,7 +538,6 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
   }
 
   Future _updateTournament({
-    required gameDataProvider,
     required String gameId,
   }) async {
     final TournamentType tournamentType = TournamentTypeUtilities.tournamentType(gameId);
@@ -552,8 +551,9 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
     }
 
     dataToUpdate.forEach((gameId, teamDataToUpdate) async {
-      await gameDataProvider.updateData(
-          doc: gameId,
+      await GameDataManager.updateData(
+          ref: ref,
+          gameId: gameId,
           newData: {
             "team": teamDataToUpdate,
           },
@@ -592,17 +592,15 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GameData>(context);
-    final gameDataProvider = Provider.of<GameData>(context, listen: false);
     final DataToPass gotData = ModalRoute.of(context)!.settings.arguments as DataToPass;
     final String gameDataId = gotData.gameDataId;
     final bool isTournament = gameDataId.contains("f") || gameDataId.contains("l");
     _isReverse = gotData.isReverse;
 
     if (gotData.classNumber != null) {
-      _gameData = (Provider.of<GameData>(context).getGameDataForSchedule(classNumber: gotData.classNumber!) as Map)[gotData.gameDataId[1]][gotData.gameDataId];
+      _gameData = (GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: gotData.classNumber!))[gotData.gameDataId[1]][gotData.gameDataId];
     } else {
-      _gameData = (Provider.of<GameData>(context).getGameDataForResult(categoryToGet: _gameDataToGet(gotData.gameDataId)!) as Map)[gotData.gameDataId[3]][gotData.gameDataId];
+      _gameData = (GameDataManager.getGameDataByCategory(ref: ref, category: _gameDataToGet(gotData.gameDataId)!))[gotData.gameDataId[3]][gotData.gameDataId];
     }
 
     if (_isInit) {
@@ -713,8 +711,9 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
                                       setState(() {
                                         _isLoadingDialog = true;
                                       });
-                                      await gameDataProvider.updateData(
-                                          doc: gameDataId,
+                                      await GameDataManager.updateData(
+                                          ref: ref,
+                                          gameId: gameDataId,
                                           newData: currentGameStatus == "now"
                                               ? {"gameStatus": "before"}
                                               : {
@@ -831,7 +830,7 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
                                           "title": "${_gameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 開始",
                                           "timeStamp": DateTime.now()
                                         };
-                                        await gameDataProvider.updateData(doc: gameDataId, newData: {"gameStatus": "now"}, teams: _gameData["team"]);
+                                        await GameDataManager.updateData(ref: ref, gameId: gameDataId, newData: {"gameStatus": "now"}, teams: _gameData["team"]);
 
                                         await FirebaseFirestore.instance.collection('Timeline').add(data);
 
@@ -959,8 +958,9 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
                                                 "title": "${_gameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 終了",
                                                 "timeStamp": DateTime.now()
                                               };
-                                              await gameDataProvider.updateData(
-                                                  doc: gameDataId,
+                                              await GameDataManager.updateData(
+                                                  ref: ref,
+                                                  gameId: gameDataId,
                                                   newData: _selectedExtraTime == ""
                                                       ? {
                                                           "gameStatus": "after",
@@ -1010,7 +1010,6 @@ class _RumutaiStaffScreenState extends State<RumutaiStaffScreen> {
                                               //トーナメントの更新
                                               if (isTournament) {
                                                 _updateTournament(
-                                                  gameDataProvider: gameDataProvider,
                                                   gameId: gameDataId,
                                                 );
                                               }

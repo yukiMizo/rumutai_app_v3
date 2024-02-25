@@ -1,14 +1,13 @@
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'notifications_detail_screen.dart';
 
+import '../../providers/local_data_provider.dart';
 import '../home_screen.dart';
-import 'package:provider/provider.dart';
-import '../../providers/local_data.dart';
 
 class NotificationDataToPass {
   final Map data;
@@ -20,16 +19,16 @@ class NotificationDataToPass {
   });
 }
 
-class NotificationsScreen extends StatefulWidget {
+class NotificationsScreen extends ConsumerStatefulWidget {
   static const routeName = "/notification-screen";
 
   const NotificationsScreen({super.key});
 
   @override
-  State<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
+class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   bool _isLoading = false;
   bool _isInit = true;
   final List<Map> _notifications = [];
@@ -206,7 +205,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool? isLoggedInAdmin = Provider.of<LocalData>(context, listen: false).isLoggedInAdmin;
+    final bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
 
     if (_isInit) {
       _loadData();

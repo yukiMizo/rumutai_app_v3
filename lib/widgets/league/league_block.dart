@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../providers/game_data.dart';
+import '../../providers/game_data_provider.dart';
 import '../../screens/detail_screen.dart';
 
 enum Block { text, win, lose, tie, none }
@@ -55,13 +55,11 @@ class LeagueBlock extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushNamed(
                 DetailScreen.routeName,
-                arguments: DataToPass(
-                    gameDataId: gameData!["gameId"], isReverse: isReverse),
+                arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
               );
             },
             child: Container(
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
+              decoration: BoxDecoration(border: Border.all(color: Colors.black)),
               child: Center(
                 child: SizedBox(
                   width: blockSize,
@@ -86,8 +84,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(
-                gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -101,8 +98,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(
-                gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -116,8 +112,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(
-                gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rumutai_app/providers/game_data.dart';
+import 'package:rumutai_app/providers/game_data_provider.dart';
 
 import 'game_results_screen.dart';
 import '../../widgets/main_pop_up_menu.dart';
@@ -13,7 +13,7 @@ class PickCategoryScreen extends StatelessWidget {
     required context,
     required IconData icon,
     required String text,
-    required CategoryToGet categoryToGet,
+    required GameDataCategory categoryToGet,
   }) {
     return FilledButton(
       style: FilledButton.styleFrom(
@@ -82,21 +82,21 @@ class PickCategoryScreen extends StatelessWidget {
                         context: context,
                         icon: Icons.sports_soccer,
                         text: "FUTSAL",
-                        categoryToGet: CategoryToGet.d1,
+                        categoryToGet: GameDataCategory.d1,
                       ),
                       const SizedBox(width: 10),
                       _gameInfoButton(
                         context: context,
                         icon: Icons.sports_volleyball_outlined,
                         text: "VOLLEYBALL",
-                        categoryToGet: CategoryToGet.j1,
+                        categoryToGet: GameDataCategory.j1,
                       ),
                       const SizedBox(width: 10),
                       _gameInfoButton(
                         context: context,
                         icon: Icons.sports_volleyball_outlined,
                         text: "DODGEBALL",
-                        categoryToGet: CategoryToGet.k1,
+                        categoryToGet: GameDataCategory.k1,
                       )
                     ],
                   ),
@@ -120,21 +120,21 @@ class PickCategoryScreen extends StatelessWidget {
                         context: context,
                         icon: Icons.sports_soccer,
                         text: "FUTSAL",
-                        categoryToGet: CategoryToGet.d2,
+                        categoryToGet: GameDataCategory.d2,
                       ),
                       const SizedBox(width: 10),
                       _gameInfoButton(
                         context: context,
                         icon: Icons.sports_basketball_outlined,
                         text: "BASKETBALL",
-                        categoryToGet: CategoryToGet.j2,
+                        categoryToGet: GameDataCategory.j2,
                       ),
                       const SizedBox(width: 10),
                       _gameInfoButton(
                         context: context,
                         icon: Icons.sports_volleyball_outlined,
                         text: "VOLLEYBALL",
-                        categoryToGet: CategoryToGet.k2,
+                        categoryToGet: GameDataCategory.k2,
                       ),
                     ],
                   ),
@@ -158,7 +158,7 @@ class PickCategoryScreen extends StatelessWidget {
                         context: context,
                         icon: Icons.sports_soccer,
                         text: "FUTSAL",
-                        categoryToGet: CategoryToGet.d3,
+                        categoryToGet: GameDataCategory.d3,
                       ),
                       const SizedBox(width: 10),
                       FilledButton(
@@ -174,7 +174,7 @@ class PickCategoryScreen extends StatelessWidget {
                             width: 1.5,
                           ),
                         ),
-                        onPressed: () => Navigator.of(context).pushNamed(GameResultsScreen.routeName, arguments: CategoryToGet.j3),
+                        onPressed: () => Navigator.of(context).pushNamed(GameResultsScreen.routeName, arguments: GameDataCategory.j3),
                         child: SizedBox(
                           width: 105,
                           height: 100,
@@ -200,7 +200,7 @@ class PickCategoryScreen extends StatelessWidget {
                         context: context,
                         icon: Icons.sports_volleyball_outlined,
                         text: "VOLLEYBALL",
-                        categoryToGet: CategoryToGet.k3,
+                        categoryToGet: GameDataCategory.k3,
                       ),
                     ],
                   ),

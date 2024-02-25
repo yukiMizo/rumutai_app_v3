@@ -1,13 +1,12 @@
 import 'dart:async';
-
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rumutai_app/providers/local_data_provider.dart';
 
 import '../home_screen.dart';
-import 'package:provider/provider.dart';
 import '../../providers/local_data.dart';
 
 class TimelineDataToPass {
@@ -20,16 +19,16 @@ class TimelineDataToPass {
   });
 }
 
-class TimelineScreen extends StatefulWidget {
+class TimelineScreen extends ConsumerStatefulWidget {
   static const routeName = "/timeline-screen";
 
   const TimelineScreen({super.key});
 
   @override
-  State<TimelineScreen> createState() => _TimelineScreenState();
+  ConsumerState<TimelineScreen> createState() => _TimelineScreenState();
 }
 
-class _TimelineScreenState extends State<TimelineScreen> {
+class _TimelineScreenState extends ConsumerState<TimelineScreen> {
   bool _isLoading = false;
   bool _isInit = true;
   final List<Map> _timelines = [];
@@ -194,7 +193,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool? isLoggedInAdmin = Provider.of<LocalData>(context, listen: false).isLoggedInAdmin;
+    final bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
 
     if (_isInit) {
       _loadData();

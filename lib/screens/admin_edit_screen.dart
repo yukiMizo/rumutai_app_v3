@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:provider/provider.dart';
 import 'package:rumutai_app/utilities/lable_utilities.dart';
 
 import 'detail_screen.dart';
 import '../widgets/game_admin_dialog_widget.dart';
-import '../providers/game_data.dart';
+import '../providers/game_data_provider.dart';
 
 class GameDataToPassAdmin {
   final Map gameData;
@@ -20,16 +20,16 @@ class GameDataToPassAdmin {
   });
 }
 
-class AdminEditScreen extends StatefulWidget {
+class AdminEditScreen extends ConsumerStatefulWidget {
   static const routeName = "/game-admin-screen";
 
   const AdminEditScreen({super.key});
 
   @override
-  State<AdminEditScreen> createState() => _AdminEditScreenState();
+  ConsumerState<AdminEditScreen> createState() => _AdminEditScreenState();
 }
 
-class _AdminEditScreenState extends State<AdminEditScreen> {
+class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
   final TextEditingController _team1Controller = TextEditingController();
   final TextEditingController _team2Controller = TextEditingController();
   final TextEditingController _timeDateController = TextEditingController();
@@ -465,8 +465,9 @@ class _AdminEditScreenState extends State<AdminEditScreen> {
                     _dialogIsLoading = true;
                   });
                   final Map<String, Object> newData = _newDataForUpdate;
-                  await Provider.of<GameData>(context, listen: false).updateData(
-                    doc: _gameData["gameId"],
+                  await GameDataManager.updateData(
+                    ref: ref,
+                    gameId: _gameData["gameId"],
                     newData: newData,
                     teams: {"0": _team1Controller.text, "1": _team2Controller.text},
                   );

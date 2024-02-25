@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/league/league_widget.dart';
 import '../../widgets/tournament/tournament_widget.dart';
 
-import '../../providers/game_data.dart';
+import '../../providers/game_data_provider.dart';
 import '../../widgets/main_pop_up_menu.dart';
 
-class GameResultsScreen extends StatefulWidget {
+class GameResultsScreen extends ConsumerStatefulWidget {
   static const routeName = "/game-info-detail-screen";
 
   const GameResultsScreen({super.key});
 
   @override
-  State<GameResultsScreen> createState() => _GameResultsScreenState();
+  ConsumerState<GameResultsScreen> createState() => _GameResultsScreenState();
 }
 
-class _GameResultsScreenState extends State<GameResultsScreen> {
+class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
   late bool _isInit = true;
   late bool _isLoading;
   late Map _gameDataAll;
 
-  Future _loadData(CategoryToGet categoryToGet) async {
+  Future _loadData(GameDataCategory gameDataCategory) async {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      await Provider.of<GameData>(context, listen: false).loadGameDataForResult(categoryToGet: categoryToGet);
+      await GameDataManager.loadGameDataForResult(gameDataCategory: gameDataCategory, ref: ref);
       setState(() {
         _isLoading = false;
       });
@@ -36,25 +35,25 @@ class _GameResultsScreenState extends State<GameResultsScreen> {
   }
 
 //not flexible
-  String _title(CategoryToGet gameInfoDetail) {
+  String _title(GameDataCategory gameInfoDetail) {
     switch (gameInfoDetail) {
-      case CategoryToGet.d1:
+      case GameDataCategory.d1:
         return "1年　男子　フットサル";
-      case CategoryToGet.j1:
+      case GameDataCategory.j1:
         return "1年　女子　バレー";
-      case CategoryToGet.k1:
+      case GameDataCategory.k1:
         return "1年　混合　ドッジボール";
-      case CategoryToGet.d2:
+      case GameDataCategory.d2:
         return "2年　男子　フットサル";
-      case CategoryToGet.j2:
+      case GameDataCategory.j2:
         return "2年　女子　バスケット";
-      case CategoryToGet.k2:
+      case GameDataCategory.k2:
         return "2年　混合　バレー";
-      case CategoryToGet.d3:
+      case GameDataCategory.d3:
         return "3年　男子　フットサル";
-      case CategoryToGet.j3:
+      case GameDataCategory.j3:
         return "3年　女子　ドッジビー";
-      case CategoryToGet.k3:
+      case GameDataCategory.k3:
         return "3年　混合　バレー";
     }
   }
@@ -62,10 +61,10 @@ class _GameResultsScreenState extends State<GameResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryToGet = ModalRoute.of(context)!.settings.arguments;
-    _loadData(categoryToGet as CategoryToGet);
+    _loadData(categoryToGet as GameDataCategory);
 
     if (!_isLoading) {
-      _gameDataAll = Provider.of<GameData>(context).getGameDataForResult(categoryToGet: categoryToGet) as Map;
+      _gameDataAll = GameDataManager.getGameDataByCategory(ref: ref, category: categoryToGet);
     }
     return DefaultTabController(
       length: 2,
@@ -121,7 +120,7 @@ class _GameResultsScreenState extends State<GameResultsScreen> {
                                 title: "決勝",
                                 tournamentData: _gameDataAll["f"],
                               ),
-                              if (categoryToGet == CategoryToGet.d2 || categoryToGet == CategoryToGet.d3)
+                              if (categoryToGet == GameDataCategory.d2 || categoryToGet == GameDataCategory.d3)
                                 Column(
                                   children: [
                                     const SizedBox(
