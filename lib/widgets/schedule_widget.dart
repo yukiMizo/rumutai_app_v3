@@ -5,7 +5,7 @@ import '../providers/game_data_provider.dart';
 
 import '../providers/local_data.dart';
 
-import '../utilities/local_notification.dart';
+import '../notification_manager.dart';
 
 class ScheduleWidget extends StatefulWidget {
   final Map gameData;
@@ -155,7 +155,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                                 if (_notify) {
                                   /*print("startTime:" + widget.gameData["startTime"]["date"] + widget.gameData["startTime"]["hour"] + widget.gameData["startTime"]["minute"]);*/
                                   //通知予約
-                                  LocalNotification.registerLocNotification(
+                                  NotificationManager.registerLocNotification(
                                     place: widget.gameData["place"],
                                     gameId: widget.gameData["gameId"],
                                     sport: widget.gameData["sport"],
@@ -174,7 +174,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                                     );
                                   });
                                 } else {
-                                  LocalNotification.cancelLocNotification(
+                                  NotificationManager.cancelLocNotification(
                                     widget.gameData["gameId"],
                                   ).then((_) {
                                     ScaffoldMessenger.of(context).hideCurrentSnackBar();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/providers/local_data_provider.dart';
 
 import 'package:rumutai_app/screens/drawer/publish_drive.dart';
 import 'package:rumutai_app/screens/staff/my_place_game_screen.dart';
 import 'package:rumutai_app/themes/app_theme.dart';
-import 'package:rumutai_app/utilities/local_notification.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rumutai_app/screens/staff/dashboard_screen.dart';
@@ -14,6 +14,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'screens/home_screen.dart';
+
+import 'notification_manager.dart';
 
 import 'providers/local_data.dart';
 import 'providers/game_data_provider.dart';
@@ -46,8 +48,6 @@ import 'screens/award/pick_award_screen.dart';
 import 'screens/award/game_award_screen.dart';
 import 'screens/award/cheer_award_screen.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
 final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -60,32 +60,8 @@ Future<void> _init() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  RemoteNotification? notification = message.notification;
-  flnp.initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
-
-  if (notification == null) {
-    return;
-  }
-
-  // 通知
-  flnp.show(
-    notification.hashCode,
-    notification.title,
-    notification.body,
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channel_id',
-        'channel_name',
-        importance: Importance.high,
-        priority: Priority.high,
-      ),
-    ),
-  );
+  //通知関係の設定
+  NotificationManager.notificationSetup();
 }
 
 class MyApp extends StatelessWidget {
@@ -94,13 +70,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //通知をタップして起動したときの設定＆local_notificationの初期化
-    flutterLocalNotificationsPlugin.initialize(LocalNotification.initializeLocNotification(), onDidReceiveNotificationResponse: (NotificationResponse res) {
-      navigatorKey.currentState?.pushNamed(DetailScreen.routeName,
-          arguments: DataToPass(
-            gameDataId: res.payload!,
-            isMyGame: true,
-          ));
-    });
+    NotificationManager.whenNotificationTapped(navigatorKey);
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'Rumutai',

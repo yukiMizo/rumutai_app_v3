@@ -30,9 +30,9 @@ class LocalDataManager {
   }
 
   static Future<void> setLoginDataFromLocal(WidgetRef ref) async {
-    ref.read(pickedPersonForMyGameProvider.notifier).state = await LocalData.readLocalData<String>("pickedPersonForMyGame");
+    ref.read(pickedPersonForMyGameProvider.notifier).state = await LocalData.readLocalData<String>("pickedPersonForMyGame") ?? "";
 
-    ref.read(isLoggedInAdminProvider.notifier).state = await LocalData.readLocalData<bool>("isLoggedInAdmin");
-    ref.read(isLoggedInRumutaiStaffProvider.notifier).state = await LocalData.readLocalData<bool>("isLoggedInRumutaiStaff");
+    ref.read(isLoggedInAdminProvider.notifier).state = await LocalData.readLocalData<bool>("isLoggedInAdmin") ?? false;
+    ref.read(isLoggedInRumutaiStaffProvider.notifier).state = await LocalData.readLocalData<bool>("isLoggedInRumutaiStaff") ?? false;
   }
 }

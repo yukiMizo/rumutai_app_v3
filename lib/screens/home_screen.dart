@@ -20,11 +20,8 @@ import 'cheer/pick_team_to_cheer_screen.dart';
 import 'omikuji/pick_omikuji_screen.dart';
 import 'award/pick_award_screen.dart';
 
-import '../utilities/local_notification.dart';
 import '../widgets/main_drawer.dart';
 import "staff/timeline_screen.dart";
-
-final FlutterLocalNotificationsPlugin flnp = FlutterLocalNotificationsPlugin();
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const routeName = "/home-screen";
@@ -36,40 +33,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  @override
+/*  @override
   void initState() {
-    final fbm = FirebaseMessaging.instance;
-    fbm.requestPermission();
-    fbm.setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
-    fbm.subscribeToTopic("notification");
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      flnp.initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
-      if (notification == null) {
-        return;
-      }
-      // 通知
-      flnp.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'channel_id',
-              'channel_name',
-              importance: Importance.high,
-              priority: Priority.high,
-            ),
-          ));
-    });
-
-    //ローカル通知初期化
-    LocalNotification.initializeLocNotification();
-
     //認証コードが変更された場合の処理
     /*
     LocalData.listOfStringThatPasswordDidChange().then((list) {
@@ -98,12 +63,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Provider.of<LocalData>(context, listen: false).setDataFromLocal();
       }
     });*/
-
-    //ローカルデータ初期化
-    LocalDataManager.setLoginDataFromLocal(ref);
     super.initState();
   }
-
+*/
   Widget _buildMainButton({
     required String text,
     required IconData icon,
@@ -275,8 +237,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
-    bool isLoggedInStaff = ref.read(isLoggedInRumutaiStaffProvider);
+    //ローカルデータ初期化
+    LocalDataManager.setLoginDataFromLocal(ref);
+
     final double buttonWidth = MediaQuery.of(context).size.width * 4 / 5;
 
     return Scaffold(
@@ -373,7 +336,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     width: buttonWidth,
                     onPressed: () => Navigator.of(context).pushNamed(PickAwardScreen.routeName),
                   ),
-                  if (isLoggedInStaff == true)
+                  if (ref.watch(isLoggedInRumutaiStaffProvider))
                     Column(
                       children: [
                         const SizedBox(height: 25),
@@ -394,7 +357,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         )
                       ],
                     ),
-                  if (isLoggedInAdmin == true)
+                  if (ref.watch(isLoggedInAdminProvider))
                     Column(
                       children: [
                         const SizedBox(height: 25),

@@ -148,9 +148,11 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                                             setState(() {
                                               _isLoading = true;
                                             });
-                                            await FirebaseFirestore.instance
-                                                .collection("notification")
-                                                .add({"timeStamp": Timestamp.fromDate(DateTime.now()), "content": _controller.text, "title": _titleController.text});
+                                            await FirebaseFirestore.instance.collection("notification").add({
+                                              "timeStamp": Timestamp.fromDate(DateTime.now()),
+                                              "content": _controller.text,
+                                              "title": _titleController.text,
+                                            });
                                             _controller.text = "";
                                             _titleController.text = "";
                                             _isLoading = false;
