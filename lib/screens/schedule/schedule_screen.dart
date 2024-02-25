@@ -181,11 +181,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 //not flexible
   List<String> _tabStrings(String classNumber) {
     if (classNumber[0] == "1") {
-      return ["フットサル", "バレーボール", "ドッジボール"];
+      return ["フットサル", "バレーボール", "ドッジボール", "全体"];
     } else if (classNumber[0] == "2") {
-      return ["フットサル", "バスケットボール", "バレーボール"];
+      return ["フットサル", "バスケットボール", "バレーボール", "全体"];
     } else if (classNumber[0] == "3") {
-      return ["フットサル", "ドッジビー", "バレーボール"];
+      return ["フットサル", "ドッジビー", "バレーボール", "全体"];
     }
     return ["", "", ""];
   }
@@ -203,16 +203,24 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     }
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text("$classNumber　スケジュール"),
           actions: const [MainPopUpMenu()],
-          bottom: TabBar(indicatorColor: Colors.white, tabs: [
-            Tab(text: tabStrings[0]),
-            Tab(text: tabStrings[1]),
-            Tab(text: tabStrings[2]),
-          ]),
+          bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorColor: AppColors.lightText1,
+            unselectedLabelColor: AppColors.lightText1,
+            labelColor: AppColors.lightText1,
+            isScrollable: true,
+            tabs: [
+              Tab(text: tabStrings[0]),
+              Tab(text: tabStrings[1]),
+              Tab(text: tabStrings[2]),
+              Tab(text: tabStrings[3]),
+            ],
+          ),
         ),
         backgroundColor: Colors.grey.shade100,
         body: _isLoading
@@ -237,6 +245,19 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: _scheduleList(classNumber: classNumber, gameData: _gameData["k"]),
+                      ),
+                    ),
+                  ),
+                  Scrollbar(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: _scheduleList(
+                          classNumber: classNumber,
+                          gameData: {}
+                            ..addAll(_gameData["d"])
+                            ..addAll(_gameData["j"])
+                            ..addAll(_gameData["k"]),
+                        ),
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../themes/app_color.dart';
 
 import 'schedule_screen.dart';
 import '../../widgets/main_pop_up_menu.dart';
@@ -20,11 +21,11 @@ class PickScheduleScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 classNumber,
-                style: TextStyle(fontSize: 20, color: Colors.brown.shade900),
+                style: TextStyle(fontSize: 20, color: AppColors.themeColor.shade900),
                 textAlign: TextAlign.center,
               ),
             ),
-            Icon(Icons.navigate_next, size: 25, color: Colors.brown.shade900),
+            Icon(Icons.navigate_next, size: 25, color: AppColors.themeColor.shade900),
           ],
         ),
       ),
@@ -41,7 +42,7 @@ class PickScheduleScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: Colors.brown.shade900,
+            color: AppColors.themeColor.shade900,
           ),
         ),
       ),
