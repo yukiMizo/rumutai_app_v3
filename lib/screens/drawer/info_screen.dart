@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 
-class SettingScreen extends StatelessWidget {
-  static const routeName = "/setting-screen";
+class InfoScreen extends StatelessWidget {
+  static const routeName = "/info-screen";
 
-  const SettingScreen({super.key});
+  const InfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("法的事項")),
+      appBar: AppBar(title: const Text("情報")),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
         child: Column(children: [
@@ -28,8 +28,7 @@ class SettingScreen extends StatelessWidget {
             height: 45,
             child: TextButton(
               style: TextButton.styleFrom(alignment: Alignment.centerLeft),
-              onPressed: () => Navigator.of(context)
-                  .pushNamed(TermsOfServiceScreen.routeName),
+              onPressed: () => Navigator.of(context).pushNamed(TermsOfServiceScreen.routeName),
               child: const Text(
                 "利用規約",
                 style: TextStyle(color: Colors.black),
@@ -41,8 +40,7 @@ class SettingScreen extends StatelessWidget {
             height: 45,
             child: TextButton(
               style: TextButton.styleFrom(alignment: Alignment.centerLeft),
-              onPressed: () => Navigator.of(context)
-                  .pushNamed(PrivacyPolicyScreen.routeName),
+              onPressed: () => Navigator.of(context).pushNamed(PrivacyPolicyScreen.routeName),
               child: const Text(
                 "プライバシーポリシー",
                 style: TextStyle(color: Colors.black),

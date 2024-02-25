@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rumutai_app/providers/local_data_provider.dart';
+import 'package:rumutai_app/providers/picked_person_data_provider.dart';
+import 'package:rumutai_app/screens/admin/adjust_schedule_screen.dart';
+import '../providers/sign_in_data_provider.dart';
 import 'package:rumutai_app/screens/staff/dashboard_screen.dart';
 
 import '../themes/app_color.dart';
 
-import 'notification/send_notification_screen.dart';
+import 'admin/send_notification_screen.dart';
 import 'schedule/pick_schedule_screen.dart';
 import 'my_game_screen.dart';
 import 'notification/notifications_screen.dart';
 import 'game_result/pick_category_screen.dart';
-import '../providers/local_data.dart';
 import 'rule_book_screen.dart';
 import 'cheer/pick_team_to_cheer_screen.dart';
 import 'omikuji/pick_omikuji_screen.dart';
@@ -23,49 +22,24 @@ import 'award/pick_award_screen.dart';
 import '../widgets/main_drawer.dart';
 import "staff/timeline_screen.dart";
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   static const routeName = "/home-screen";
-
   const HomeScreen({super.key});
 
-  @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
+  Future<void> _initWithRef(WidgetRef ref, BuildContext context) async {
+    //ローカルデータ初期化
+    PickedPersonDataManager.setPickedPersonDataFromLocal(ref);
+    SignInDataManager.setSignInDataFromLocal(ref);
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-/*  @override
-  void initState() {
-    //認証コードが変更された場合の処理
-    /*
-    LocalData.listOfStringThatPasswordDidChange().then((list) {
-      if (list != []) {
-        if (list.contains("ルム対スタッフ")) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ルム対スタッフ用の認証コードが変更されたので、サインアウトしました。'),
-            ),
-          );
-        }
-        if (list.contains("管理者")) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('管理者用の認証コードが変更されたので、サインアウトしました。'),
-            ),
-          );
-        }
-        if (list.contains("試合結果編集者")) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('試合結果編集者用の認証コードが変更されたので、サインアウトしました。'),
-            ),
-          );
-        }
-        Provider.of<LocalData>(context, listen: false).setDataFromLocal();
-      }
-    });*/
-    super.initState();
+    //パスワードの変更をチェック
+    var scaffoldMessengerOfContext = ScaffoldMessenger.of(context);
+    final String message = await SignInDataManager.checkIfPasswordChanged(ref);
+    if (message != "") {
+      scaffoldMessengerOfContext.removeCurrentSnackBar();
+      scaffoldMessengerOfContext.showSnackBar(SnackBar(content: Text(message)));
+    }
   }
-*/
+
   Widget _buildMainButton({
     required String text,
     required IconData icon,
@@ -78,9 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       height: 50,
       child: FilledButton.icon(
         onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
+        style: FilledButton.styleFrom(backgroundColor: AppColors.themeColor),
         label: Text(
           text,
           style: const TextStyle(
@@ -109,10 +81,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: FilledButton.icon(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
+          side: const BorderSide(color: AppColors.themeColor, width: 2),
           backgroundColor: Colors.white,
           foregroundColor: AppColors.themeColor.shade800,
         ),
@@ -144,10 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
+          side: const BorderSide(color: AppColors.themeColor, width: 2),
           backgroundColor: Colors.white,
           foregroundColor: AppColors.themeColor.shade800,
         ),
@@ -203,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _dividerWithText(String text) {
+  Widget _buildDividerWithText(String text) {
     return Container(
       width: 340,
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -236,9 +202,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    //ローカルデータ初期化
-    LocalDataManager.setLoginDataFromLocal(ref);
+  Widget build(BuildContext context, WidgetRef ref) {
+    //refを使う初期化(refを必要としないものはmain.dartで初期化している)
+    _initWithRef(ref, context);
 
     final double buttonWidth = MediaQuery.of(context).size.width * 4 / 5;
 
@@ -300,7 +266,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(height: 15),
                   _buildTonalButton(text: "担当の試合", icon: Icons.sports_score, width: buttonWidth, onPressed: () => Navigator.of(context).pushNamed(MyGameScreen.routeName)),
                   const SizedBox(height: 25),
-                  _dividerWithText("その他機能"),
+                  _buildDividerWithText("その他機能"),
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -336,11 +302,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     width: buttonWidth,
                     onPressed: () => Navigator.of(context).pushNamed(PickAwardScreen.routeName),
                   ),
-                  if (ref.watch(isLoggedInRumutaiStaffProvider))
+                  if (ref.watch(isLoggedInRumutaiStaffProvider) || ref.watch(isLoggedInAdminProvider))
                     Column(
                       children: [
                         const SizedBox(height: 25),
-                        _dividerWithText("スタッフ機能"),
+                        _buildDividerWithText("スタッフ機能"),
                         const SizedBox(height: 15),
                         _buildTonalButton(
                           text: "タイムライン",
@@ -361,13 +327,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Column(
                       children: [
                         const SizedBox(height: 25),
-                        _dividerWithText("管理者機能"),
+                        _buildDividerWithText("管理者機能"),
                         const SizedBox(height: 15),
                         _buildTonalButton(
                           text: "通知を送る",
                           icon: Icons.send_outlined,
                           width: buttonWidth,
                           onPressed: () => Navigator.of(context).pushNamed(SendNotificationScreen.routeName),
+                        ),
+                        const SizedBox(height: 15),
+                        _buildTonalButton(
+                          text: "日程",
+                          icon: Icons.date_range,
+                          width: buttonWidth,
+                          onPressed: () => Navigator.of(context).pushNamed(AdjustScheduleScreen.routeName),
                         ),
                       ],
                     ),

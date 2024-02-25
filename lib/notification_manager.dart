@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:rumutai_app/providers/game_data_provider.dart';
 import 'package:rumutai_app/screens/detail_screen.dart';
 import 'local_data.dart';

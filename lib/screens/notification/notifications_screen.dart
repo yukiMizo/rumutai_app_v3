@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'notifications_detail_screen.dart';
 
-import '../../providers/local_data_provider.dart';
+import '../../providers/sign_in_data_provider.dart';
 import '../home_screen.dart';
 
 class NotificationDataToPass {
@@ -57,7 +57,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   Widget _notificationWidget({
     required notificationData,
     required int index,
-    bool? isLoggedInAdmin,
+    required bool isLoggedInAdmin,
   }) {
     return SizedBox(
       width: double.infinity,
@@ -95,8 +95,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       ),
                     ],
                   ),
-                  if (isLoggedInAdmin == true) const Expanded(child: SizedBox()),
-                  if (isLoggedInAdmin == true)
+                  if (isLoggedInAdmin) const Expanded(child: SizedBox()),
+                  if (isLoggedInAdmin)
                     IconButton(
                       onPressed: () => showDialog(
                         context: context,
@@ -205,7 +205,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
+    final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
 
     if (_isInit) {
       _loadData();

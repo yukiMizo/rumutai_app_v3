@@ -550,16 +550,18 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       return;
     }
 
-    dataToUpdate.forEach((gameId, teamDataToUpdate) async {
-      await GameDataManager.updateData(
-          ref: ref,
-          gameId: gameId,
-          newData: {
-            "team": teamDataToUpdate,
-          },
-          teams: _gameData["team"],
-          setMerge: true);
-    });
+    dataToUpdate.forEach(
+      (gameId, teamDataToUpdate) async {
+        await GameDataManager.updateData(
+            ref: ref,
+            gameId: gameId,
+            newData: {
+              "team": teamDataToUpdate,
+            },
+            teams: _gameData["team"],
+            setMerge: true);
+      },
+    );
   }
 
   bool _canFinishGame(bool isTournament) {

@@ -16,6 +16,7 @@ ThemeData appTheme() => ThemeData(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
+      dividerTheme: DividerThemeData(color: AppColors.themeColor.shade50),
       dividerColor: Colors.brown.shade100,
       dialogTheme: const DialogTheme(
         titleTextStyle: TextStyle(

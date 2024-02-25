@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../themes/app_color.dart';
 import '../screens/drawer/map_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/drawer/setting_screen.dart';
+import '../screens/drawer/info_screen.dart';
 
 class MainPopUpMenu extends StatelessWidget {
   final String? place;
@@ -13,13 +14,13 @@ class MainPopUpMenu extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: Colors.brown.shade900,
+          color: AppColors.themeColor.shade900,
         ),
         const SizedBox(width: 10),
         Text(
           text,
           style: TextStyle(
-            color: Colors.brown.shade900,
+            color: AppColors.themeColor.shade900,
           ),
         ),
       ],
@@ -31,11 +32,11 @@ class MainPopUpMenu extends StatelessWidget {
     return SizedBox(
       width: 50,
       child: PopupMenuButton(
-        color: Colors.brown.shade50,
+        color: AppColors.themeColor.shade50,
         onSelected: (selectedValue) {
           switch (selectedValue) {
-            case "法的事項":
-              Navigator.of(context).pushNamed(SettingScreen.routeName);
+            case "情報":
+              Navigator.of(context).pushNamed(InfoScreen.routeName);
               return;
             case "マップ":
               Navigator.of(context).pushNamed(MapScreen.routeName, arguments: place);
@@ -48,8 +49,8 @@ class MainPopUpMenu extends StatelessWidget {
         position: PopupMenuPosition.under,
         itemBuilder: (BuildContext context) => <PopupMenuEntry>[
           PopupMenuItem(
-            value: "法的事項",
-            child: _popUpMenuChild(text: "法的事項", icon: Icons.settings_outlined),
+            value: "情報",
+            child: _popUpMenuChild(text: "情報", icon: Icons.article_outlined),
           ),
           PopupMenuItem(
             value: "マップ",

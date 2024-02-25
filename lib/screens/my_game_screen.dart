@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rumutai_app/providers/local_data_provider.dart';
+import 'package:rumutai_app/providers/picked_person_data_provider.dart';
 
 import '../widgets/my_game_widget.dart';
 import '../widgets/main_pop_up_menu.dart';
 
-import '../providers/local_data.dart';
+import '../local_data.dart';
 
 class MyGameScreen extends ConsumerStatefulWidget {
   static const routeName = "/my-game-screen";
@@ -276,33 +276,16 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
                 onPressed: currentTargetPerson == _targetPersonController.text
                     ? null
                     : () async {
-                        /*
-                            String pickedPersonInDialog =
-                                _pickedPersonInDialog == null
-                                    ? ""
-                                    : _pickedPersonInDialog!;*/
-
                         await LocalData.saveLocalData<String>("pickedPersonForMyGame", _targetPersonController.text);
 
                         if (!mounted) return;
-                        await LocalDataManager.setLoginDataFromLocal(ref);
+                        await PickedPersonDataManager.setPickedPersonDataFromLocal(ref);
                         setState(() {
                           _targetPerson = _targetPersonController.text;
                           if (_targetPerson != "") {
                             _isDirty = true;
                           }
-                          /*
-                              if (pickedPersonInDialog != "") {
-                                _targetPerson = pickedPersonInDialog;
-                                _isDirty = true;
-                              } else {
-                                _targetPerson = null;
-                                _gameDataList = [];
-                              }*/
                         });
-                        // _wasPickedPersonInDialog = null;
-                        //  _searchedNames = [];
-                        //   _pickedPersonInDialog = null;
                         if (!mounted) return;
                         Navigator.pop(context);
                       },
@@ -400,11 +383,6 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: FilledButton.icon(
             onPressed: () {
-              /*
-                      if (_targetPerson != null) {
-                        _pickedPersonInDialog = _targetPerson;
-                        _wasPickedPersonInDialog = _targetPerson;
-                      }*/
               showDialog(
                 context: context,
                 builder: (_) {

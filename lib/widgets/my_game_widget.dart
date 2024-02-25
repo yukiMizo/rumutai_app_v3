@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/detail_screen.dart';
 import '../providers/game_data_provider.dart';
 
-import '../providers/local_data.dart';
+import '../local_data.dart';
 import '../notification_manager.dart';
 
 class MyGameWidget extends StatefulWidget {

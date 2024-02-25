@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rumutai_app/providers/local_data_provider.dart';
+import 'package:rumutai_app/providers/sign_in_data_provider.dart';
 
 import '../home_screen.dart';
-import '../../providers/local_data.dart';
 
 class TimelineDataToPass {
   final Map data;
@@ -193,7 +192,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
+    final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
 
     if (_isInit) {
       _loadData();

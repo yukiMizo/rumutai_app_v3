@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rumutai_app/providers/local_data_provider.dart';
+import 'package:rumutai_app/providers/sign_in_data_provider.dart';
+import 'package:rumutai_app/themes/app_color.dart';
 
 import 'admin_edit_screen.dart';
 import 'rumutai_staff_screen.dart';
@@ -236,8 +237,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     } else {
       gameData = (GameDataManager.getGameDataByCategory(ref: ref, category: _categoryToGet(gotData.gameDataId)!))[gotData.gameDataId[3]][gotData.gameDataId];
     }
-    final bool isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
-    final bool isLoggedInRumutaiStaff = ref.read(isLoggedInRumutaiStaffProvider);
+    final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
+    final bool isLoggedInRumutaiStaff = ref.watch(isLoggedInRumutaiStaffProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("詳細"), actions: [MainPopUpMenu(place: gameData["place"])]),
       floatingActionButton: _isLoading
@@ -246,25 +247,10 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                /*
-                FloatingActionButton.extended(
-                  heroTag: "hero1",
-                  onPressed: () => Navigator.of(context).pushNamed(
-                    PredictScreen.routeName,
-                    arguments: DataToPassPredictScreen(
-                      gameId: gameData["gameId"],
-                      isReverse: isReverse,
-                      teamMap: gameData["team"],
-                      gameStatus: gameData["gameStatus"],
-                    ),
-                  ),
-                  icon: const Icon(Icons.ballot_outlined),
-                  label: const Text("予想"),
-                ),
-                if (isLoggedInRumutaiStaff == true) const SizedBox(height: 10),*/
-                if (isLoggedInRumutaiStaff == true)
+                if (isLoggedInRumutaiStaff || isLoggedInAdmin)
                   FloatingActionButton.extended(
                     heroTag: "hero1",
+                    backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(
                       RumutaiStaffScreen.routeName,
                       arguments: DataToPass(
@@ -276,10 +262,11 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     icon: const Icon(Icons.sports),
                     label: const Text("試合"),
                   ),
-                if (isLoggedInAdmin == true && isLoggedInRumutaiStaff == true) const SizedBox(height: 10),
-                if (isLoggedInAdmin == true)
+                if (isLoggedInAdmin) const SizedBox(height: 10),
+                if (isLoggedInAdmin)
                   FloatingActionButton.extended(
                     heroTag: "hero2",
+                    backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassAdmin(gameData: gameData, isReverse: isReverse)),
                     icon: const Icon(Icons.edit),
                     label: const Text("編集"),
@@ -511,17 +498,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                 _lable("審判："),
                                 _refereesAsColumn(gameData),
                               ],
-                            ), /*
-                            if (gameData["rumutaiStaff"] != "")
-                              const SizedBox(height: 5),
-                            if (gameData["rumutaiStaff"] != "")
-                              Row(
-                                children: [
-                                  _lable("スタッフ："),
-                                  Text(gameData["rumutaiStaff"],
-                                      style: const TextStyle(fontSize: 20)),
-                                ],
-                              ),*/
+                            ),
                           ],
                         ),
                         const SizedBox(height: 25),
