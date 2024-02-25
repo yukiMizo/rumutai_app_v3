@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../themes/app_color.dart';
 import '../../widgets/league/league_widget.dart';
 import '../../widgets/tournament/tournament_widget.dart';
 
@@ -72,10 +73,16 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
         appBar: AppBar(
           title: Text(_title(categoryToGet)),
           actions: const [MainPopUpMenu()],
-          bottom: const TabBar(indicatorColor: Colors.white, tabs: [
-            Tab(text: "リーグ"),
-            Tab(text: "トーナメント"),
-          ]),
+          bottom: const TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorColor: AppColors.lightText1,
+            unselectedLabelColor: AppColors.lightText1,
+            labelColor: AppColors.lightText1,
+            tabs: [
+              Tab(text: "リーグ"),
+              Tab(text: "トーナメント"),
+            ],
+          ),
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())

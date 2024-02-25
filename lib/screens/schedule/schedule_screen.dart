@@ -195,8 +195,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     final String classNumber = ModalRoute.of(context)!.settings.arguments as String;
     _loadData(classNumber);
     final List<String> tabStrings = _tabStrings(classNumber);
-//    Provider.of<GameData>(context, listen: false)
-    //      .loadGameData2(collection: "gameData");
 
     if (!_isLoading) {
       _gameData = GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: classNumber);

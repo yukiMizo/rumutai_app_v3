@@ -110,36 +110,44 @@ class MyApp extends StatelessWidget {
       initialRoute: HomeScreen.routeName,
       routes: {
         HomeScreen.routeName: (ctx) => const HomeScreen(),
-        PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
-        SignInScreen.routeName: (ctx) => const SignInScreen(),
-        NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
         DetailScreen.routeName: (ctx) => const DetailScreen(),
-        ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
-        PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
-        GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
-        MapScreen.routeName: (ctx) => MapScreen(),
-        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
         AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
         RumutaiStaffScreen.routeName: (ctx) => const RumutaiStaffScreen(),
-        NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
         RuleBookScreen.routeName: (ctx) => const RuleBookScreen(),
         MyGameScreen.routeName: (ctx) => const MyGameScreen(),
+        //drawer
         SettingScreen.routeName: (ctx) => const SettingScreen(),
+        SignInScreen.routeName: (ctx) => const SignInScreen(),
+        MapScreen.routeName: (ctx) => MapScreen(),
         PrivacyPolicyScreen.routeName: (ctx) => const PrivacyPolicyScreen(),
         TermsOfServiceScreen.routeName: (ctx) => const TermsOfServiceScreen(),
         ContactScreen.routeName: (ctx) => const ContactScreen(),
+        //gameResult
+        GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
+        PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
+        //schedule
+        ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
+        PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
+        //notification
+        NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
+        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
+        NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
+        //cheer
         PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
         CheerScreen.routeName: (ctx) => const CheerScreen(),
+        //omikuji
         PickOmikujiScreen.routeName: (ctx) => const PickOmikujiScreen(),
         DrawOmikujiScreen.routeName: (ctx) => const DrawOmikujiScreen(),
         MakeOmikujiScreen.routeName: (ctx) => const MakeOmikujiScreen(),
+        //award
+        PickAwardScreen.routeName: (ctx) => const PickAwardScreen(),
+        GameAwardScreen.routeName: (ctx) => const GameAwardScreen(),
+        CheerAwardScreen.routeName: (ctz) => const CheerAwardScreen(),
+
         TimelineScreen.routeName: (ctx) => const TimelineScreen(),
         DashboardScreen.routeName: (ctx) => const DashboardScreen(),
         MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
         PublishDriveScreen.routeName: (ctx) => const PublishDriveScreen(),
-        PickAwardScreen.routeName: (ctx) => const PickAwardScreen(),
-        GameAwardScreen.routeName: (ctx) => const GameAwardScreen(),
-        CheerAwardScreen.routeName: (ctz) => const CheerAwardScreen(),
       },
     );
   }
