@@ -20,14 +20,14 @@ class GameResultsScreen extends ConsumerStatefulWidget {
 class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
   late bool _isInit = true;
   late bool _isLoading;
-  late Map _gameDataAll;
+  late Map _gameDataForThisCategory;
 
   Future _loadData(GameDataCategory gameDataCategory) async {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      await GameDataManager.loadGameDataForResult(gameDataCategory: gameDataCategory, ref: ref);
+      _gameDataForThisCategory = await GameDataManager.getGameDataByCategory(category: gameDataCategory, ref: ref);
       setState(() {
         _isLoading = false;
       });
@@ -63,10 +63,6 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
   Widget build(BuildContext context) {
     final categoryToGet = ModalRoute.of(context)!.settings.arguments;
     _loadData(categoryToGet as GameDataCategory);
-
-    if (!_isLoading) {
-      _gameDataAll = GameDataManager.getGameDataByCategory(ref: ref, category: categoryToGet);
-    }
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -98,7 +94,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
                               children: [
                                 LeagueWidget(
                                   title: "リーグA",
-                                  leagueData: _gameDataAll["a"],
+                                  leagueData: _gameDataForThisCategory["a"],
                                 ),
                                 const SizedBox(
                                   child: Padding(
@@ -108,7 +104,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
                                 ),
                                 LeagueWidget(
                                   title: "リーグB",
-                                  leagueData: _gameDataAll["b"],
+                                  leagueData: _gameDataForThisCategory["b"],
                                 ),
                               ],
                             ),
@@ -125,7 +121,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
                             children: [
                               TournamentWidget(
                                 title: "決勝",
-                                tournamentData: _gameDataAll["f"],
+                                tournamentData: _gameDataForThisCategory["f"],
                               ),
                               if (categoryToGet == GameDataCategory.d2 || categoryToGet == GameDataCategory.d3)
                                 Column(
@@ -138,7 +134,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
                                     ),
                                     TournamentWidget(
                                       title: "下位",
-                                      tournamentData: _gameDataAll["l"],
+                                      tournamentData: _gameDataForThisCategory["l"],
                                     ),
                                     const SizedBox(height: 30),
                                   ],

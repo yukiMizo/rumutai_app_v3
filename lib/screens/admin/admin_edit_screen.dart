@@ -6,19 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rumutai_app/utilities/lable_utilities.dart';
 
-import 'detail_screen.dart';
-import '../widgets/game_admin_dialog_widget.dart';
-import '../providers/game_data_provider.dart';
-
-class GameDataToPassAdmin {
-  final Map gameData;
-  final bool isReverse;
-
-  GameDataToPassAdmin({
-    required this.gameData,
-    this.isReverse = false,
-  });
-}
+import '../detail_screen.dart';
+import '../../widgets/game_admin_dialog_widget.dart';
+import '../../providers/game_data_provider.dart';
 
 class AdminEditScreen extends ConsumerStatefulWidget {
   static const routeName = "/game-admin-screen";
@@ -493,8 +483,8 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    GameDataToPassAdmin gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassAdmin;
-    _gameData = gotData.gameData;
+    GameDataToPassStaffOrAdmin gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassStaffOrAdmin;
+    _gameData = gotData.thisGameData;
     _isReverse = gotData.isReverse;
 
     if (_isInit) {
@@ -609,15 +599,6 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                               _refereeInputColumn,
                             ],
                           ),
-                          /*
-                              Row(
-                                children: [
-                                  _lable("スタッフ："),
-                                  _textField(
-                                      width: 180,
-                                      controller: _rumutaiStaffController),
-                                ],
-                              ),*/
                           const SizedBox(height: 10),
                           const Divider(),
                           Row(

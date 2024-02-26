@@ -1,16 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:rumutai_app/providers/game_data_provider.dart';
-import 'package:rumutai_app/screens/detail_screen.dart';
-import 'local_data.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import 'local_data.dart';
+
+import '../providers/game_data_provider.dart';
+import '../providers/rumutai_date_provider.dart';
+
+import '../screens/detail_screen.dart';
 
 //通知関係は全てここで扱う
 class NotificationManager {
@@ -143,7 +146,7 @@ class NotificationManager {
       onDidReceiveNotificationResponse: (NotificationResponse res) {
         navigatorKey.currentState?.pushNamed(
           DetailScreen.routeName,
-          arguments: DataToPass(
+          arguments: GameDataToPass(
             gameDataId: res.payload!,
             isMyGame: true,
           ),
@@ -175,6 +178,7 @@ class NotificationManager {
 
   //ローカル通知の予約
   static Future<void> registerLocNotification({
+    required WidgetRef ref,
     required String place,
     required String gameId,
     required String sport,
@@ -184,42 +188,41 @@ class NotificationManager {
     required String team1,
     required String team2,
   }) async {
-    //TODO adminがアプリから設定できるようにする
-    var globalDateData = await FirebaseFirestore.instance.collection("rumutaiSchedule").doc("2023Early").get();
     //試合日程yyyy/mm/dd
-    int year = globalDateData.get("year");
-    int month = globalDateData.get("month");
-    int firstDay = globalDateData.get("day");
+    int year = ref.read(day1dateProvider).year;
+    int month = ref.read(day1dateProvider).month;
+    int dayToUse = int.parse(day) == 1 ? ref.read(day1dateProvider).day : ref.read(day2dateProvider).day;
     //日時指定
     var date = tz.TZDateTime(
       tz.local,
       year,
       month,
-      firstDay - 1 + int.parse(day),
+      dayToUse,
       int.parse(hour),
       int.parse(minute) - 10,
     );
     String message = "10分前：$place";
     //通知設定
     await flnp.zonedSchedule(
-        gameId.hashCode,
-        "${team1}vs$team2（${_sport(sport)}）",
-        message,
-        date,
-        payload: gameId,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'HR対抗',
-            'HR対抗',
-            importance: Importance.max,
-            priority: Priority.high,
-            ongoing: true,
-            styleInformation: BigTextStyleInformation(message),
-            icon: 'notification_icon',
-          ), //iosは設定事項がほぼないためアンドロイドのみの設定
-        ),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true);
+      gameId.hashCode,
+      "${team1}vs$team2（${_sport(sport)}）",
+      message,
+      date,
+      payload: gameId,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'HR対抗',
+          'HR対抗',
+          importance: Importance.max,
+          priority: Priority.high,
+          ongoing: true,
+          styleInformation: BigTextStyleInformation(message),
+          icon: 'notification_icon',
+        ), //iosは設定事項がほぼないためアンドロイドのみの設定
+      ),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+    );
 
     await LocalData.saveLocalData<bool>(gameId, true);
   }

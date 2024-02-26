@@ -55,7 +55,7 @@ class LeagueBlock extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushNamed(
                 DetailScreen.routeName,
-                arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
+                arguments: GameDataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
               );
             },
             child: Container(
@@ -84,7 +84,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: GameDataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -98,7 +98,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: GameDataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -112,7 +112,7 @@ class LeagueBlock extends StatelessWidget {
         return InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
+            arguments: GameDataToPass(gameDataId: gameData!["gameId"], isReverse: isReverse),
           ),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.black)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rumutai_app/themes/app_color.dart';
 
 class SendNotificationScreen extends StatefulWidget {
   static const routeName = "/send-notification-screen";
@@ -12,10 +13,111 @@ class SendNotificationScreen extends StatefulWidget {
 }
 
 class _SendNotificationScreenState extends State<SendNotificationScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _contentsController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
 
   bool _isLoading = false;
+
+  Widget _buildTextField({required String title, required TextEditingController controller}) {
+    return SizedBox(
+      width: 300,
+      child: TextField(
+        controller: controller,
+        onChanged: (value) => setState(() {}),
+        decoration: InputDecoration(label: Text(title)),
+      ),
+    );
+  }
+
+  Widget _buildSendButton() {
+    return SizedBox(
+      width: 300,
+      child: FilledButton(
+        onPressed: (_contentsController.text == "" || _titleController.text == "")
+            ? null
+            : () => showDialog(
+                context: context,
+                builder: (_) {
+                  return StatefulBuilder(
+                    builder: (context, setState) => AlertDialog(
+                      insetPadding: const EdgeInsets.all(10),
+                      title: const Text("確認"),
+                      content: SizedBox(
+                        height: 200,
+                        child: _isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const Text('以下の内容で通知を送信します。'),
+                                    Divider(color: AppColors.themeColor.shade800),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Text(
+                                        _titleController.text,
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Text(
+                                        _contentsController.text,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                      actionsAlignment: MainAxisAlignment.center,
+                      actions: <Widget>[
+                        if (!_isLoading)
+                          SizedBox(
+                            width: 120,
+                            height: 40,
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("キャンセル"),
+                            ),
+                          ),
+                        if (!_isLoading)
+                          SizedBox(
+                            width: 120,
+                            height: 40,
+                            child: FilledButton(
+                              child: const Text("送信"),
+                              onPressed: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await FirebaseFirestore.instance.collection("notification").add({
+                                  "timeStamp": Timestamp.fromDate(DateTime.now()),
+                                  "content": _contentsController.text,
+                                  "title": _titleController.text,
+                                });
+                                _contentsController.text = "";
+                                _titleController.text = "";
+                                _isLoading = false;
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("通知を送信しました"),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+        child: const Text("送信"),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,131 +150,11 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    controller: _titleController,
-                    onChanged: (value) => setState(() {}),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      label: const Text("タイトル"),
-                    ),
-                  ),
-                ),
+                _buildTextField(title: "タイトル", controller: _titleController),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    controller: _controller,
-                    onChanged: (value) => setState(() {}),
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      label: const Text("内容"),
-                    ),
-                  ),
-                ),
+                _buildTextField(title: "内容", controller: _contentsController),
                 const SizedBox(height: 25),
-                SizedBox(
-                  width: 300,
-                  child: FilledButton(
-                    onPressed: (_controller.text == "" || _titleController.text == "")
-                        ? null
-                        : () => showDialog(
-                            context: context,
-                            builder: (_) {
-                              return StatefulBuilder(
-                                builder: (context, setState) => AlertDialog(
-                                  title: const Text("確認"),
-                                  content: SizedBox(
-                                    height: 200,
-                                    child: _isLoading
-                                        ? const Center(child: CircularProgressIndicator())
-                                        : SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                const Text('以下の内容で通知を送信します。'),
-                                                const Divider(),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Text(
-                                                    _titleController.text,
-                                                    textAlign: TextAlign.start,
-                                                    style: const TextStyle(fontWeight: FontWeight.w600),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 5),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Text(
-                                                    _controller.text,
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                  ),
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  actions: <Widget>[
-                                    if (!_isLoading)
-                                      SizedBox(
-                                        width: 120,
-                                        height: 40,
-                                        child: OutlinedButton(
-                                          style: ButtonStyle(
-                                            foregroundColor: MaterialStateProperty.all(Colors.black),
-                                          ),
-                                          onPressed: () => Navigator.pop(context),
-                                          child: const Text("キャンセル"),
-                                        ),
-                                      ),
-                                    if (!_isLoading)
-                                      SizedBox(
-                                        width: 120,
-                                        height: 40,
-                                        child: FilledButton(
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                          ),
-                                          child: const Text("送信"),
-                                          onPressed: () async {
-                                            setState(() {
-                                              _isLoading = true;
-                                            });
-                                            await FirebaseFirestore.instance.collection("notification").add({
-                                              "timeStamp": Timestamp.fromDate(DateTime.now()),
-                                              "content": _controller.text,
-                                              "title": _titleController.text,
-                                            });
-                                            _controller.text = "";
-                                            _titleController.text = "";
-                                            _isLoading = false;
-                                            if (!mounted) return;
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text("通知を送信しました"),
-                                              ),
-                                            );
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              );
-                            }),
-                    child: const Text("送信"),
-                  ),
-                ),
+                _buildSendButton(),
               ],
             ),
           ),

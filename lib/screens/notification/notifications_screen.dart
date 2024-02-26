@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rumutai_app/themes/app_color.dart';
 
 import 'notifications_detail_screen.dart';
 
@@ -54,7 +55,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     });
   }
 
-  Widget _notificationWidget({
+  Widget _buildNotificationWidget({
     required notificationData,
     required int index,
     required bool isLoggedInAdmin,
@@ -101,7 +102,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       onPressed: () => showDialog(
                         context: context,
                         builder: (_) {
-                          return _dialog(notificationData: notificationData);
+                          return _delteNotificationDialog(notificationData: notificationData);
                         },
                       ),
                       icon: const Icon(
@@ -118,7 +119,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     );
   }
 
-  Widget _dialog({required notificationData}) {
+  Widget _delteNotificationDialog({required notificationData}) {
     bool dialogIsLoading = false;
     return StatefulBuilder(
       builder: (context, setStateInDialog) {
@@ -157,7 +158,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           actions: <Widget>[
             if (!dialogIsLoading)
               SizedBox(
-                width: 140,
+                width: 120,
                 height: 40,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
@@ -167,16 +168,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               ),
             if (!dialogIsLoading)
               SizedBox(
-                width: 140,
+                width: 120,
                 height: 40,
                 child: FilledButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
                   child: const Text("消去"),
                   onPressed: () async {
                     setStateInDialog(() {
@@ -227,13 +221,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       "※タップで内容を確認できます。",
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.brown.shade700,
+                        color: AppColors.themeColor.shade700,
                         fontWeight: FontWeight.w300,
                       ),
                     ),
                   );
                 }
-                return _notificationWidget(
+                return _buildNotificationWidget(
                   notificationData: _notifications[index],
                   index: index,
                   isLoggedInAdmin: isLoggedInAdmin,

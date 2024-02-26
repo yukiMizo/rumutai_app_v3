@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:rumutai_app/providers/rumutai_date_provider.dart';
+
+import '../../providers/rumutai_date_provider.dart';
 
 enum DayToAdjust { day1, day2 }
 

@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:rumutai_app/providers/picked_person_data_provider.dart';
-import 'package:rumutai_app/screens/admin/adjust_schedule_screen.dart';
-import '../providers/sign_in_data_provider.dart';
-import 'package:rumutai_app/screens/staff/dashboard_screen.dart';
-
 import '../themes/app_color.dart';
 
-import 'admin/send_notification_screen.dart';
-import 'schedule/pick_schedule_screen.dart';
+import '../providers/rumutai_date_provider.dart';
+import '../providers/picked_person_data_provider.dart';
+import '../providers/sign_in_data_provider.dart';
+
 import 'my_game_screen.dart';
-import 'notification/notifications_screen.dart';
-import 'game_result/pick_category_screen.dart';
 import 'rule_book_screen.dart';
-import 'cheer/pick_team_to_cheer_screen.dart';
-import 'omikuji/pick_omikuji_screen.dart';
+import 'admin/adjust_schedule_screen.dart';
+import 'admin/send_notification_screen.dart';
 import 'award/pick_award_screen.dart';
+import 'cheer/pick_team_to_cheer_screen.dart';
+import 'game_result/pick_category_screen.dart';
+import 'staff/dashboard_screen.dart';
+import "staff/timeline_screen.dart";
+import 'notification/notifications_screen.dart';
+import 'omikuji/pick_omikuji_screen.dart';
+import 'schedule/pick_schedule_screen.dart';
 
 import '../widgets/main_drawer.dart';
-import "staff/timeline_screen.dart";
 
 class HomeScreen extends ConsumerWidget {
   static const routeName = "/home-screen";
@@ -38,6 +39,8 @@ class HomeScreen extends ConsumerWidget {
       scaffoldMessengerOfContext.removeCurrentSnackBar();
       scaffoldMessengerOfContext.showSnackBar(SnackBar(content: Text(message)));
     }
+    //日付の情報を設定
+    RumutaiDateManager.setDateData(ref);
   }
 
   Widget _buildMainButton({
@@ -201,6 +204,14 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
+  String _rumutaiDateString(WidgetRef ref) {
+    final String year = ref.watch(day1dateProvider).year.toString();
+    final String month = ref.watch(day1dateProvider).month.toString();
+    final String day1 = ref.watch(day1dateProvider).day.toString();
+    final String day2 = ref.watch(day2dateProvider).day.toString();
+    return "$year  $month/$day1-$day2";
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     //refを使う初期化(refを必要としないものはmain.dartで初期化している)
@@ -237,10 +248,8 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "2024  3/13〜14",
-                    style: TextStyle(
-                      color: AppColors.themeColor.shade800,
-                    ),
+                    _rumutaiDateString(ref),
+                    style: TextStyle(color: AppColors.themeColor.shade800),
                   ),
                   const SizedBox(height: 40),
                   _buildMainButton(

@@ -36,7 +36,7 @@ class TournamentButton extends StatelessWidget {
         ),
         onPressed: () => Navigator.of(context).pushNamed(
           DetailScreen.routeName,
-          arguments: DataToPass(gameDataId: gameData["gameId"]),
+          arguments: GameDataToPass(gameDataId: gameData["gameId"]),
         ),
         child: Padding(
           padding: const EdgeInsets.all(3.0),

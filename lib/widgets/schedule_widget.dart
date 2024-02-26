@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../screens/detail_screen.dart';
 import '../providers/game_data_provider.dart';
@@ -7,7 +8,7 @@ import '../local_data.dart';
 
 import '../notification_manager.dart';
 
-class ScheduleWidget extends StatefulWidget {
+class ScheduleWidget extends ConsumerStatefulWidget {
   final Map gameData;
   final String classNumber;
   final bool isReverse;
@@ -19,10 +20,10 @@ class ScheduleWidget extends StatefulWidget {
   });
 
   @override
-  State<ScheduleWidget> createState() => _ScheduleWidgetState();
+  ConsumerState<ScheduleWidget> createState() => _ScheduleWidgetState();
 }
 
-class _ScheduleWidgetState extends State<ScheduleWidget> {
+class _ScheduleWidgetState extends ConsumerState<ScheduleWidget> {
   bool _notify = false;
   bool _gameIsDone = false;
 
@@ -91,7 +92,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
         child: InkWell(
           onTap: () => Navigator.of(context).pushNamed(
             DetailScreen.routeName,
-            arguments: DataToPass(
+            arguments: GameDataToPass(
               gameDataId: widget.gameData["gameId"],
               classNumber: widget.classNumber,
               isReverse: widget.classNumber == widget.gameData["team"]["0"] ? false : true,
@@ -153,9 +154,9 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                               setState(() {
                                 _notify = !_notify;
                                 if (_notify) {
-                                  /*print("startTime:" + widget.gameData["startTime"]["date"] + widget.gameData["startTime"]["hour"] + widget.gameData["startTime"]["minute"]);*/
                                   //通知予約
                                   NotificationManager.registerLocNotification(
+                                    ref: ref,
                                     place: widget.gameData["place"],
                                     gameId: widget.gameData["gameId"],
                                     sport: widget.gameData["sport"],

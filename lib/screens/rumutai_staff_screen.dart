@@ -24,7 +24,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   bool _isLoadingDialog = false;
   bool _isInit = true;
   bool _isReverse = false;
-  late Map _gameData;
+  late Map _thisGameData;
   late Map<String, dynamic> data;
 
   final TextEditingController _scoreDetail1Controller = TextEditingController();
@@ -59,16 +59,16 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
 
 //not flexible
   List<String> get _scoreDetailLableList {
-    if (_gameData["sport"] == "futsal" || _gameData["sport"] == "dodgebee" || _gameData["sport"] == "dodgeball") {
+    if (_thisGameData["sport"] == "futsal" || _thisGameData["sport"] == "dodgebee" || _thisGameData["sport"] == "dodgeball") {
       return ["前半", "後半"];
-    } else if (_gameData["sport"] == "volleyball") {
+    } else if (_thisGameData["sport"] == "volleyball") {
       if ((_scoreList[0] == "1" && _scoreList[1] == "1") || (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) == 3)) {
         return ["セット１", "セット２", "セット３"];
       }
       _scoreDetail5Controller.text = "0";
       _scoreDetail6Controller.text = "0";
       return ["セット１", "セット２"];
-    } else if (_gameData["sport"] == "basketball") {
+    } else if (_thisGameData["sport"] == "basketball") {
       return ["ピリオド１", "ピリオド２", "ピリオド３"];
     } /*else if (_gameData["gameId"][1] == "m") {
       if ((_scoreList[0] == "1" && _scoreList[1] == "1") ||
@@ -120,7 +120,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       Stack(
         alignment: const Alignment(-1, 0),
         children: [
-          if (_gameData["sport"] == "volleyball") _lable("セット数：") else _lable("点数："),
+          if (_thisGameData["sport"] == "volleyball") _lable("セット数：") else _lable("点数："),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -157,7 +157,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   List<String> get _scoreList {
     List<String> scoreList = [];
 
-    if (_gameData["sport"] == "volleyball") {
+    if (_thisGameData["sport"] == "volleyball") {
       Map winCount = {"0": 0, "1": 0};
       if (_strToInt(_scoreDetail1Controller.text) > _strToInt(_scoreDetail2Controller.text)) {
         winCount["0"] += 1;
@@ -216,7 +216,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     return const Text("");
   }
 
-  GameDataCategory? _gameDataToGet(String gameDataId) {
+  GameDataCategory? _categoryToGet(String gameDataId) {
     if (gameDataId.contains("1d")) {
       return GameDataCategory.d1;
     } else if (gameDataId.contains("1j")) {
@@ -313,7 +313,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                 SizedBox(
                   width: 45,
                   child: Text(
-                    _gameData["team"][_isReverse ? "1" : "0"],
+                    _thisGameData["team"][_isReverse ? "1" : "0"],
                     style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
@@ -346,7 +346,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                 SizedBox(
                   width: 45,
                   child: Text(
-                    _gameData["team"][_isReverse ? "0" : "1"],
+                    _thisGameData["team"][_isReverse ? "0" : "1"],
                     style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
@@ -366,7 +366,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
           index: "1",
           lable: scoreDetailLableList[1],
         ),
-        if ((_gameData["sport"] == "volleyball" || _gameData["sport"] == "basketball") && scoreDetailLableList.length == 3)
+        if ((_thisGameData["sport"] == "volleyball" || _thisGameData["sport"] == "basketball") && scoreDetailLableList.length == 3)
           _scoreDetailPartWidget(
             scoreData: scoreData,
             index: "2",
@@ -375,9 +375,6 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       ],
     );
   }
-
-/*{"gameId":{"0":"team"}}
-*/
 
   Map<String, Map<String, String>> _dataToUpdateTournament({
     required Map gameData,
@@ -542,7 +539,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   }) async {
     final TournamentType tournamentType = TournamentTypeUtilities.tournamentType(gameId);
     final Map<String, Map<String, String>> dataToUpdate = _dataToUpdateTournament(
-      gameData: _gameData,
+      gameData: _thisGameData,
       tournamentType: tournamentType,
     );
 
@@ -558,7 +555,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
             newData: {
               "team": teamDataToUpdate,
             },
-            teams: _gameData["team"],
+            teams: _thisGameData["team"],
             setMerge: true);
       },
     );
@@ -575,7 +572,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       return false;
     }
     //バレーの場合
-    if (_gameData["sport"] == "volleyball") {
+    if (_thisGameData["sport"] == "volleyball") {
       //フルセットでない時、勝敗がついていない場合false
       if (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) < 2) {
         return false;
@@ -594,25 +591,20 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final DataToPass gotData = ModalRoute.of(context)!.settings.arguments as DataToPass;
-    final String gameDataId = gotData.gameDataId;
+    final gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassStaffOrAdmin;
+    _thisGameData = gotData.thisGameData;
+    final String gameDataId = _thisGameData["gameId"];
     final bool isTournament = gameDataId.contains("f") || gameDataId.contains("l");
     _isReverse = gotData.isReverse;
 
-    if (gotData.classNumber != null) {
-      _gameData = (GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: gotData.classNumber!))[gotData.gameDataId[1]][gotData.gameDataId];
-    } else {
-      _gameData = (GameDataManager.getGameDataByCategory(ref: ref, category: _gameDataToGet(gotData.gameDataId)!))[gotData.gameDataId[3]][gotData.gameDataId];
-    }
-
     if (_isInit) {
-      _scoreDetail1Controller.text = _gameData["scoreDetail"]["0"][0].toString();
-      _scoreDetail2Controller.text = _gameData["scoreDetail"]["0"][1].toString();
-      _scoreDetail3Controller.text = _gameData["scoreDetail"]["1"][0].toString();
-      _scoreDetail4Controller.text = _gameData["scoreDetail"]["1"][1].toString();
-      _scoreDetail5Controller.text = _gameData["scoreDetail"]["2"][0].toString();
-      _scoreDetail6Controller.text = _gameData["scoreDetail"]["2"][1].toString();
-      _selectedExtraTime = _gameData["extraTime"];
+      _scoreDetail1Controller.text = _thisGameData["scoreDetail"]["0"][0].toString();
+      _scoreDetail2Controller.text = _thisGameData["scoreDetail"]["0"][1].toString();
+      _scoreDetail3Controller.text = _thisGameData["scoreDetail"]["1"][0].toString();
+      _scoreDetail4Controller.text = _thisGameData["scoreDetail"]["1"][1].toString();
+      _scoreDetail5Controller.text = _thisGameData["scoreDetail"]["2"][0].toString();
+      _scoreDetail6Controller.text = _thisGameData["scoreDetail"]["2"][1].toString();
+      _selectedExtraTime = _thisGameData["extraTime"];
       _isInit = false;
     }
 
@@ -634,24 +626,24 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_gameData["team"][_isReverse ? "1" : "0"], style: const TextStyle(fontSize: 40)),
+                  Text(_thisGameData["team"][_isReverse ? "1" : "0"], style: const TextStyle(fontSize: 40)),
                   const Text(" vs ", style: TextStyle(fontSize: 30)),
-                  Text(_gameData["team"][_isReverse ? "0" : "1"], style: const TextStyle(fontSize: 40)),
+                  Text(_thisGameData["team"][_isReverse ? "0" : "1"], style: const TextStyle(fontSize: 40)),
                 ],
               ),
-              Text("${_gameData["startTime"]["date"]}日目　${_gameData["startTime"]["hour"]}:${_gameData["startTime"]["minute"]}〜　${_gameData["place"]}"),
+              Text("${_thisGameData["startTime"]["date"]}日目　${_thisGameData["startTime"]["hour"]}:${_thisGameData["startTime"]["minute"]}〜　${_thisGameData["place"]}"),
               const Divider(),
               Column(
                 children: [
-                  _gameStatus(_gameData["gameStatus"]),
+                  _gameStatus(_thisGameData["gameStatus"]),
                   const SizedBox(height: 30),
-                  if (_gameData["gameStatus"] == "now") _scoreInputWidget(),
+                  if (_thisGameData["gameStatus"] == "now") _scoreInputWidget(),
                   const SizedBox(height: 30),
-                  if (_gameData["gameStatus"] == "now" && _gameData["sport"] != "volleyball" && isTournament)
+                  if (_thisGameData["gameStatus"] == "now" && _thisGameData["sport"] != "volleyball" && isTournament)
                     _extraTimeInputWidget(
-                      team1: _gameData["team"]["0"],
-                      team2: _gameData["team"]["1"],
-                      sport: _gameData["sport"],
+                      team1: _thisGameData["team"]["0"],
+                      team2: _thisGameData["team"]["1"],
+                      sport: _thisGameData["sport"],
                     ),
                 ],
               ),
@@ -664,12 +656,12 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               //戻るボタン
-              if (_gameData["gameStatus"] != "before")
+              if (_thisGameData["gameStatus"] != "before")
                 TextButton.icon(
                   onPressed: () => showDialog(
                       context: context,
                       builder: (_) {
-                        final String currentGameStatus = _gameData["gameStatus"];
+                        final String currentGameStatus = _thisGameData["gameStatus"];
 
                         return StatefulBuilder(
                           builder: (context, setState) => AlertDialog(
@@ -728,7 +720,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                                   },
                                                   "extraTime": ""
                                                 },
-                                          teams: _gameData["team"]);
+                                          teams: _thisGameData["team"]);
                                       setState(() {
                                         _isLoadingDialog = false;
                                       });
@@ -757,7 +749,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                 ),
               const SizedBox(width: 10),
               //試合開始ボタン
-              if (_gameData["gameStatus"] == "before")
+              if (_thisGameData["gameStatus"] == "before")
                 ElevatedButton.icon(
                   onPressed: () {
                     dateTime = DateTime.now();
@@ -829,10 +821,10 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                         });
 
                                         data = {
-                                          "title": "${_gameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 開始",
+                                          "title": "${_thisGameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 開始",
                                           "timeStamp": DateTime.now()
                                         };
-                                        await GameDataManager.updateData(ref: ref, gameId: gameDataId, newData: {"gameStatus": "now"}, teams: _gameData["team"]);
+                                        await GameDataManager.updateData(ref: ref, gameId: gameDataId, newData: {"gameStatus": "now"}, teams: _thisGameData["team"]);
 
                                         await FirebaseFirestore.instance.collection('Timeline').add(data);
 
@@ -856,7 +848,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                   icon: const Icon(Icons.sports),
                 ),
               //試合終了ボタン
-              if (_gameData["gameStatus"] == "now")
+              if (_thisGameData["gameStatus"] == "now")
                 ElevatedButton.icon(
                   onPressed: !_canFinishGame(isTournament)
                       ? null
@@ -901,7 +893,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                                     },
                                                   }),
                                                   const SizedBox(height: 10),
-                                                  if (_selectedExtraTime != "") _extraTimeWidget(_gameData["sport"]),
+                                                  if (_selectedExtraTime != "") _extraTimeWidget(_thisGameData["sport"]),
                                                   const Divider(),
                                                   const SizedBox(height: 10),
                                                   const Text("試合を終了します。"),
@@ -957,7 +949,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                               });
 
                                               data = {
-                                                "title": "${_gameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 終了",
+                                                "title": "${_thisGameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${gameDataId.toUpperCase()} 終了",
                                                 "timeStamp": DateTime.now()
                                               };
                                               await GameDataManager.updateData(
@@ -1007,7 +999,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                                           },
                                                           "extraTime": _selectedExtraTime,
                                                         },
-                                                  teams: _gameData["team"]);
+                                                  teams: _thisGameData["team"]);
 
                                               //トーナメントの更新
                                               if (isTournament) {

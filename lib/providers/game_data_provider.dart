@@ -27,16 +27,28 @@ enum GameDataNumber {
   n15,
 } //nに特に意味はない
 
-class DataToPass {
+//画面遷移時のデータのgameDataのやり取り用
+class GameDataToPass {
   final String gameDataId;
   final String? classNumber;
   final bool isReverse;
   final bool? isMyGame;
 
-  DataToPass({
+  GameDataToPass({
     required this.gameDataId,
     this.classNumber,
     this.isMyGame = false,
+    this.isReverse = false,
+  });
+}
+
+//画面遷移時のデータのgameDataのやり取り用（detailScreenで試合または編集ボタンを押した時用）
+class GameDataToPassStaffOrAdmin {
+  final Map thisGameData;
+  final bool isReverse;
+
+  GameDataToPassStaffOrAdmin({
+    required this.thisGameData,
     this.isReverse = false,
   });
 }
@@ -387,34 +399,53 @@ class GameDataManager {
     });
   }
 
-  static Map getGameDataByCategory({required WidgetRef ref, required GameDataCategory category}) {
+  static Future<Map> getGameDataByCategory({required WidgetRef ref, required GameDataCategory category}) async {
+    String categoryString = "";
     switch (category) {
       case GameDataCategory.d1:
-        return ref.read(gameDataForResultProvider)["1d"];
+        categoryString = "1d";
+        break;
       case GameDataCategory.j1:
-        return ref.read(gameDataForResultProvider)["1j"];
+        categoryString = "1j";
+        break;
       case GameDataCategory.k1:
-        return ref.read(gameDataForResultProvider)["1k"];
+        categoryString = "1k";
+        break;
       case GameDataCategory.d2:
-        return ref.read(gameDataForResultProvider)["2d"];
+        categoryString = "2d";
+        break;
       case GameDataCategory.j2:
-        return ref.read(gameDataForResultProvider)["2j"];
+        categoryString = "2j";
+        break;
       case GameDataCategory.k2:
-        return ref.read(gameDataForResultProvider)["2k"];
+        categoryString = "2k";
+        break;
       case GameDataCategory.d3:
-        return ref.read(gameDataForResultProvider)["3d"];
+        categoryString = "3d";
+        break;
       case GameDataCategory.j3:
-        return ref.read(gameDataForResultProvider)["3j"];
+        categoryString = "3j";
+        break;
       case GameDataCategory.k3:
-        return ref.read(gameDataForResultProvider)["3k"];
+        categoryString = "3k";
+        break;
     }
+    if (ref.read(gameDataForResultProvider)[categoryString] == null) {
+      print("loaded1");
+      await _loadGameDataForResult(gameDataCategory: category, ref: ref);
+    }
+    return ref.read(gameDataForResultProvider)[categoryString];
   }
 
-  static Map getGameDataByClassNumber({required WidgetRef ref, required classNumber}) {
-    return ref.read(gameDataForScheduleProvider)[classNumber] ?? {};
+  static Future<Map> getGameDataByClassNumber({required WidgetRef ref, required classNumber}) async {
+    if (ref.read(gameDataForScheduleProvider)[classNumber] == null) {
+      print("loaded2");
+      await _loadGameDataForSchedule(classNumber: classNumber, ref: ref);
+    }
+    return ref.read(gameDataForScheduleProvider)[classNumber];
   }
 
-  static Future loadGameDataForResult({required GameDataCategory gameDataCategory, required WidgetRef ref}) async {
+  static Future _loadGameDataForResult({required GameDataCategory gameDataCategory, required WidgetRef ref}) async {
     late String gradeCategory;
     switch (gameDataCategory) {
       case GameDataCategory.d1:
@@ -453,7 +484,7 @@ class GameDataManager {
     );
   }
 
-  static Future loadGameDataForSchedule({required String classNumber, required WidgetRef ref}) async {
+  static Future _loadGameDataForSchedule({required String classNumber, required WidgetRef ref}) async {
     await FirebaseFirestore.instance.collection("classGameDataToRead").doc(classNumber).get().then(
       (DocumentSnapshot doc) {
         ref.read(gameDataForScheduleProvider.notifier).setData(classNumber: classNumber, newData: doc.data() as Map);

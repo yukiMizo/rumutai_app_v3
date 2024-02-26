@@ -19,10 +19,26 @@ ThemeData appTheme() => ThemeData(
       dividerTheme: DividerThemeData(color: AppColors.themeColor.shade50),
       dividerColor: Colors.brown.shade100,
       dialogTheme: const DialogTheme(
+        backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
           fontSize: 22,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.grey),
+          foregroundColor: Colors.black,
         ),
       ),
       scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,

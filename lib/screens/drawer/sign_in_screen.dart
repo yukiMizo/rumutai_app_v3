@@ -63,15 +63,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         TextField(
           onChanged: (_) => setState(() {}),
           controller: _passwordController,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).disabledColor),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
         ),
       ],
     );

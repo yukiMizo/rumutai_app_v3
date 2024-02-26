@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rumutai_app/providers/sign_in_data_provider.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 
-import 'admin_edit_screen.dart';
+import 'admin/admin_edit_screen.dart';
 import 'rumutai_staff_screen.dart';
 import '../providers/game_data_provider.dart';
 
@@ -22,14 +22,16 @@ class DetailScreen extends ConsumerStatefulWidget {
 
 class _DetailScreenState extends ConsumerState<DetailScreen> {
   bool _isExpanded = false;
-  late bool _isInit = true;
-  late bool _isLoading = false;
+  bool _isInit = true;
+  bool _isLoading = false;
 
-  Column _refereesAsColumn(Map gameData) {
+  Map _thisGameData = {};
+
+  Column _refereesAsColumn() {
     List<Widget> refereeList = [];
     int count = 0;
-    List refereeLableList = LableUtilities.refereeLableList(gameData["sport"]);
-    gameData["referee"].forEach((referee) {
+    List refereeLableList = LableUtilities.refereeLableList(_thisGameData["sport"]);
+    _thisGameData["referee"].forEach((referee) {
       if (referee == "") {
         return;
       }
@@ -62,7 +64,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  Widget _scoreDetailPartWidget({required Map gameData, required String index, required String lable, bool isReverse = false}) {
+  Widget _scoreDetailPartWidget({required String index, required String lable, bool isReverse = false}) {
     return SizedBox(
       width: 300,
       child: Stack(
@@ -86,7 +88,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
               SizedBox(
                 width: 40,
                 child: Text(
-                  gameData["scoreDetail"][index][isReverse ? 1 : 0].toString(),
+                  _thisGameData["scoreDetail"][index][isReverse ? 1 : 0].toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     height: 1.0,
@@ -104,7 +106,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
               SizedBox(
                 width: 40,
                 child: Text(
-                  gameData["scoreDetail"][index][isReverse ? 0 : 1].toString(),
+                  _thisGameData["scoreDetail"][index][isReverse ? 0 : 1].toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     height: 1.0,
@@ -119,26 +121,23 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  Widget _scoreDetailWidget({required Map gameData, bool isReverse = false}) {
-    List<String> scoreDetailLableList = LableUtilities.scoreDetailLableList(gameData["sport"]);
+  Widget _scoreDetailWidget({bool isReverse = false}) {
+    List<String> scoreDetailLableList = LableUtilities.scoreDetailLableList(_thisGameData["sport"]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _scoreDetailPartWidget(
-          gameData: gameData,
           index: "0",
           isReverse: isReverse,
           lable: scoreDetailLableList[0],
         ),
         _scoreDetailPartWidget(
-          gameData: gameData,
           index: "1",
           isReverse: isReverse,
           lable: scoreDetailLableList[1],
         ),
-        if (gameData["sport"] == "volleyball" || gameData["sport"] == "basketball")
+        if (_thisGameData["sport"] == "volleyball" || _thisGameData["sport"] == "basketball")
           _scoreDetailPartWidget(
-            gameData: gameData,
             index: "2",
             isReverse: isReverse,
             lable: scoreDetailLableList[2],
@@ -168,20 +167,6 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
       return GameDataCategory.k3;
     }
     return null;
-  }
-
-//ルム対スタッフが自分の担当のゲーム一覧からこの画面を開いた時だけロードされる。
-  Future _loadData(GameDataCategory categoryToGet) async {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      await GameDataManager.loadGameDataForResult(gameDataCategory: categoryToGet, ref: ref);
-      setState(() {
-        _isLoading = false;
-      });
-      _isInit = false;
-    }
   }
 
   String _sport(String sport) {
@@ -220,27 +205,50 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
+  Future _loadGameDataByCategory(GameDataToPass gotData) async {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final Map gotGameData = await GameDataManager.getGameDataByCategory(category: _categoryToGet(gotData.gameDataId)!, ref: ref);
+      _thisGameData = gotGameData[gotData.gameDataId[3]][gotData.gameDataId];
+      setState(() {
+        _isLoading = false;
+      });
+      _isInit = false;
+    }
+  }
+
+  Future _loadGameDataByClassNumber(GameDataToPass gotData) async {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final Map gotGameData = await GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: gotData.classNumber!);
+      _thisGameData = gotGameData[gotData.gameDataId[1]][gotData.gameDataId];
+      setState(() {
+        _isLoading = false;
+      });
+      _isInit = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    DataToPass gotData = ModalRoute.of(context)!.settings.arguments as DataToPass;
+    GameDataToPass gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPass;
 
-    Map gameData = {};
     final bool isReverse = gotData.isReverse;
     if (gotData.isMyGame == true) {
-      if ((GameDataManager.getGameDataByCategory(category: _categoryToGet(gotData.gameDataId)!, ref: ref)) == {}) {
-        _loadData(_categoryToGet(gotData.gameDataId)!);
-      } else if (!_isLoading) {
-        gameData = (GameDataManager.getGameDataByCategory(category: _categoryToGet(gotData.gameDataId)!, ref: ref))[gotData.gameDataId[3]][gotData.gameDataId];
-      }
+      _loadGameDataByCategory(gotData);
     } else if (gotData.classNumber != null) {
-      gameData = (GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: gotData.classNumber!))[gotData.gameDataId[1]][gotData.gameDataId];
+      _loadGameDataByClassNumber(gotData);
     } else {
-      gameData = (GameDataManager.getGameDataByCategory(ref: ref, category: _categoryToGet(gotData.gameDataId)!))[gotData.gameDataId[3]][gotData.gameDataId];
+      _loadGameDataByCategory(gotData);
     }
     final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
     final bool isLoggedInRumutaiStaff = ref.watch(isLoggedInRumutaiStaffProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text("詳細"), actions: [MainPopUpMenu(place: gameData["place"])]),
+      appBar: AppBar(title: const Text("詳細"), actions: [MainPopUpMenu(place: _thisGameData["place"])]),
       floatingActionButton: _isLoading
           ? null
           : Column(
@@ -253,9 +261,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(
                       RumutaiStaffScreen.routeName,
-                      arguments: DataToPass(
-                        classNumber: gotData.classNumber,
-                        gameDataId: gameData["gameId"],
+                      arguments: GameDataToPassStaffOrAdmin(
+                        thisGameData: _thisGameData,
                         isReverse: isReverse,
                       ),
                     ),
@@ -267,7 +274,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                   FloatingActionButton.extended(
                     heroTag: "hero2",
                     backgroundColor: AppColors.accentColor,
-                    onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassAdmin(gameData: gameData, isReverse: isReverse)),
+                    onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassStaffOrAdmin(thisGameData: _thisGameData, isReverse: isReverse)),
                     icon: const Icon(Icons.edit),
                     label: const Text("編集"),
                   ),
@@ -304,7 +311,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                 SizedBox(
                                   width: 60,
                                   child: Text(
-                                    gameData["team"][isReverse ? "1" : "0"],
+                                    _thisGameData["team"][isReverse ? "1" : "0"],
                                     style: const TextStyle(fontSize: 25),
                                     textAlign: TextAlign.center,
                                   ),
@@ -314,7 +321,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             SizedBox(
                               width: 90,
                               child: Text(
-                                gameData["score"][isReverse ? 1 : 0].toString(),
+                                _thisGameData["score"][isReverse ? 1 : 0].toString(),
                                 style: const TextStyle(fontSize: 45),
                                 textAlign: TextAlign.center,
                               ),
@@ -326,7 +333,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             SizedBox(
                               width: 90,
                               child: Text(
-                                gameData["score"][isReverse ? 0 : 1].toString(),
+                                _thisGameData["score"][isReverse ? 0 : 1].toString(),
                                 style: const TextStyle(fontSize: 45),
                                 textAlign: TextAlign.center,
                               ),
@@ -337,7 +344,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                 SizedBox(
                                   width: 60,
                                   child: Text(
-                                    gameData["team"][isReverse ? "0" : "1"],
+                                    _thisGameData["team"][isReverse ? "0" : "1"],
                                     style: const TextStyle(fontSize: 25),
                                     textAlign: TextAlign.center,
                                   ),
@@ -351,24 +358,21 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                           builder: (BuildContext context, StateSetter setState) {
                             return Column(
                               children: [
-                                if (gameData["gameStatus"] == "after")
+                                if (_thisGameData["gameStatus"] == "after")
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
                                     height: !_isExpanded ? 0 : 70,
                                     curve: Curves.linearToEaseOut,
                                     child: SingleChildScrollView(
-                                      child: _scoreDetailWidget(
-                                        gameData: gameData,
-                                        isReverse: isReverse,
-                                      ),
+                                      child: _scoreDetailWidget(isReverse: isReverse),
                                     ),
                                   ),
-                                if (gameData["gameStatus"] == "before")
+                                if (_thisGameData["gameStatus"] == "before")
                                   const Text(
                                     "試合前",
                                     style: TextStyle(fontSize: 16),
                                   )
-                                else if (gameData["gameStatus"] == "now")
+                                else if (_thisGameData["gameStatus"] == "now")
                                   Text(
                                     "試合中",
                                     style: TextStyle(
@@ -376,7 +380,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                       fontSize: 16,
                                     ),
                                   )
-                                else if (gameData["gameStatus"] == "after")
+                                else if (_thisGameData["gameStatus"] == "after")
                                   Stack(
                                     children: [
                                       Row(
@@ -401,14 +405,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                       ),
                                       Column(
                                         children: [
-                                          if (gameData["extraTime"] != "")
+                                          if (_thisGameData["extraTime"] != "")
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
                                                 Text(
                                                   LableUtilities.extraTimeLable(
-                                                    gameData["sport"],
+                                                    _thisGameData["sport"],
                                                   ),
                                                   style: const TextStyle(
                                                     fontSize: 18,
@@ -417,7 +421,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  gameData["extraTime"],
+                                                  _thisGameData["extraTime"],
                                                   style: const TextStyle(
                                                     fontSize: 23,
                                                     height: 1.0,
@@ -432,7 +436,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                                 ),
                                               ],
                                             ),
-                                          if (gameData["extraTime"] != "") const SizedBox(height: 10),
+                                          if (_thisGameData["extraTime"] != "") const SizedBox(height: 10),
                                           const Center(
                                             child: Text(
                                               "試合終了",
@@ -467,12 +471,12 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               children: [
                                 _lable("日時："),
                                 Text(
-                                  "${gameData["startTime"]["date"]}",
+                                  "${_thisGameData["startTime"]["date"]}",
                                   style: const TextStyle(fontSize: 25, height: 1.0),
                                 ),
                                 const Text("日目　", style: TextStyle(fontSize: 16)),
                                 Text(
-                                  "${gameData["startTime"]["hour"]}:${gameData["startTime"]["minute"]}〜",
+                                  "${_thisGameData["startTime"]["hour"]}:${_thisGameData["startTime"]["minute"]}〜",
                                   style: const TextStyle(fontSize: 25, height: 1.0),
                                 ),
                               ],
@@ -481,14 +485,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             Row(
                               children: [
                                 _lable("場所："),
-                                Text("${gameData["place"]}", style: const TextStyle(fontSize: 20)),
+                                Text("${_thisGameData["place"]}", style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                             const SizedBox(height: 4),
                             Row(
                               children: [
                                 _lable("競技："),
-                                Text(_sport(gameData["sport"]), style: const TextStyle(fontSize: 20)),
+                                Text(_sport(_thisGameData["sport"]), style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                             const SizedBox(height: 35),
@@ -496,7 +500,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _lable("審判："),
-                                _refereesAsColumn(gameData),
+                                _refereesAsColumn(),
                               ],
                             ),
                           ],

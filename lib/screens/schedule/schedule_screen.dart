@@ -19,14 +19,14 @@ class ScheduleScreen extends ConsumerStatefulWidget {
 class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   bool _isInit = true;
   bool _isLoading = false;
-  late Map _gameData;
+  late Map _gameDataForThisClass;
 
   Future _loadData(String classNumber) async {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      await GameDataManager.loadGameDataForSchedule(classNumber: classNumber, ref: ref);
+      _gameDataForThisClass = await GameDataManager.getGameDataByClassNumber(classNumber: classNumber, ref: ref);
       setState(() {
         _isLoading = false;
       });
@@ -196,10 +196,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     _loadData(classNumber);
     final List<String> tabStrings = _tabStrings(classNumber);
 
-    if (!_isLoading) {
-      _gameData = GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: classNumber);
-    }
-
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -228,21 +224,21 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   Scrollbar(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: _scheduleList(classNumber: classNumber, gameData: _gameData["d"]),
+                        children: _scheduleList(classNumber: classNumber, gameData: _gameDataForThisClass["d"]),
                       ),
                     ),
                   ),
                   Scrollbar(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: _scheduleList(classNumber: classNumber, gameData: _gameData["j"]),
+                        children: _scheduleList(classNumber: classNumber, gameData: _gameDataForThisClass["j"]),
                       ),
                     ),
                   ),
                   Scrollbar(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: _scheduleList(classNumber: classNumber, gameData: _gameData["k"]),
+                        children: _scheduleList(classNumber: classNumber, gameData: _gameDataForThisClass["k"]),
                       ),
                     ),
                   ),
@@ -252,9 +248,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         children: _scheduleList(
                           classNumber: classNumber,
                           gameData: {}
-                            ..addAll(_gameData["d"])
-                            ..addAll(_gameData["j"])
-                            ..addAll(_gameData["k"]),
+                            ..addAll(_gameDataForThisClass["d"])
+                            ..addAll(_gameDataForThisClass["j"])
+                            ..addAll(_gameDataForThisClass["k"]),
                         ),
                       ),
                     ),
