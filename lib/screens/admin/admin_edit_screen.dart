@@ -483,7 +483,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    GameDataToPassStaffOrAdmin gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassStaffOrAdmin;
+    GameDataToPassAdmin gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassAdmin;
     _gameData = gotData.thisGameData;
     _isReverse = gotData.isReverse;
 

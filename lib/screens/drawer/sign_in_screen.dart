@@ -71,7 +71,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget _buildSigninButton() {
     return SizedBox(
       width: double.infinity,
-      child: FilledButton(
+      child: ElevatedButton.icon(
+        icon: const Icon(Icons.login),
         onPressed: (_passwordController.text != "" && _selectedLoginType != null)
             ? () async {
                 setState(() {
@@ -115,15 +116,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 });
               }
             : null,
-        child: const Text("サインイン"),
+        label: const Text("サインイン"),
       ),
     );
   }
 
   Widget _buildSignoutButton() {
     return SizedBox(
-      width: double.infinity,
-      child: FilledButton(
+      width: 200,
+      child: ElevatedButton.icon(
+        icon: const Icon(Icons.logout),
         onPressed: () async {
           setState(() {
             _isLoading = true;
@@ -143,7 +145,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             _isLoading = false;
           });
         },
-        child: const Text("サインアウト"),
+        label: const Text("サインアウト"),
       ),
     );
   }
@@ -181,8 +183,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               FocusManager.instance.primaryFocus!.unfocus();
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               child: isSignedIn ? _buildSignOutScreen() : _buildSignInScreen(),

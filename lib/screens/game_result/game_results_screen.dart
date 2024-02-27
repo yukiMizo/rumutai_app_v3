@@ -27,7 +27,11 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
       setState(() {
         _isLoading = true;
       });
-      _gameDataForThisCategory = await GameDataManager.getGameDataByCategory(category: gameDataCategory, ref: ref);
+      _gameDataForThisCategory = await GameDataManager.getGameDataByCategory(
+        category: gameDataCategory,
+        ref: ref,
+        load: true, //毎回ロードする
+      );
       setState(() {
         _isLoading = false;
       });
@@ -62,6 +66,8 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryToGet = ModalRoute.of(context)!.settings.arguments;
+
+    ref.watch(gameDataForResultProvider); //データの変更を監視
     _loadData(categoryToGet as GameDataCategory);
     return DefaultTabController(
       length: 2,

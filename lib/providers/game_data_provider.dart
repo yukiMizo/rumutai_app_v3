@@ -42,17 +42,18 @@ class GameDataToPass {
   });
 }
 
-//画面遷移時のデータのgameDataのやり取り用（detailScreenで試合または編集ボタンを押した時用）
-class GameDataToPassStaffOrAdmin {
+//画面遷移時のデータのgameDataのやり取り用（detailScreenで編集ボタンを押した時用）
+class GameDataToPassAdmin {
   final Map thisGameData;
   final bool isReverse;
 
-  GameDataToPassStaffOrAdmin({
+  GameDataToPassAdmin({
     required this.thisGameData,
     this.isReverse = false,
   });
 }
 
+//
 class GameDataForResultNotifier extends StateNotifier<Map> {
   GameDataForResultNotifier() : super({});
 
@@ -60,10 +61,10 @@ class GameDataForResultNotifier extends StateNotifier<Map> {
   void updateOneGameData({
     required String gameId,
     required String key,
-    required Map data,
+    required data,
     bool setMerge = false,
   }) {
-    Map tmpState = state;
+    Map tmpState = {...state};
 
     final String category = gameId.substring(0, 2);
     final String block = gameId[3];
@@ -88,7 +89,7 @@ class GameDataForResultNotifier extends StateNotifier<Map> {
     required String category,
     required Map newData,
   }) {
-    Map tmpState = state;
+    Map tmpState = {...state};
 
     tmpState[category] = newData;
 
@@ -96,7 +97,7 @@ class GameDataForResultNotifier extends StateNotifier<Map> {
   }
 
   void updateAllData(Map newGameData) {
-    state = newGameData;
+    state = {...newGameData};
   }
 }
 
@@ -107,11 +108,11 @@ class GameDataForScheduleNotifier extends StateNotifier<Map> {
   void updateOneGameData({
     required String gameId,
     required String key,
-    required Map data,
+    required data,
     required Map teams,
     bool setMerge = false,
   }) {
-    Map tmpState = state;
+    Map tmpState = {...state};
 
     final String gender = gameId[1];
 
@@ -141,7 +142,7 @@ class GameDataForScheduleNotifier extends StateNotifier<Map> {
     required String classNumber,
     required Map newData,
   }) {
-    Map tmpState = state;
+    Map tmpState = {...state};
 
     tmpState[classNumber] = newData;
 
@@ -150,7 +151,7 @@ class GameDataForScheduleNotifier extends StateNotifier<Map> {
 
   //データ全て更新
   void updateAllData(Map newGameData) {
-    state = newGameData;
+    state = {...newGameData};
   }
 }
 
@@ -391,15 +392,18 @@ class GameDataManager {
     } catch (e) {
       return;
     }
-
     //デバイス上のデータ更新
     newData.forEach((key, data) {
-      ref.read(gameDataForResultProvider.notifier).updateOneGameData(gameId: gameId, key: key, data: data as Map);
+      ref.read(gameDataForResultProvider.notifier).updateOneGameData(gameId: gameId, key: key, data: data);
       ref.read(gameDataForScheduleProvider.notifier).updateOneGameData(gameId: gameId, key: key, data: data, teams: teams);
     });
   }
 
-  static Future<Map> getGameDataByCategory({required WidgetRef ref, required GameDataCategory category}) async {
+  static Future<Map> getGameDataByCategory({
+    required WidgetRef ref,
+    required GameDataCategory category,
+    bool load = false,
+  }) async {
     String categoryString = "";
     switch (category) {
       case GameDataCategory.d1:
@@ -430,15 +434,19 @@ class GameDataManager {
         categoryString = "3k";
         break;
     }
-    if (ref.read(gameDataForResultProvider)[categoryString] == null) {
+    if (load || ref.read(gameDataForResultProvider)[categoryString] == null) {
       print("loaded1");
       await _loadGameDataForResult(gameDataCategory: category, ref: ref);
     }
     return ref.read(gameDataForResultProvider)[categoryString];
   }
 
-  static Future<Map> getGameDataByClassNumber({required WidgetRef ref, required classNumber}) async {
-    if (ref.read(gameDataForScheduleProvider)[classNumber] == null) {
+  static Future<Map> getGameDataByClassNumber({
+    required WidgetRef ref,
+    required classNumber,
+    bool load = false,
+  }) async {
+    if (load || ref.read(gameDataForScheduleProvider)[classNumber] == null) {
       print("loaded2");
       await _loadGameDataForSchedule(classNumber: classNumber, ref: ref);
     }

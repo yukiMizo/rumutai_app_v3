@@ -354,7 +354,6 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
   @override
   Widget build(BuildContext context) {
     _loadData();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("担当の試合"),
@@ -362,12 +361,10 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                _buildTopSection(),
-                _buildMiddleSection(),
-              ],
-            ),
+          : Column(children: [
+              _buildTopSection(),
+              _buildMiddleSection(),
+            ]),
       bottomNavigationBar: _buildBottomSection(),
     );
   }

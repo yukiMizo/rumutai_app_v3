@@ -65,6 +65,7 @@ class _DrawOmikujiScreenState extends State<DrawOmikujiScreen> {
   Widget _omikuji() {
     final omikujiData = _randomOmikujiData;
     return AlertDialog(
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       backgroundColor: Colors.orange.shade50,
       content: SizedBox(
         height: 460,

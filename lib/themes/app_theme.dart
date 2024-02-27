@@ -31,9 +31,7 @@ ThemeData appTheme() => ThemeData(
           borderSide: const BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(5),
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(

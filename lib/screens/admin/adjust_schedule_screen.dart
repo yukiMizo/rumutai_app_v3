@@ -21,7 +21,7 @@ class _AdjustScheduleScreenState extends ConsumerState<AdjustScheduleScreen> {
   bool _isloading = false;
 
   Widget _adjustDateButton(DayToAdjust dayToAdjust) {
-    return FilledButton(
+    return ElevatedButton(
       onPressed: () async {
         final DateTime? pickedDate = await showDatePicker(
           context: context,

@@ -7,10 +7,7 @@ import '../../utilities/tournament_type_utilities.dart';
 class TournamentWidget extends StatelessWidget {
   final String _title;
   final Map _tournamentData;
-  const TournamentWidget(
-      {super.key,
-      required Map<dynamic, dynamic> tournamentData,
-      required String title})
+  const TournamentWidget({super.key, required Map<dynamic, dynamic> tournamentData, required String title})
       : _title = title,
         _tournamentData = tournamentData;
 
@@ -101,7 +98,7 @@ class TournamentWidget extends StatelessWidget {
       height: 35,
       child: Card(
         elevation: 1,
-        color: Colors.brown.shade100,
+        color: Colors.brown.shade50,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
           child: FittedBox(
@@ -625,9 +622,7 @@ class TournamentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final TournamentType tournamentType =
-        TournamentTypeUtilities.tournamentType(
-            _tournamentData.values.first["gameId"]);
+    final TournamentType tournamentType = TournamentTypeUtilities.tournamentType(_tournamentData.values.first["gameId"]);
     final Map tournamentDataMap = _tournamentDataMap(_tournamentData);
     final Map teamMap = _teamMap(_tournamentData, tournamentType);
 

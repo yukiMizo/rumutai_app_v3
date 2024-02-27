@@ -26,7 +26,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       setState(() {
         _isLoading = true;
       });
-      _gameDataForThisClass = await GameDataManager.getGameDataByClassNumber(classNumber: classNumber, ref: ref);
+      _gameDataForThisClass = await GameDataManager.getGameDataByClassNumber(
+        classNumber: classNumber,
+        ref: ref,
+        load: true, //毎回ロードする
+      );
       setState(() {
         _isLoading = false;
       });

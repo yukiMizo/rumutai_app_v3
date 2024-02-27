@@ -238,6 +238,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     GameDataToPass gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPass;
 
     final bool isReverse = gotData.isReverse;
+
+    ref.watch(gameDataForResultProvider); //データの変更を監視
     if (gotData.isMyGame == true) {
       _loadGameDataByCategory(gotData);
     } else if (gotData.classNumber != null) {
@@ -261,8 +263,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(
                       RumutaiStaffScreen.routeName,
-                      arguments: GameDataToPassStaffOrAdmin(
-                        thisGameData: _thisGameData,
+                      arguments: GameDataToPass(
+                        classNumber: gotData.classNumber,
+                        gameDataId: _thisGameData["gameId"],
                         isReverse: isReverse,
                       ),
                     ),
@@ -274,7 +277,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                   FloatingActionButton.extended(
                     heroTag: "hero2",
                     backgroundColor: AppColors.accentColor,
-                    onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassStaffOrAdmin(thisGameData: _thisGameData, isReverse: isReverse)),
+                    onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassAdmin(thisGameData: _thisGameData, isReverse: isReverse)),
                     icon: const Icon(Icons.edit),
                     label: const Text("編集"),
                   ),
