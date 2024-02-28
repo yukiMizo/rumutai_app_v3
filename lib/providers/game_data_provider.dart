@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -435,7 +436,6 @@ class GameDataManager {
         break;
     }
     if (load || ref.read(gameDataForResultProvider)[categoryString] == null) {
-      print("loaded1");
       await _loadGameDataForResult(gameDataCategory: category, ref: ref);
     }
     return ref.read(gameDataForResultProvider)[categoryString];
@@ -447,7 +447,6 @@ class GameDataManager {
     bool load = false,
   }) async {
     if (load || ref.read(gameDataForScheduleProvider)[classNumber] == null) {
-      print("loaded2");
       await _loadGameDataForSchedule(classNumber: classNumber, ref: ref);
     }
     return ref.read(gameDataForScheduleProvider)[classNumber];
@@ -485,6 +484,7 @@ class GameDataManager {
         break;
     }
 
+    debugPrint("loadedGameDataCategory");
     await FirebaseFirestore.instance.collection("gameDataToRead").doc(gradeCategory).get().then(
       (DocumentSnapshot doc) {
         ref.read(gameDataForResultProvider.notifier).setData(category: gradeCategory, newData: doc.data() as Map);
@@ -493,6 +493,7 @@ class GameDataManager {
   }
 
   static Future _loadGameDataForSchedule({required String classNumber, required WidgetRef ref}) async {
+    debugPrint("loadedGameDataClass");
     await FirebaseFirestore.instance.collection("classGameDataToRead").doc(classNumber).get().then(
       (DocumentSnapshot doc) {
         ref.read(gameDataForScheduleProvider.notifier).setData(classNumber: classNumber, newData: doc.data() as Map);

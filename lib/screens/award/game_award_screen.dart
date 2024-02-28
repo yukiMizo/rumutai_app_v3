@@ -105,6 +105,7 @@ class _GameAwardScreenState extends State<GameAwardScreen> {
     setState(() {
       _isLoading = true;
     });
+    debugPrint("loadedAwardData");
     await FirebaseFirestore.instance.collection("award").doc("gameResult").get().then((DocumentSnapshot doc) {
       dynamic d = doc.data();
       _rankDataList = d[grade];

@@ -94,7 +94,7 @@ class GameAdminDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 1,
       child: SizedBox(
         width: double.infinity,
         child: Padding(

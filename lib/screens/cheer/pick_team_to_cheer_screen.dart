@@ -161,6 +161,7 @@ class _PickTeamToCheerScreenState extends State<PickTeamToCheerScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isInit) {
+      debugPrint("loadedCheerData2");
       FirebaseDatabase.instance.ref("cheer").get().then((data) {
         final dataMap = data.value as Map;
         int maxCheerPoint1 = 0;

@@ -30,6 +30,8 @@ class _MyPlaceGameScreenState extends State<MyPlaceGameScreen> {
         _isLoading = true;
       });
       _gameDataList = [];
+
+      debugPrint("loadedDataForMyPlaceGameScreen");
       await FirebaseFirestore.instance.collection('gameData2').where('place', isEqualTo: _targetPlace).where("gameStatus", isNotEqualTo: "after").get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           _gameDataList.add(doc.data() as Map);

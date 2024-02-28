@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/themes/app_color.dart';
 
 import 'package:rumutai_app/utilities/lable_utilities.dart';
 
@@ -53,18 +54,26 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
   Widget _textField({
     required double width,
     required TextEditingController controller,
-    InputDecoration? inputDecoration,
+    String? saffixLabel,
     bool canEnterOnlyNumber = false,
   }) {
-    return SizedBox(
+    return Container(
       width: width,
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextField(
           keyboardType: !canEnterOnlyNumber ? null : (Platform.isAndroid ? TextInputType.number : const TextInputType.numberWithOptions(decimal: true)),
           inputFormatters: !canEnterOnlyNumber ? null : [FilteringTextInputFormatter.digitsOnly],
-          decoration: inputDecoration ??
-              const InputDecoration(
-                isDense: true,
-              ),
+          decoration: InputDecoration(
+            enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border: const UnderlineInputBorder(),
+            fillColor: AppColors.themeColor.shade50,
+            contentPadding: const EdgeInsets.only(left: 5),
+            filled: true,
+            isDense: true,
+            isCollapsed: true,
+            suffixText: saffixLabel,
+            suffixStyle: const TextStyle(color: Colors.grey),
+          ),
           style: const TextStyle(fontSize: 20),
           onChanged: (_) {
             _dirtyCheck();
@@ -269,7 +278,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
       scoreDetailList.add(
         Row(
           children: [
-            _lable("$lable："),
+            _label("$lable："),
             if (count == 1)
               _textField(
                 width: 40,
@@ -335,11 +344,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
         _textField(
           width: 180,
           controller: teController,
-          inputDecoration: InputDecoration(
-            isDense: true,
-            suffixText: "($lable)",
-            suffixStyle: const TextStyle(color: Colors.grey),
-          ),
+          saffixLabel: "($lable)",
         ),
       );
       count++;
@@ -347,14 +352,14 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
     return Column(children: refereeDetailList);
   }
 
-  Widget _lable(lable) {
+  Widget _label(label) {
     return SizedBox(
       width: 100,
       child: Row(
         children: [
           Expanded(
             child: Text(
-              lable,
+              label,
               textAlign: TextAlign.end,
               style: TextStyle(color: Colors.grey.shade700),
             ),
@@ -432,7 +437,6 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
               width: 140,
               height: 40,
               child: OutlinedButton(
-                style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () => Navigator.pop(context),
                 child: const Text("キャンセル"),
               ),
@@ -442,13 +446,6 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
               width: 140,
               height: 40,
               child: FilledButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
                 child: const Text("変更"),
                 onPressed: () async {
                   setState(() {
@@ -556,19 +553,16 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Row(
                             children: [
-                              _lable("チーム："),
+                              _label("チーム："),
                               _textField(
-                                width: 80,
+                                width: 65,
                                 controller: _isReverse ? _team2Controller : _team1Controller,
                               ),
                               const SizedBox(width: 10),
-                              const Text(
-                                "vs",
-                                style: TextStyle(fontSize: 20),
-                              ),
+                              const Text("vs", style: TextStyle(fontSize: 20)),
                               const SizedBox(width: 10),
                               _textField(
-                                width: 80,
+                                width: 65,
                                 controller: _isReverse ? _team1Controller : _team2Controller,
                               ),
                             ],
@@ -576,7 +570,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                           const SizedBox(height: 15),
                           Row(
                             children: [
-                              _lable("開始時間："),
+                              _label("開始時間："),
                               _textField(width: 40, controller: _timeDateController),
                               const Text("日目　"),
                               _textField(width: 40, controller: _timeHourController),
@@ -587,7 +581,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                           ),
                           Row(
                             children: [
-                              _lable("場所："),
+                              _label("場所："),
                               _textField(width: 180, controller: _placeController),
                             ],
                           ),
@@ -595,7 +589,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(children: [const SizedBox(height: 10), _lable("審判：")]),
+                              Column(children: [const SizedBox(height: 10), _label("審判：")]),
                               _refereeInputColumn,
                             ],
                           ),
@@ -603,7 +597,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                           const Divider(),
                           Row(
                             children: [
-                              _lable("試合状況："),
+                              _label("試合状況："),
                               DropdownButton(
                                 items: const [
                                   DropdownMenuItem(
@@ -715,7 +709,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                             children: [
                               Row(
                                 children: [
-                                  _lable("点数："),
+                                  _label("点数："),
                                   _textField(
                                     width: 40,
                                     controller: _isReverse ? _score2Controller : _score1Controller,

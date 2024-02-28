@@ -79,6 +79,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   _isLoading = true;
                 });
                 //firebaseからパスワードを取得
+                debugPrint("loadedPasswordData");
                 var passwordData = await FirebaseFirestore.instance.collection("password").doc("passwordDoc").get();
                 //パスワードが合っているか確認
                 bool canLogin = false;

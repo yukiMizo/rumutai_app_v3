@@ -139,6 +139,8 @@ class _DrawOmikujiScreenState extends State<DrawOmikujiScreen> {
       setState(() {
         _isLoading = true;
       });
+
+      debugPrint("loadedOmikujiData");
       await FirebaseFirestore.instance.collection("omikujiDataToRead").doc("omikujiDataToReadDoc").get().then((DocumentSnapshot doc) {
         final Map gotMap = doc.data() as Map;
         gotMap.forEach((id, map) {

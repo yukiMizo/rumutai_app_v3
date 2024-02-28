@@ -9,8 +9,7 @@ class NotificationsDetailScreen extends StatelessWidget {
   const NotificationsDetailScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    NotificationDataToPass gotData =
-        ModalRoute.of(context)!.settings.arguments as NotificationDataToPass;
+    NotificationDataToPass gotData = ModalRoute.of(context)!.settings.arguments as NotificationDataToPass;
     final Map data = gotData.data;
     final int index = gotData.index;
 

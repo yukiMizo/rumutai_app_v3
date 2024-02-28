@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -11,17 +12,20 @@ class RumutaiDateManager {
   static final formatter = DateFormat('yyyy-M-d');
   static Future<void> setDateData(WidgetRef ref) async {
     try {
+      debugPrint("loadedDateData");
       final rumutaiScheduleData = await FirebaseFirestore.instance.collection("rumutaiSchedule").doc("rumutaiScheduleDoc").get();
       final day1data = rumutaiScheduleData["day1"];
       final day2data = rumutaiScheduleData["day2"];
-      //providerの値を更新
-      ref.read(day1dateProvider.notifier).state = DateTime(day1data["year"], day1data["month"], day1data["day"]);
-      ref.read(day2dateProvider.notifier).state = DateTime(day2data["year"], day2data["month"], day2data["day"]);
+
+      final String day1dateString = formatter.format(DateTime(day1data["year"], day1data["month"], day1data["day"]));
+      final String day2dateString = formatter.format(DateTime(day2data["year"], day2data["month"], day2data["day"]));
       //localに保存
-      LocalData.saveLocalData<String>("day1date", formatter.format(ref.read(day1dateProvider)));
-      LocalData.saveLocalData<String>("day2date", formatter.format(ref.read(day2dateProvider)));
+      await LocalData.saveLocalData<String>("day1date", day1dateString);
+      await LocalData.saveLocalData<String>("day2date", day2dateString);
+      //providerの値を更新
+      await _setDateDataFromLocal(ref);
     } catch (_) {
-      _setDateDataFromLocal(ref);
+      await _setDateDataFromLocal(ref);
     }
   }
 
@@ -31,7 +35,13 @@ class RumutaiDateManager {
     if (day1dateString == null || day2dateString == null) {
       return;
     }
-    ref.read(day1dateProvider.notifier).state = formatter.parse(day1dateString);
-    ref.read(day2dateProvider.notifier).state = formatter.parse(day2dateString);
+
+    //不必要な更新を防ぐ
+    if (formatter.format(ref.read(day1dateProvider)) != day1dateString) {
+      ref.read(day1dateProvider.notifier).state = formatter.parse(day1dateString);
+    }
+    if (formatter.format(ref.read(day2dateProvider)) != day2dateString) {
+      ref.read(day2dateProvider.notifier).state = formatter.parse(day2dateString);
+    }
   }
 }

@@ -12,16 +12,11 @@ class MainPopUpMenu extends StatelessWidget {
   Widget _popUpMenuChild({required String text, required IconData icon}) {
     return Row(
       children: [
-        Icon(
-          icon,
-          color: AppColors.themeColor.shade900,
-        ),
+        Icon(icon, color: AppColors.themeColor.shade900),
         const SizedBox(width: 10),
         Text(
           text,
-          style: TextStyle(
-            color: AppColors.themeColor.shade900,
-          ),
+          style: TextStyle(color: AppColors.themeColor.shade900),
         ),
       ],
     );
@@ -30,7 +25,7 @@ class MainPopUpMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 50,
+      width: 60,
       child: PopupMenuButton(
         color: AppColors.themeColor.shade50,
         onSelected: (selectedValue) {

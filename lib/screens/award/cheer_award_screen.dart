@@ -18,6 +18,7 @@ class _CheerAwardScreenState extends State<CheerAwardScreen> {
     setState(() {
       _isLoading = true;
     });
+    debugPrint("loadedCheerData");
     FirebaseDatabase.instance.ref("cheer").get().then((data) {
       final dataMap = data.value as Map;
       List<Map<String, String>> cheerRankList1 = [];

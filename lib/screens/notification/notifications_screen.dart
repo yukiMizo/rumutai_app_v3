@@ -38,6 +38,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     setState(() {
       _isLoading = true;
     });
+    debugPrint("loadedNotificationData");
     var gotData = await FirebaseFirestore.instance.collection("notification").get();
     for (var data in gotData.docs) {
       final d = data.data();

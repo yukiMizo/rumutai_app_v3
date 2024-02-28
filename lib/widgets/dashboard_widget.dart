@@ -42,6 +42,7 @@ class _DashboardState extends State<DashboardWidget> {
       localPlace = await LocalData.readLocalData<String>("staffPlace");
     }
 
+    debugPrint("loadedDashboardData");
     var globalData = await FirebaseFirestore.instance.collection("StaffDashboard").doc(staffPlace).get();
     int currentStaffs = globalData.get("staffs");
 
@@ -101,6 +102,7 @@ class _DashboardState extends State<DashboardWidget> {
                     onPressed: () async {
                       await LocalData.saveLocalData<String>("staffPlace", staffPlace);
 
+                      debugPrint("loadedStaffDashboard");
                       var d = await FirebaseFirestore.instance.collection("StaffDashboard").doc(staffPlace).get();
                       var data = {"staffs": d.get("staffs") + 1};
                       await FirebaseFirestore.instance.collection('StaffDashboard').doc(staffPlace).set(data, SetOptions(merge: true));
@@ -162,6 +164,7 @@ class _DashboardState extends State<DashboardWidget> {
                         child: const Text("確認"),
                         onPressed: () async {
                           LocalData.saveLocalData<String>("staffPlace", "None");
+                          debugPrint("loadedStaffDashboard2");
                           var d = await FirebaseFirestore.instance.collection("StaffDashboard").doc(staffPlace).get();
                           var data = {"staffs": d.get("staffs") - 1};
                           if (d.get("staffs") >= 1) {

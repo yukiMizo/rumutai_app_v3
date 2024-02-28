@@ -36,6 +36,8 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
     setState(() {
       _isLoading = true;
     });
+
+    debugPrint("loadedDataForTimeLineScreen");
     var gotData = await FirebaseFirestore.instance.collection("Timeline").get();
     for (var data in gotData.docs) {
       final d = data.data();

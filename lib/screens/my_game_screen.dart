@@ -41,6 +41,7 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
         _isLoading = true;
       });
       _gameDataList = [];
+      debugPrint("loadedMyGameData");
       await FirebaseFirestore.instance.collection('gameData2').where('referee', arrayContains: _targetPerson).get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           _gameDataList.add(doc.data() as Map);

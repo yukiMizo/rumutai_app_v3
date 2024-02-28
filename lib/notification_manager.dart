@@ -53,7 +53,16 @@ class NotificationManager {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
-      flnp.initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
+      flnp.initialize(
+        const InitializationSettings(
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: false,
+          ),
+          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        ),
+      );
       if (notification == null) {
         return;
       }
@@ -99,7 +108,11 @@ class NotificationManager {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation("Asia/Tokyo"));
     //権限設定
-    const DarwinInitializationSettings initSettingsIOS = DarwinInitializationSettings(requestAlertPermission: true, requestBadgePermission: true, requestSoundPermission: false);
+    const DarwinInitializationSettings initSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: false,
+    );
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('notification_icon');
     if (Platform.isAndroid) {
       flnp.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
@@ -117,7 +130,16 @@ class NotificationManager {
   //バックグラウンド通知の処理
   static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
-    flnp.initialize(const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')));
+    flnp.initialize(
+      const InitializationSettings(
+        iOS: DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: false,
+        ),
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+    );
 
     if (notification == null) {
       return;

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,29 +22,33 @@ class SignInDataManager {
 
   //パスワードが変わっていた場合の処理
   static Future<String> checkIfPasswordChanged(WidgetRef ref) async {
-    final isLoggedInRumutaiStaff = ref.read(isLoggedInRumutaiStaffProvider);
-    final isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
+    try {
+      final isLoggedInRumutaiStaff = ref.read(isLoggedInRumutaiStaffProvider);
+      final isLoggedInAdmin = ref.read(isLoggedInAdminProvider);
 
-    if (!(isLoggedInRumutaiStaff || isLoggedInAdmin)) {
-      return ""; //サインインしてない場合チェックする必要なし
-    }
-
-    final passwordData = await FirebaseFirestore.instance.collection("password").doc("passwordDoc").get();
-    if (isLoggedInRumutaiStaff) {
-      final oldRumutaiStaffPassword = await LocalData.readLocalData<String>("rumutaiStaffPassword");
-      if (passwordData["rumutaiStaff"] != oldRumutaiStaffPassword) {
-        signOut(ref);
-        return "ルム対スタッフ用のパスワードが変更されたので、サインアウトしました。";
+      if (!(isLoggedInRumutaiStaff || isLoggedInAdmin)) {
+        return ""; //サインインしてない場合チェックする必要なし
       }
-    }
-    if (isLoggedInAdmin) {
-      final oldAdminPassword = await LocalData.readLocalData<String>("adminPassword");
-      if (passwordData["admin"] != oldAdminPassword) {
-        signOut(ref);
-        return "管理者用のパスワードが変更されたので、サインアウトしました。";
+      debugPrint("loadedPasswordForChangeCheck");
+      final passwordData = await FirebaseFirestore.instance.collection("password").doc("passwordDoc").get();
+      if (isLoggedInRumutaiStaff) {
+        final oldRumutaiStaffPassword = await LocalData.readLocalData<String>("rumutaiStaffPassword");
+        if (passwordData["rumutaiStaff"] != oldRumutaiStaffPassword) {
+          signOut(ref);
+          return "ルム対スタッフ用のパスワードが変更されたので、サインアウトしました。";
+        }
       }
+      if (isLoggedInAdmin) {
+        final oldAdminPassword = await LocalData.readLocalData<String>("adminPassword");
+        if (passwordData["admin"] != oldAdminPassword) {
+          signOut(ref);
+          return "管理者用のパスワードが変更されたので、サインアウトしました。";
+        }
+      }
+      return "";
+    } catch (_) {
+      return "";
     }
-    return "";
   }
 
   static Future signIn(
