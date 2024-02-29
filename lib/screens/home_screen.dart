@@ -7,6 +7,9 @@ import '../themes/app_color.dart';
 import '../providers/rumutai_date_provider.dart';
 import '../providers/picked_person_data_provider.dart';
 import '../providers/sign_in_data_provider.dart';
+import '../providers/notification_number_provider.dart';
+
+import '../widgets/notification_button.dart';
 
 import 'my_game_screen.dart';
 import 'rule_book_screen.dart';
@@ -48,6 +51,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     //日付の情報を設定
     await RumutaiDateManager.setDateData(ref);
+
+    //未読の通知設定数の設定
+    await NotificationNumberManager.setNotificationNumber(ref);
 
     //パスワードの変更をチェック
     final String message = await SignInDataManager.checkIfPasswordChanged(ref);
@@ -244,12 +250,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pushNamed(NotificationsScreen.routeName),
-            icon: const Icon(Icons.notifications),
-          ),
-        ],
+        actions: [NotificationButton()],
         title: const Text("ホーム"),
       ),
       drawer: const MainDrawer(),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rumutai_app/providers/notification_number_provider.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 
 import 'notifications_detail_screen.dart';
@@ -38,22 +39,36 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     setState(() {
       _isLoading = true;
     });
+
     debugPrint("loadedNotificationData");
-    var gotData = await FirebaseFirestore.instance.collection("notification").get();
-    for (var data in gotData.docs) {
-      final d = data.data();
-      final String id = data.id;
-      _notifications.add({
-        "id": id,
-        "timeStamp": d["timeStamp"].toDate(),
-        "content": d["content"],
-        "title": d["title"],
+    await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").get().then((DocumentSnapshot doc) {
+      final Map gotMap = doc.data() as Map;
+      gotMap.forEach((id, map) {
+        _notifications.add({
+          "id": id,
+          "timeStamp": map["timeStamp"].toDate(),
+          "content": map["content"],
+          "title": map["title"],
+        });
       });
-    }
+    });
+
     _notifications.sort((a, b) => b['timeStamp'].compareTo(a['timeStamp']));
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Widget _buildUnreadNotifier(String id) {
+    final isUnread = ref.watch(unreadNotificationIdProvider).contains(id);
+    return isUnread
+        ? Container(
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.accentColor),
+            height: 8,
+            width: 8,
+            margin: const EdgeInsets.only(right: 10),
+          )
+        : const SizedBox(width: 18);
   }
 
   Widget _buildNotificationWidget({
@@ -64,15 +79,19 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     return SizedBox(
       width: double.infinity,
       child: InkWell(
-        onTap: () => Navigator.of(context).pushNamed(NotificationsDetailScreen.routeName, arguments: NotificationDataToPass(data: notificationData, index: index)),
+        onTap: () => Navigator.of(context).pushNamed(
+          NotificationsDetailScreen.routeName,
+          arguments: NotificationDataToPass(data: notificationData, index: index),
+        ),
         child: Hero(
           tag: "notification-tag$index",
           child: Card(
             elevation: 1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.only(left: 8, right: 20, top: 12, bottom: 12),
               child: Row(
                 children: [
+                  _buildUnreadNotifier(notificationData["id"]),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -178,6 +197,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       dialogIsLoading = true;
                     });
                     await FirebaseFirestore.instance.collection("notification").doc(notificationData["id"]).delete();
+                    await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").update({notificationData["id"]: FieldValue.delete()});
                     dialogIsLoading = false;
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(

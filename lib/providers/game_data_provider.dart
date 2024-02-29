@@ -160,7 +160,7 @@ final gameDataForResultProvider = StateNotifierProvider<GameDataForResultNotifie
 final gameDataForScheduleProvider = StateNotifierProvider<GameDataForScheduleNotifier, Map>((ref) => GameDataForScheduleNotifier());
 
 class GameDataManager {
-  final firebase = FirebaseFirestore.instance;
+  static final firebase = FirebaseFirestore.instance;
 
   /* List l = [
     //1b
@@ -386,9 +386,9 @@ class GameDataManager {
     //firestore上のデータ更新
     try {
       if (!setMerge) {
-        await FirebaseFirestore.instance.collection('gameData2').doc(gameId).update(newData);
+        await firebase.collection('gameData2').doc(gameId).update(newData);
       } else {
-        await FirebaseFirestore.instance.collection('gameData2').doc(gameId).set(newData, SetOptions(merge: true));
+        await firebase.collection('gameData2').doc(gameId).set(newData, SetOptions(merge: true));
       }
     } catch (e) {
       return;
@@ -485,7 +485,7 @@ class GameDataManager {
     }
 
     debugPrint("loadedGameDataCategory");
-    await FirebaseFirestore.instance.collection("gameDataToRead").doc(gradeCategory).get().then(
+    await firebase.collection("gameDataToRead").doc(gradeCategory).get().then(
       (DocumentSnapshot doc) {
         ref.read(gameDataForResultProvider.notifier).setData(category: gradeCategory, newData: doc.data() as Map);
       },
@@ -494,7 +494,7 @@ class GameDataManager {
 
   static Future _loadGameDataForSchedule({required String classNumber, required WidgetRef ref}) async {
     debugPrint("loadedGameDataClass");
-    await FirebaseFirestore.instance.collection("classGameDataToRead").doc(classNumber).get().then(
+    await firebase.collection("classGameDataToRead").doc(classNumber).get().then(
       (DocumentSnapshot doc) {
         ref.read(gameDataForScheduleProvider.notifier).setData(classNumber: classNumber, newData: doc.data() as Map);
       },

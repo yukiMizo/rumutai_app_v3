@@ -1,17 +1,23 @@
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
+
+import '../../providers/notification_number_provider.dart';
 import 'package:rumutai_app/screens/notification/notifications_screen.dart';
 
-class NotificationsDetailScreen extends StatelessWidget {
+class NotificationsDetailScreen extends ConsumerWidget {
   static const routeName = "/notification-detail-screen";
 
   const NotificationsDetailScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     NotificationDataToPass gotData = ModalRoute.of(context)!.settings.arguments as NotificationDataToPass;
     final Map data = gotData.data;
     final int index = gotData.index;
+
+    //mark as read
+    NotificationNumberManager.readNotification(ref, data["id"]);
 
     return Scaffold(
       appBar: AppBar(title: const Text("通知詳細")),
