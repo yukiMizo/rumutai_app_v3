@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../themes/app_color.dart';
 
@@ -20,7 +21,6 @@ import 'cheer/pick_team_to_cheer_screen.dart';
 import 'game_result/pick_category_screen.dart';
 import 'staff/dashboard_screen.dart';
 import "staff/timeline_screen.dart";
-import 'notification/notifications_screen.dart';
 import 'omikuji/pick_omikuji_screen.dart';
 import 'schedule/pick_schedule_screen.dart';
 
@@ -61,6 +61,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       scaffoldMessengerOfContext.removeCurrentSnackBar();
       scaffoldMessengerOfContext.showSnackBar(SnackBar(content: Text(message)));
     }
+
+    //通知受信時にproviderを更新
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      NotificationNumberManager.setAllNotificationIdProviderFromFirestore(ref);
+    });
 
     setState(() {
       _isLoading = false;
@@ -250,7 +255,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [NotificationButton()],
+        actions: const [NotificationButton()],
         title: const Text("ホーム"),
       ),
       drawer: const MainDrawer(),

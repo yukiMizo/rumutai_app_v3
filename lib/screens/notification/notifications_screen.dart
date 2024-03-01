@@ -40,10 +40,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       _isLoading = true;
     });
 
+    List<String> notificationIdList = [];
     debugPrint("loadedNotificationData");
     await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").get().then((DocumentSnapshot doc) {
       final Map gotMap = doc.data() as Map;
       gotMap.forEach((id, map) {
+        notificationIdList.add(id);
         _notifications.add({
           "id": id,
           "timeStamp": map["timeStamp"].toDate(),
@@ -52,6 +54,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         });
       });
     });
+    //update provider
+    ref.read(allNotificationIdProvider.notifier).updateAllData(notificationIdList);
 
     _notifications.sort((a, b) => b['timeStamp'].compareTo(a['timeStamp']));
     setState(() {
@@ -196,14 +200,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                     setStateInDialog(() {
                       dialogIsLoading = true;
                     });
-                    await FirebaseFirestore.instance.collection("notification").doc(notificationData["id"]).delete();
-                    await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").update({notificationData["id"]: FieldValue.delete()});
+                    final String notificationId = notificationData["id"];
+                    await FirebaseFirestore.instance.collection("notification").doc(notificationId).delete();
+                    await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").update({notificationId: FieldValue.delete()});
+
+                    //provider 更新
+                    ref.read(allNotificationIdProvider.notifier).removeData(notificationId);
+
                     dialogIsLoading = false;
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('通知を消去しました。'),
-                      ),
+                      const SnackBar(content: Text("通知を消去しました。")),
                     );
                     Navigator.popUntil(
                       context,

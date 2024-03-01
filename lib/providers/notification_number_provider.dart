@@ -9,7 +9,9 @@ class AllNotificationIdNotifier extends StateNotifier<List<String>> {
   AllNotificationIdNotifier() : super([]);
 
   void removeData(String data) {
-    state.remove(data);
+    List<String> tmpList = state;
+    tmpList.remove(data);
+    state = [...tmpList];
   }
 
   void updateAllData(List<String> newData) {
@@ -19,10 +21,6 @@ class AllNotificationIdNotifier extends StateNotifier<List<String>> {
 
 class ReadNotificationIdNotifier extends StateNotifier<List<String>> {
   ReadNotificationIdNotifier() : super([]);
-
-  void removeData(String data) {
-    state.remove(data);
-  }
 
   void addData(String data) {
     if (state.contains(data)) {
@@ -41,7 +39,6 @@ class ReadNotificationIdNotifier extends StateNotifier<List<String>> {
 final unreadNotificationNumberProvider = StateProvider<int>((ref) {
   final List<String> allNotificationId = ref.watch(allNotificationIdProvider);
   final List<String> readNotificationId = ref.watch(readNotificationIdProvider);
-  print("helloddddd");
   int unreadNotificationNumber = 0;
   for (String id in allNotificationId) {
     if (!readNotificationId.contains(id)) {
@@ -68,6 +65,13 @@ final allNotificationIdProvider = StateNotifierProvider<AllNotificationIdNotifie
 class NotificationNumberManager {
   static Future<void> setNotificationNumber(WidgetRef ref) async {
     //set allNotificationListProvider from firestore
+    await setAllNotificationIdProviderFromFirestore(ref);
+
+    //set provider data from local
+    await _setReadNotificationIdProviderFromLocal(ref);
+  }
+
+  static Future<void> setAllNotificationIdProviderFromFirestore(WidgetRef ref) async {
     final List<String> notificationIdList = [];
     debugPrint("loadedNotificationDataForInit");
     await FirebaseFirestore.instance.collection("notificationToRead").doc("notificationToReadDoc").get().then((DocumentSnapshot doc) {
@@ -75,16 +79,6 @@ class NotificationNumberManager {
       gotMap.forEach((id, _) => notificationIdList.add(id));
     });
     ref.read(allNotificationIdProvider.notifier).updateAllData(notificationIdList);
-
-    //set provider data from local
-    await _setReadNotificationIdProviderFromLocal(ref);
-  }
-
-  static Future<void> _setReadNotificationIdProviderFromLocal(ref) async {
-    //set readNotificationIdProvider from local
-    final List<String> emptyList = [];
-    final List<String> dataFromLocal = (await LocalData.readLocalData<List>("readNotification") ?? emptyList);
-    ref.read(readNotificationIdProvider.notifier).updateAllData(dataFromLocal);
   }
 
   static Future<void> readNotification(WidgetRef ref, String id) async {
@@ -95,5 +89,23 @@ class NotificationNumberManager {
 
     //set provider data from local
     _setReadNotificationIdProviderFromLocal(ref);
+  }
+
+  static Future<void> _setReadNotificationIdProviderFromLocal(ref) async {
+    //set readNotificationIdProvider from local
+    final List<String> emptyList = [];
+    final List<String> dataFromLocal = (await LocalData.readLocalData<List>("readNotification") ?? emptyList);
+
+    //firestoreから消去されたメッセージはローカルからも消去
+    final List<String> allNotificationId = ref.read(allNotificationIdProvider);
+    List<String> newDataFromLocal = [];
+    for (String data in dataFromLocal) {
+      if (allNotificationId.contains(data)) {
+        newDataFromLocal.add(data);
+      }
+    }
+    LocalData.saveLocalData<List>("readNotification", newDataFromLocal);
+
+    ref.read(readNotificationIdProvider.notifier).updateAllData(newDataFromLocal);
   }
 }

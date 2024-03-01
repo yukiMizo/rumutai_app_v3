@@ -49,10 +49,6 @@ class MainDrawer extends ConsumerWidget {
           title: const Text("情報", style: TextStyle(fontSize: 20)),
           onTap: () => Navigator.of(context).pushNamed(InfoScreen.routeName),
         ),
-        /*ListTile(
-          title: const Text("情報公開", style: TextStyle(fontSize: 20)),
-          onTap: () => Navigator.of(context).pushNamed(PublishDriveScreen.routeName),
-        ),*/
         Divider(color: AppColors.themeColor.shade100),
         ListTile(
           leading: Icon(isSignedIn ? Icons.logout_outlined : Icons.login_outlined),

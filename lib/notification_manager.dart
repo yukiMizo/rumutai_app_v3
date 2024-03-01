@@ -10,10 +10,10 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'local_data.dart';
 
-import '../providers/game_data_provider.dart';
-import '../providers/rumutai_date_provider.dart';
+import 'providers/game_data_provider.dart';
+import 'providers/rumutai_date_provider.dart';
 
-import '../screens/detail_screen.dart';
+import 'screens/detail_screen.dart';
 
 //通知関係は全てここで扱う
 class NotificationManager {
