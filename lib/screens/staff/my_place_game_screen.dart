@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../providers/init_data_provider.dart';
 
 import '../../widgets/my_game_widget.dart';
 import '../../widgets/main_pop_up_menu.dart';
 
-class MyPlaceGameScreen extends StatefulWidget {
+class MyPlaceGameScreen extends ConsumerStatefulWidget {
   static const routeName = "/my-place_game-screen";
 
   const MyPlaceGameScreen({super.key});
 
   @override
-  State<MyPlaceGameScreen> createState() => _MyPlaceGameScreenState();
+  ConsumerState<MyPlaceGameScreen> createState() => _MyPlaceGameScreenState();
 }
 
-class _MyPlaceGameScreenState extends State<MyPlaceGameScreen> {
+class _MyPlaceGameScreenState extends ConsumerState<MyPlaceGameScreen> {
   bool _isInit = true;
   bool _isLoading = false;
 
   List<Map> _gameDataList = [];
 
   String? _targetPlace;
-
-  //final TextEditingController _targetPlaceController = TextEditingController();
 
   Future _loadData() async {
     if ((_isInit && _targetPlace != null)) {
@@ -31,8 +32,10 @@ class _MyPlaceGameScreenState extends State<MyPlaceGameScreen> {
       });
       _gameDataList = [];
 
+      final String collection = ref.read(semesterProvider) == Semester.zenki ? "gameDataZenki" : "gameDataKouki";
+
       debugPrint("loadedDataForMyPlaceGameScreen");
-      await FirebaseFirestore.instance.collection('gameData2').where('place', isEqualTo: _targetPlace).where("gameStatus", isNotEqualTo: "after").get().then((QuerySnapshot querySnapshot) {
+      await FirebaseFirestore.instance.collection(collection).where('place', isEqualTo: _targetPlace).where("gameStatus", isNotEqualTo: "after").get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           _gameDataList.add(doc.data() as Map);
         }

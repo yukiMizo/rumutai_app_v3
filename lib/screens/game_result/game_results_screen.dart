@@ -7,6 +7,7 @@ import '../../widgets/tournament/tournament_widget.dart';
 
 import '../../providers/game_data_provider.dart';
 import '../../widgets/main_pop_up_menu.dart';
+import '../../utilities/label_utilities.dart';
 
 class GameResultsScreen extends ConsumerStatefulWidget {
   static const routeName = "/game-info-detail-screen";
@@ -39,27 +40,28 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
     }
   }
 
-//not flexible
-  String _title(GameDataCategory gameInfoDetail) {
-    switch (gameInfoDetail) {
+  String _title(GameDataCategory gameDataCategory) {
+    final String sport = LabelUtilities.gameDataCategoryToSportLabel(ref, gameDataCategory);
+
+    switch (gameDataCategory) {
       case GameDataCategory.d1:
-        return "1年　男子　フットサル";
+        return "1年 男子 $sport";
       case GameDataCategory.j1:
-        return "1年　女子　バレー";
+        return "1年 女子 $sport";
       case GameDataCategory.k1:
-        return "1年　混合　ドッジボール";
+        return "1年 混合 $sport";
       case GameDataCategory.d2:
-        return "2年　男子　フットサル";
+        return "2年 男子 $sport";
       case GameDataCategory.j2:
-        return "2年　女子　バスケット";
+        return "2年 女子 $sport";
       case GameDataCategory.k2:
-        return "2年　混合　バレー";
+        return "2年 混合 $sport";
       case GameDataCategory.d3:
-        return "3年　男子　フットサル";
+        return "3年 男子 $sport";
       case GameDataCategory.j3:
-        return "3年　女子　ドッジビー";
+        return "3年 女子 $sport";
       case GameDataCategory.k3:
-        return "3年　混合　バレー";
+        return "3年 混合 $sport";
     }
   }
 
@@ -69,18 +71,19 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
 
     ref.watch(gameDataForResultProvider); //データの変更を監視
     _loadData(categoryToGet as GameDataCategory);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(_title(categoryToGet)),
           actions: const [MainPopUpMenu()],
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorColor: AppColors.lightText1,
-            unselectedLabelColor: AppColors.lightText1,
+            unselectedLabelColor: AppColors.lightText1.withOpacity(0.5),
             labelColor: AppColors.lightText1,
-            tabs: [
+            tabs: const [
               Tab(text: "リーグ"),
               Tab(text: "トーナメント"),
             ],
@@ -129,7 +132,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
                                 title: "決勝",
                                 tournamentData: _gameDataForThisCategory["f"],
                               ),
-                              if (categoryToGet == GameDataCategory.d2 || categoryToGet == GameDataCategory.d3)
+                              if (_gameDataForThisCategory["l"] != null)
                                 Column(
                                   children: [
                                     const SizedBox(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'tournament_block.dart';
 
-import '../../utilities/tournament_type_utilities.dart';
+import '../../providers/init_data_provider.dart';
 
-class TournamentWidget extends StatelessWidget {
+class TournamentWidget extends ConsumerWidget {
   final String _title;
   final Map _tournamentData;
   const TournamentWidget({super.key, required Map<dynamic, dynamic> tournamentData, required String title})
@@ -289,8 +290,8 @@ class TournamentWidget extends StatelessWidget {
   Widget _tournamentTypeFive(Map tournamentDataMap, Map teamMap) {
     return Column(
       children: [
-        Row(
-          children: const [
+        const Row(
+          children: [
             Text(
               "５位",
               style: TextStyle(
@@ -506,8 +507,8 @@ class TournamentWidget extends StatelessWidget {
   Widget _tournamentTypeSeven(Map tournamentDataMap, Map teamMap) {
     return Column(
       children: [
-        Row(
-          children: const [
+        const Row(
+          children: [
             SizedBox(width: 40),
             Text(
               "５位",
@@ -619,10 +620,12 @@ class TournamentWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final TournamentType tournamentType = TournamentTypeUtilities.tournamentType(_tournamentData.values.first["gameId"]);
+    final String id = _tournamentData.values.first["gameId"].substring(0, 4);
+    final TournamentType tournamentType = ref.watch(tournamentTypeMapProvider)[id] ?? TournamentType.four;
+
     final Map tournamentDataMap = _tournamentDataMap(_tournamentData);
     final Map teamMap = _teamMap(_tournamentData, tournamentType);
 

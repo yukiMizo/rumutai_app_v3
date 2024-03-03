@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../themes/app_color.dart';
 
-import '../providers/rumutai_date_provider.dart';
+import '../providers/init_data_provider.dart';
 import '../providers/picked_person_data_provider.dart';
 import '../providers/sign_in_data_provider.dart';
 import '../providers/notification_number_provider.dart';
@@ -25,6 +25,8 @@ import 'omikuji/pick_omikuji_screen.dart';
 import 'schedule/pick_schedule_screen.dart';
 
 import '../widgets/main_drawer.dart';
+
+import '../set_game_data.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static const routeName = "/home-screen";
@@ -50,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await SignInDataManager.setSignInDataFromLocal(ref);
 
     //日付の情報を設定
-    await RumutaiDateManager.setDateData(ref);
+    await InitDataManager.setData(ref);
 
     //未読の通知設定数の設定
     await NotificationNumberManager.setNotificationNumber(ref);
@@ -66,6 +68,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       NotificationNumberManager.setAllNotificationIdProviderFromFirestore(ref);
     });
+
+    SetGameData.setData();
 
     setState(() {
       _isLoading = false;
@@ -233,7 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  String _rumutaiDateString() {
+  String _getRumutaiDateString() {
     final String year = ref.watch(day1dateProvider).year.toString();
     final String month = ref.watch(day1dateProvider).month.toString();
     final String day1 = ref.watch(day1dateProvider).day.toString();
@@ -270,7 +274,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Column(
                       children: [
                         Text(
-                          "HR対抗 ",
+                          "HR対抗",
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
@@ -279,7 +283,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          _rumutaiDateString(),
+                          _getRumutaiDateString(),
                           style: TextStyle(color: AppColors.themeColor.shade800),
                         ),
                         const SizedBox(height: 40),

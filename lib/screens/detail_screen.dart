@@ -6,8 +6,9 @@ import 'package:rumutai_app/themes/app_color.dart';
 import 'admin/admin_edit_screen.dart';
 import 'rumutai_staff_screen.dart';
 import '../providers/game_data_provider.dart';
+import '../providers/init_data_provider.dart';
 
-import '../utilities/lable_utilities.dart';
+import '../utilities/label_utilities.dart';
 
 import '../widgets/main_pop_up_menu.dart';
 
@@ -26,11 +27,13 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   bool _isLoading = false;
 
   Map _thisGameData = {};
+  late SportsType _thisGameSport;
 
   Column _refereesAsColumn() {
     List<Widget> refereeList = [];
     int count = 0;
-    List refereeLableList = LableUtilities.refereeLableList(_thisGameData["sport"]);
+    List refereeLabelList = LabelUtilities.refereeLabelList(_thisGameSport);
+
     _thisGameData["referee"].forEach((referee) {
       if (referee == "") {
         return;
@@ -47,7 +50,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
             ),
           ),
           Text(
-            " ( ${refereeLableList[count]} )",
+            " ( ${refereeLabelList[count]} )",
             maxLines: 1,
             style: TextStyle(
               fontSize: 15,
@@ -64,7 +67,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
-  Widget _scoreDetailPartWidget({required String index, required String lable, bool isReverse = false}) {
+  Widget _scoreDetailPartWidget({required String index, required String label, bool isReverse = false}) {
     return SizedBox(
       width: 300,
       child: Stack(
@@ -73,7 +76,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
           SizedBox(
             width: 100,
             child: Text(
-              "$lable：",
+              "$label：",
               style: TextStyle(
                 color: Colors.grey.shade700,
                 fontSize: 13,
@@ -122,25 +125,25 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   }
 
   Widget _scoreDetailWidget({bool isReverse = false}) {
-    List<String> scoreDetailLableList = LableUtilities.scoreDetailLableList(_thisGameData["sport"]);
+    List<String> scoreDetailLabelList = LabelUtilities.scoreDetailLabelList(_thisGameSport);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _scoreDetailPartWidget(
           index: "0",
           isReverse: isReverse,
-          lable: scoreDetailLableList[0],
+          label: scoreDetailLabelList[0],
         ),
         _scoreDetailPartWidget(
           index: "1",
           isReverse: isReverse,
-          lable: scoreDetailLableList[1],
+          label: scoreDetailLabelList[1],
         ),
-        if (_thisGameData["sport"] == "volleyball" || _thisGameData["sport"] == "basketball")
+        if (_thisGameSport == SportsType.volleyball || _thisGameSport == SportsType.basketball)
           _scoreDetailPartWidget(
             index: "2",
             isReverse: isReverse,
-            lable: scoreDetailLableList[2],
+            label: scoreDetailLabelList[2],
           ),
       ],
     );
@@ -169,29 +172,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     return null;
   }
 
-  String _sport(String sport) {
-    if (sport == "futsal") {
-      return "フットサル";
-    } else if (sport == "volleyball") {
-      return "バレーボール";
-    } else if (sport == "basketball") {
-      return "バスケットボール";
-    } else if (sport == "dodgebee") {
-      return "ドッチビー";
-    } else if (sport == "dodgeball") {
-      return "ドッジボール";
-    }
-    return "";
-  }
-
-  Widget _lable(lable) {
+  Widget _label(label) {
     return SizedBox(
       width: 100,
       child: Row(
         children: [
           Expanded(
             child: Text(
-              lable,
+              label,
               textAlign: TextAlign.end,
               style: TextStyle(
                 fontSize: 15,
@@ -212,6 +200,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
       });
       final Map gotGameData = await GameDataManager.getGameDataByCategory(category: _categoryToGet(gotData.gameDataId)!, ref: ref);
       _thisGameData = gotGameData[gotData.gameDataId[3]][gotData.gameDataId];
+      _thisGameSport = SportsType.values.byName(_thisGameData["sport"]);
       setState(() {
         _isLoading = false;
       });
@@ -226,6 +215,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
       });
       final Map gotGameData = await GameDataManager.getGameDataByClassNumber(ref: ref, classNumber: gotData.classNumber!);
       _thisGameData = gotGameData[gotData.gameDataId[1]][gotData.gameDataId];
+      _thisGameSport = SportsType.values.byName(_thisGameData["sport"]);
       setState(() {
         _isLoading = false;
       });
@@ -272,14 +262,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     icon: const Icon(Icons.sports),
                     label: const Text("試合"),
                   ),
-                if (isLoggedInAdmin) const SizedBox(height: 10),
+                if (isLoggedInAdmin) const SizedBox(height: 5),
                 if (isLoggedInAdmin)
                   FloatingActionButton.extended(
                     heroTag: "hero2",
                     backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassAdmin(thisGameData: _thisGameData, isReverse: isReverse)),
                     icon: const Icon(Icons.edit),
-                    label: const Text("編集"),
+                    label: const Text("試合"),
                   ),
               ],
             ),
@@ -414,9 +404,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
                                                 Text(
-                                                  LableUtilities.extraTimeLable(
-                                                    _thisGameData["sport"],
-                                                  ),
+                                                  LabelUtilities.extraTimeLabel(_thisGameSport),
                                                   style: const TextStyle(
                                                     fontSize: 18,
                                                     height: 1.0,
@@ -472,12 +460,12 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                _lable("日時："),
+                                _label("日時："),
                                 Text(
                                   "${_thisGameData["startTime"]["date"]}",
-                                  style: const TextStyle(fontSize: 25, height: 1.0),
+                                  style: const TextStyle(fontSize: 25, height: 1),
                                 ),
-                                const Text("日目　", style: TextStyle(fontSize: 16)),
+                                const Text("日目　", style: TextStyle(fontSize: 16, height: 1.25)),
                                 Text(
                                   "${_thisGameData["startTime"]["hour"]}:${_thisGameData["startTime"]["minute"]}〜",
                                   style: const TextStyle(fontSize: 25, height: 1.0),
@@ -487,22 +475,22 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                _lable("場所："),
+                                _label("場所："),
                                 Text("${_thisGameData["place"]}", style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                _lable("競技："),
-                                Text(_sport(_thisGameData["sport"]), style: const TextStyle(fontSize: 20)),
+                                _label("競技："),
+                                Text(_thisGameSport.asLongJapanse(), style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                             const SizedBox(height: 35),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _lable("審判："),
+                                _label("審判："),
                                 _refereesAsColumn(),
                               ],
                             ),

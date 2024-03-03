@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:rumutai_app/themes/app_color.dart';
-import 'package:rumutai_app/utilities/lable_utilities.dart';
+import 'package:rumutai_app/utilities/label_utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../utilities/tournament_type_utilities.dart';
+import '../providers/init_data_provider.dart';
 
 import '../providers/game_data_provider.dart';
 
@@ -26,6 +26,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   bool _isInit = true;
   bool _isReverse = false;
   late Map _thisGameData;
+  late SportsType _thisGameSportType;
   late String _gameDataId;
   late bool _isTournament;
   late Map<String, dynamic> data;
@@ -68,56 +69,49 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     );
   }
 
-//not flexible
-  List<String> get _scoreDetailLableList {
-    if (_thisGameData["sport"] == "futsal" || _thisGameData["sport"] == "dodgebee" || _thisGameData["sport"] == "dodgeball") {
-      return ["前半", "後半"];
-    } else if (_thisGameData["sport"] == "volleyball") {
-      if ((_scoreList[0] == "1" && _scoreList[1] == "1") || (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) == 3)) {
-        return ["セット１", "セット２", "セット３"];
-      }
-      _scoreDetail5Controller.text = "0";
-      _scoreDetail6Controller.text = "0";
-      return ["セット１", "セット２"];
-    } else if (_thisGameData["sport"] == "basketball") {
-      return ["ピリオド１", "ピリオド２", "ピリオド３"];
-    } /*else if (_gameData["gameId"][1] == "m") {
-      if ((_scoreList[0] == "1" && _scoreList[1] == "1") ||
-          (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) == 3)) {
-        return ["セット１", "セット２", "セット３"];
-      }
-      _scoreDetail5Controller.text = "0";
-      _scoreDetail6Controller.text = "0";
-      return ["セット１", "セット２"];
-    } else if (_gameData["gameId"][0] == "1") {
-      return ["ピリオド１", "ピリオド２", "ピリオド３"];
-    } else if (_gameData["gameId"][0] == "2") {
-      return ["前半", "後半"];
-    }*/
-    return [];
+  List<String> get _scoreDetailLabelList {
+    switch (_thisGameSportType) {
+      case SportsType.futsal:
+        return ["前半", "後半"];
+      case SportsType.basketball:
+        return ["ピリオド１", "ピリオド２", "ピリオド３"];
+      case SportsType.volleyball:
+        if ((_scoreList[0] == "1" && _scoreList[1] == "1") || (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) == 3)) {
+          return ["セット１", "セット２", "セット３"];
+        }
+        _scoreDetail5Controller.text = "0";
+        _scoreDetail6Controller.text = "0";
+        return ["セット１", "セット２"];
+      case SportsType.dodgeball:
+        return ["前半", "後半"];
+      case SportsType.dodgebee:
+        return ["前半", "後半"];
+    }
   }
 
   Column _scoreInputWidget() {
     List<Widget> widgetList = [];
     int count = 1;
-    for (var lable in _scoreDetailLableList) {
+    for (var label in _scoreDetailLabelList) {
       widgetList.add(
         Stack(
           alignment: const Alignment(-1, 0),
           children: [
-            _lable("$lable："),
+            _label("$label："),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(width: 5),
                 if (count == 1) _textField(controller: _isReverse ? _scoreDetail2Controller : _scoreDetail1Controller),
                 if (count == 2) _textField(controller: _isReverse ? _scoreDetail4Controller : _scoreDetail3Controller),
                 if (count == 3) _textField(controller: _isReverse ? _scoreDetail6Controller : _scoreDetail5Controller),
-                const SizedBox(width: 20),
+                const SizedBox(width: 15),
                 const Text("-", style: TextStyle(fontSize: 30)),
-                const SizedBox(width: 20),
+                const SizedBox(width: 15),
                 if (count == 1) _textField(controller: _isReverse ? _scoreDetail1Controller : _scoreDetail2Controller),
                 if (count == 2) _textField(controller: _isReverse ? _scoreDetail3Controller : _scoreDetail4Controller),
                 if (count == 3) _textField(controller: _isReverse ? _scoreDetail5Controller : _scoreDetail6Controller),
+                const SizedBox(width: 5),
               ],
             ),
           ],
@@ -131,7 +125,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       Stack(
         alignment: const Alignment(-1, 0),
         children: [
-          if (_thisGameData["sport"] == "volleyball") _lable("セット数：") else _lable("点数："),
+          if (_thisGameSportType == SportsType.volleyball) _label("セット数：") else _label("点数："),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -168,7 +162,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   List<String> get _scoreList {
     List<String> scoreList = [];
 
-    if (_thisGameData["sport"] == "volleyball") {
+    if (_thisGameSportType == SportsType.volleyball) {
       Map winCount = {"0": 0, "1": 0};
       if (_strToInt(_scoreDetail1Controller.text) > _strToInt(_scoreDetail2Controller.text)) {
         winCount["0"] += 1;
@@ -230,7 +224,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   Widget _scoreDetailPartWidget({
     required Map scoreData,
     required String index,
-    required String lable,
+    required String label,
   }) {
     return SizedBox(
       width: 300,
@@ -240,7 +234,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
           SizedBox(
             width: 80,
             child: Text(
-              "$lable：",
+              "$label：",
               style: TextStyle(
                 color: Colors.grey.shade700,
                 fontSize: 13,
@@ -289,7 +283,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   }
 
   Widget _scoreDetailWidget(Map scoreData) {
-    List<String> scoreDetailLableList = _scoreDetailLableList;
+    List<String> scoreDetailLabelList = _scoreDetailLabelList;
     return Column(
       children: [
         Row(
@@ -347,18 +341,18 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
         _scoreDetailPartWidget(
           scoreData: scoreData,
           index: "0",
-          lable: scoreDetailLableList[0],
+          label: scoreDetailLabelList[0],
         ),
         _scoreDetailPartWidget(
           scoreData: scoreData,
           index: "1",
-          lable: scoreDetailLableList[1],
+          label: scoreDetailLabelList[1],
         ),
-        if ((_thisGameData["sport"] == "volleyball" || _thisGameData["sport"] == "basketball") && scoreDetailLableList.length == 3)
+        if ((_thisGameSportType == SportsType.volleyball || _thisGameSportType == SportsType.basketball) && scoreDetailLabelList.length == 3)
           _scoreDetailPartWidget(
             scoreData: scoreData,
             index: "2",
-            lable: scoreDetailLableList[2],
+            label: scoreDetailLabelList[2],
           ),
       ],
     );
@@ -442,9 +436,9 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     return dataToReturn;
   }
 
-  Widget _lable(text) {
+  Widget _label(text) {
     return SizedBox(
-      width: 100,
+      width: 110,
       child: Row(
         children: [
           Expanded(
@@ -464,14 +458,10 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     );
   }
 
-  Widget _extraTimeInputWidget({
-    required String team1,
-    required String team2,
-    required String sport,
-  }) {
+  Widget _extraTimeInputWidget({required String team1, required String team2}) {
     return Row(
       children: [
-        _lable(LableUtilities.extraTimeLable(sport)),
+        _label(LabelUtilities.extraTimeLabel(_thisGameSportType)),
         SizedBox(
           width: 150,
           child: DropdownButton(
@@ -503,12 +493,12 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     );
   }
 
-  Widget _extraTimeWidget(String sport) {
+  Widget _extraTimeWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          LableUtilities.extraTimeLable(sport),
+          LabelUtilities.extraTimeLabel(_thisGameSportType),
           style: TextStyle(
             color: Colors.grey.shade700,
             fontSize: 18,
@@ -525,7 +515,8 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
   Future _updateTournament({
     required String gameId,
   }) async {
-    final TournamentType tournamentType = TournamentTypeUtilities.tournamentType(gameId);
+    final String id = gameId.substring(0, 4);
+    final TournamentType tournamentType = ref.watch(tournamentTypeMapProvider)[id] ?? TournamentType.four;
     final Map<String, Map<String, String>> dataToUpdate = _dataToUpdateTournament(
       gameData: _thisGameData,
       tournamentType: tournamentType,
@@ -560,7 +551,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       return false;
     }
     //バレーの場合
-    if (_thisGameData["sport"] == "volleyball") {
+    if (_thisGameSportType == SportsType.volleyball) {
       //フルセットでない時、勝敗がついていない場合false
       if (int.parse(_scoreList[0]) + int.parse(_scoreList[1]) < 2) {
         return false;
@@ -730,7 +721,13 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                             });
 
                             data = {"title": "${_thisGameData["place"]}) ${dateTime.hour.toString()}時${dateTime.minute.toString()}分 ${_gameDataId.toUpperCase()} 開始", "timeStamp": DateTime.now()};
-                            await GameDataManager.updateData(ref: ref, gameId: _gameDataId, newData: {"gameStatus": "now"}, teams: _thisGameData["team"]);
+
+                            await GameDataManager.updateData(
+                              ref: ref,
+                              gameId: _gameDataId,
+                              newData: {"gameStatus": "now"},
+                              teams: _thisGameData["team"],
+                            );
 
                             await FirebaseFirestore.instance.collection('Timeline').add(data);
 
@@ -801,7 +798,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                         },
                                       }),
                                       const SizedBox(height: 10),
-                                      if (_selectedExtraTime != "") _extraTimeWidget(_thisGameData["sport"]),
+                                      if (_selectedExtraTime != "") _extraTimeWidget(),
                                       const Divider(),
                                       const SizedBox(height: 10),
                                       const Text("試合を終了します。"),
@@ -937,8 +934,9 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     if (gotData.classNumber == null) {
       _thisGameData = ref.watch(gameDataForResultProvider)[gotData.gameDataId.substring(0, 2)][gotData.gameDataId[3]][gotData.gameDataId];
     } else {
-      _thisGameData = ref.watch(gameDataForScheduleProvider)[gotData.gameDataId[1]][gotData.gameDataId];
+      _thisGameData = ref.watch(gameDataForScheduleProvider)[gotData.classNumber][gotData.gameDataId[1]][gotData.gameDataId];
     }
+    _thisGameSportType = SportsType.values.byName(_thisGameData["sport"]);
     _gameDataId = _thisGameData["gameId"];
     _isTournament = _gameDataId.contains("f") || _gameDataId.contains("l");
     _isReverse = gotData.isReverse;
@@ -977,12 +975,8 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                   const SizedBox(height: 30),
                   if (_thisGameData["gameStatus"] == "now") _scoreInputWidget(),
                   const SizedBox(height: 30),
-                  if (_thisGameData["gameStatus"] == "now" && _thisGameData["sport"] != "volleyball" && _isTournament)
-                    _extraTimeInputWidget(
-                      team1: _thisGameData["team"]["0"],
-                      team2: _thisGameData["team"]["1"],
-                      sport: _thisGameData["sport"],
-                    ),
+                  if (_thisGameData["gameStatus"] == "now" && _thisGameSportType != SportsType.volleyball && _isTournament)
+                    _extraTimeInputWidget(team1: _thisGameData["team"]["0"], team2: _thisGameData["team"]["1"]),
                 ],
               ),
             ]),

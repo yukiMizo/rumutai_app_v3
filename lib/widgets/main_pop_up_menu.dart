@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rumutai_app/screens/drawer/info_screen.dart';
 
 import '../themes/app_color.dart';
 import '../screens/drawer/map_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/drawer/info_screen.dart';
 
 class MainPopUpMenu extends StatelessWidget {
   final String? place;

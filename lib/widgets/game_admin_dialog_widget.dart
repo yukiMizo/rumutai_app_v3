@@ -1,33 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:rumutai_app/providers/init_data_provider.dart';
 
-import '../utilities/lable_utilities.dart';
+import '../utilities/label_utilities.dart';
 
 class GameAdminDialogWidget extends StatelessWidget {
-  final Map _gameData;
+  final Map _thisGameData;
   final bool _isReverse;
   final List<String> _dartyList;
-  const GameAdminDialogWidget({super.key, required Map<dynamic, dynamic> gameData, List<String> dartyList = const [], bool isReverse = false})
-      : _dartyList = dartyList,
+  final SportsType _thisGameSportType;
+  const GameAdminDialogWidget({
+    super.key,
+    required Map<dynamic, dynamic> gameData,
+    required SportsType sportType,
+    List<String> dartyList = const [],
+    bool isReverse = false,
+  })  : _dartyList = dartyList,
         _isReverse = isReverse,
-        _gameData = gameData;
+        _thisGameData = gameData,
+        _thisGameSportType = sportType;
 
   String get _gameStatus {
     late String gameStatus;
-    if (_gameData["gameStatus"] == "before") {
+    if (_thisGameData["gameStatus"] == "before") {
       gameStatus = "試合前";
-    } else if (_gameData["gameStatus"] == "now") {
+    } else if (_thisGameData["gameStatus"] == "now") {
       gameStatus = "試合中";
-    } else if (_gameData["gameStatus"] == "after") {
+    } else if (_thisGameData["gameStatus"] == "after") {
       gameStatus = "試合終了";
     }
     return gameStatus;
   }
 
   String get _extraTime {
-    if (_gameData["extraTime"] == "") {
+    if (_thisGameData["extraTime"] == "") {
       return "なし";
     } else {
-      return "${_gameData["extraTime"]} 勝利";
+      return "${_thisGameData["extraTime"]} 勝利";
     }
   }
 
@@ -38,14 +46,14 @@ class GameAdminDialogWidget extends StatelessWidget {
     return Row(
       children: [
         Text(
-          _gameData["scoreDetail"][index.toString()][isReverse ? 1 : 0].toString(),
+          _thisGameData["scoreDetail"][index.toString()][isReverse ? 1 : 0].toString(),
           style: _dartyList.contains("scoreDetail${isReverse ? secondIndexForDirtyList : firstIndexForDirtyList}") ? const TextStyle(color: Colors.red) : null,
         ),
         const SizedBox(width: 10),
         const Text("-"),
         const SizedBox(width: 10),
         Text(
-          _gameData["scoreDetail"][index.toString()][isReverse ? 0 : 1].toString(),
+          _thisGameData["scoreDetail"][index.toString()][isReverse ? 0 : 1].toString(),
           style: _dartyList.contains("scoreDetail${isReverse ? firstIndexForDirtyList : secondIndexForDirtyList}") ? const TextStyle(color: Colors.red) : null,
         ),
       ],
@@ -55,7 +63,7 @@ class GameAdminDialogWidget extends StatelessWidget {
   List<Widget> get _scoreDetailWidgetList {
     List<Widget> scoreDetailList = [];
     int index = 0;
-    for (var lable in LableUtilities.scoreDetailLableList(_gameData["gameId"])) {
+    for (var label in LabelUtilities.scoreDetailLabelList(_thisGameSportType)) {
       // index = 0〜2
       if (index >= 3) {
         break;
@@ -63,7 +71,7 @@ class GameAdminDialogWidget extends StatelessWidget {
       scoreDetailList.add(
         Row(
           children: [
-            _text("$lable："),
+            _text("$label："),
             _widgetForScoreDetailWidgetList(index: index, isReverse: _isReverse),
           ],
         ),
@@ -108,12 +116,12 @@ class GameAdminDialogWidget extends StatelessWidget {
                   children: [
                     _text("チーム："),
                     Text(
-                      _gameData["team"][_isReverse ? "1" : "0"],
+                      _thisGameData["team"][_isReverse ? "1" : "0"],
                       style: _dartyList.contains("team${_isReverse ? 2 : 1}") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const Text(" vs "),
                     Text(
-                      _gameData["team"][_isReverse ? "0" : "1"],
+                      _thisGameData["team"][_isReverse ? "0" : "1"],
                       style: _dartyList.contains("team${_isReverse ? 1 : 2}") ? const TextStyle(color: Colors.red) : null,
                     ),
                   ],
@@ -123,16 +131,16 @@ class GameAdminDialogWidget extends StatelessWidget {
                   children: [
                     _text("開始時間："),
                     Text(
-                      "${_gameData["startTime"]["date"]}日目　",
+                      "${_thisGameData["startTime"]["date"]}日目　",
                       style: _dartyList.contains("timeDate") ? const TextStyle(color: Colors.red) : null,
                     ),
                     Text(
-                      _gameData["startTime"]["hour"],
+                      _thisGameData["startTime"]["hour"],
                       style: _dartyList.contains("timeHour") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const Text(":"),
                     Text(
-                      _gameData["startTime"]["minute"],
+                      _thisGameData["startTime"]["minute"],
                       style: _dartyList.contains("timeMinute") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const Text("〜"),
@@ -142,7 +150,7 @@ class GameAdminDialogWidget extends StatelessWidget {
                   children: [
                     _text("場所："),
                     Text(
-                      _gameData["place"],
+                      _thisGameData["place"],
                       style: _dartyList.contains("place") ? const TextStyle(color: Colors.red) : null,
                     ),
                   ],
@@ -152,23 +160,23 @@ class GameAdminDialogWidget extends StatelessWidget {
                   children: [
                     _text("審判："),
                     Text(
-                      _gameData["referee"][0],
+                      _thisGameData["referee"][0],
                       style: _dartyList.contains("referee1") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const Text("、"),
                     Text(
-                      _gameData["referee"][1],
+                      _thisGameData["referee"][1],
                       style: _dartyList.contains("referee2") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const Text("、"),
                     Text(
-                      _gameData["referee"][2],
+                      _thisGameData["referee"][2],
                       style: _dartyList.contains("referee3") ? const TextStyle(color: Colors.red) : null,
                     ),
-                    if ((_gameData["referee"].length >= 4 && _gameData["referee"][3] != "")) const Text("、"),
-                    if ((_gameData["referee"].length >= 4 && _gameData["referee"][3] != ""))
+                    if ((_thisGameData["referee"].length >= 4 && _thisGameData["referee"][3] != "")) const Text("、"),
+                    if ((_thisGameData["referee"].length >= 4 && _thisGameData["referee"][3] != ""))
                       Text(
-                        _gameData["referee"][3],
+                        _thisGameData["referee"][3],
                         style: _dartyList.contains("referee4") ? const TextStyle(color: Colors.red) : null,
                       ),
                   ],
@@ -184,7 +192,7 @@ class GameAdminDialogWidget extends StatelessWidget {
                   ],
                 ),
                 Row(children: [
-                  _text(LableUtilities.extraTimeLable(_gameData["gameId"])),
+                  _text(LabelUtilities.extraTimeLabel(_thisGameSportType)),
                   Text(
                     _extraTime,
                     style: _dartyList.contains("extraTime") ? const TextStyle(color: Colors.red) : null,
@@ -194,14 +202,14 @@ class GameAdminDialogWidget extends StatelessWidget {
                   children: [
                     _text("点数："),
                     Text(
-                      _gameData["score"][_isReverse ? 1 : 0].toString(),
+                      _thisGameData["score"][_isReverse ? 1 : 0].toString(),
                       style: _dartyList.contains("score${_isReverse ? 2 : 1}") ? const TextStyle(color: Colors.red) : null,
                     ),
                     const SizedBox(width: 10),
                     const Text("-"),
                     const SizedBox(width: 10),
                     Text(
-                      _gameData["score"][_isReverse ? 0 : 1].toString(),
+                      _thisGameData["score"][_isReverse ? 0 : 1].toString(),
                       style: _dartyList.contains("score${_isReverse ? 1 : 2}") ? const TextStyle(color: Colors.red) : null,
                     ),
                   ],

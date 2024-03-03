@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rumutai_app/themes/app_color.dart';
 
 import 'pick_omikuji_screen.dart';
 
@@ -43,14 +42,14 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
 
   bool _isInit = true;
 
-  Widget _lable(lable) {
+  Widget _label(label) {
     return SizedBox(
       width: 120,
       child: Row(
         children: [
           Expanded(
             child: Text(
-              lable,
+              label,
               textAlign: TextAlign.end,
               style: TextStyle(
                 color: Colors.brown.shade900,
@@ -72,7 +71,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
         elevation: 1,
         child: Row(
           children: [
-            _lable("運勢："),
+            _label("運勢："),
             SizedBox(
               width: 100,
               child: DropdownButton(
@@ -212,7 +211,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
     );
   }
 
-  String _categoryLable(OmikujiCategory category) {
+  String _categoryLabel(OmikujiCategory category) {
     switch (category) {
       case OmikujiCategory.fortune:
         return "";
@@ -285,7 +284,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
               },
         child: FittedBox(
           child: Text(
-            _categoryLable(category),
+            _categoryLabel(category),
             style: TextStyle(color: Colors.brown.shade900),
           ),
         ),
@@ -469,7 +468,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
 
   Widget _textForDialog({required OmikujiCategory category}) {
     late String text;
-    final String title = _categoryLable(category);
+    final String title = _categoryLabel(category);
     switch (category) {
       case OmikujiCategory.fortune:
         return const SizedBox();
@@ -652,7 +651,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
                       continue;
                     }
                     contentList.add({
-                      "title": _categoryLable(category),
+                      "title": _categoryLabel(category),
                       "content": text,
                     });
                   }

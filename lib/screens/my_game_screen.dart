@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rumutai_app/providers/picked_person_data_provider.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 
+import '../providers/init_data_provider.dart';
+
 import '../widgets/my_game_widget.dart';
 import '../widgets/main_pop_up_menu.dart';
 
@@ -41,13 +43,16 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
         _isLoading = true;
       });
       _gameDataList = [];
+
+      final String collection = ref.read(semesterProvider) == Semester.zenki ? "gameDataZenki" : "gameDataKouki";
+
       debugPrint("loadedMyGameData");
-      await FirebaseFirestore.instance.collection('gameData2').where('referee', arrayContains: _targetPerson).get().then((QuerySnapshot querySnapshot) {
+      await FirebaseFirestore.instance.collection(collection).where('referee', arrayContains: _targetPerson).get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           _gameDataList.add(doc.data() as Map);
         }
       });
-      await FirebaseFirestore.instance.collection('gameData2').where('rumutaiStaff', isEqualTo: _targetPerson).get().then((QuerySnapshot querySnapshot) {
+      await FirebaseFirestore.instance.collection(collection).where('rumutaiStaff', isEqualTo: _targetPerson).get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           _gameDataList.add(doc.data() as Map);
         }

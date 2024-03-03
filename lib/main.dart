@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rumutai_app/screens/drawer/info_screen.dart';
 import 'firebase_options.dart';
 
 import 'notification_manager.dart';
@@ -26,7 +27,6 @@ import 'screens/cheer/cheer_screen.dart';
 //drawer/
 import 'screens/drawer/map_screen.dart';
 import 'screens/drawer/sign_in_screen.dart';
-import 'screens/drawer/info_screen.dart';
 import 'screens/drawer/privacy_policy_screen.dart';
 import 'screens/drawer/terms_of_service_screen.dart';
 import 'screens/drawer/contact_screen.dart';

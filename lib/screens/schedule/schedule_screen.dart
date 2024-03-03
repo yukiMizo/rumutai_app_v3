@@ -6,6 +6,7 @@ import '../../widgets/schedule_widget.dart';
 
 import '../../providers/game_data_provider.dart';
 import '../../widgets/main_pop_up_menu.dart';
+import '../../utilities/label_utilities.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   static const routeName = "/schedule-detail-screen";
@@ -182,14 +183,23 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     return scheduleList;
   }
 
-//not flexible
   List<String> _tabStrings(String classNumber) {
+    final String sport1d = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.d1);
+    final String sport1j = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.j1);
+    final String sport1k = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.k1);
+    final String sport2d = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.d2);
+    final String sport2j = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.j2);
+    final String sport2k = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.k2);
+    final String sport3d = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.d3);
+    final String sport3j = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.j3);
+    final String sport3k = LabelUtilities.gameDataCategoryToSportLabel(ref, GameDataCategory.k3);
+
     if (classNumber[0] == "1") {
-      return ["フットサル", "バレーボール", "ドッジボール", "全体"];
+      return [sport1d, sport1j, sport1k, "全体"];
     } else if (classNumber[0] == "2") {
-      return ["フットサル", "バスケットボール", "バレーボール", "全体"];
+      return [sport2d, sport2j, sport2k, "全体"];
     } else if (classNumber[0] == "3") {
-      return ["フットサル", "ドッジビー", "バレーボール", "全体"];
+      return [sport3d, sport3j, sport3k, "全体"];
     }
     return ["", "", ""];
   }
@@ -204,12 +214,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("$classNumber　スケジュール"),
+          title: Text("$classNumber スケジュール"),
           actions: const [MainPopUpMenu()],
           bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: AppColors.lightText1,
-            unselectedLabelColor: AppColors.lightText1,
+            unselectedLabelColor: AppColors.lightText1.withOpacity(0.5),
             labelColor: AppColors.lightText1,
             isScrollable: true,
             tabs: [
@@ -252,9 +261,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         children: _scheduleList(
                           classNumber: classNumber,
                           gameData: {}
-                            ..addAll(_gameDataForThisClass["d"])
-                            ..addAll(_gameDataForThisClass["j"])
-                            ..addAll(_gameDataForThisClass["k"]),
+                            ..addAll(_gameDataForThisClass["d"] ?? {})
+                            ..addAll(_gameDataForThisClass["j"] ?? {})
+                            ..addAll(_gameDataForThisClass["k"] ?? {}),
                         ),
                       ),
                     ),

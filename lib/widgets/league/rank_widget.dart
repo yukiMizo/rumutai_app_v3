@@ -24,7 +24,7 @@ class RankWidget extends StatelessWidget {
               "$count",
               style: const TextStyle(
                 fontSize: 18,
-                height: 1.0,
+                height: 1,
                 fontWeight: FontWeight.w300,
               ),
             ),

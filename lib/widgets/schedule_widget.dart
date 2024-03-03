@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/providers/init_data_provider.dart';
 
 import '../screens/detail_screen.dart';
 import '../providers/game_data_provider.dart';
@@ -159,7 +160,7 @@ class _ScheduleWidgetState extends ConsumerState<ScheduleWidget> {
                                     ref: ref,
                                     place: widget.gameData["place"],
                                     gameId: widget.gameData["gameId"],
-                                    sport: widget.gameData["sport"],
+                                    sportsType: SportsType.values.byName(widget.gameData["sport"]),
                                     day: widget.gameData["startTime"]["date"],
                                     hour: widget.gameData["startTime"]["hour"],
                                     minute: widget.gameData["startTime"]["minute"],

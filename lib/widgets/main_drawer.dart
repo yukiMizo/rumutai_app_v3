@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/screens/drawer/info_screen.dart';
 
-import 'package:rumutai_app/screens/drawer/publish_drive.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 import '../providers/sign_in_data_provider.dart';
 
 import '../screens/home_screen.dart';
 import '../screens/drawer/map_screen.dart';
 import '../screens/drawer/sign_in_screen.dart';
-import '../screens/drawer/info_screen.dart';
 import '../screens/drawer/contact_screen.dart';
 
 class MainDrawer extends ConsumerWidget {

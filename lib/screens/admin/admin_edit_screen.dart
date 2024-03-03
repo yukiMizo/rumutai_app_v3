@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/providers/init_data_provider.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 
-import 'package:rumutai_app/utilities/lable_utilities.dart';
+import 'package:rumutai_app/utilities/label_utilities.dart';
 
 import '../detail_screen.dart';
 import '../../widgets/game_admin_dialog_widget.dart';
@@ -46,7 +47,9 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
   String? _selectedExtraTimeOnDropButton;
 
   List<String> _dirtyList = [];
-  late Map _gameData;
+  late Map _thisGameData;
+  late SportsType _thisGameSportsType;
+  late String _thisGameId;
 
   bool _dialogIsLoading = false;
   bool _isReverse = false;
@@ -85,64 +88,64 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
 
   void _dirtyCheck() {
     _dirtyList = [];
-    if (_gameData["team"]["0"] != _team1Controller.text) {
+    if (_thisGameData["team"]["0"] != _team1Controller.text) {
       _dirtyList.add("team1");
     }
-    if (_gameData["team"]["1"] != _team2Controller.text) {
+    if (_thisGameData["team"]["1"] != _team2Controller.text) {
       _dirtyList.add("team2");
     }
-    if (_gameData["startTime"]["date"] != _timeDateController.text) {
+    if (_thisGameData["startTime"]["date"] != _timeDateController.text) {
       _dirtyList.add("timeDate");
     }
-    if (_gameData["startTime"]["hour"] != _timeHourController.text) {
+    if (_thisGameData["startTime"]["hour"] != _timeHourController.text) {
       _dirtyList.add("timeHour");
     }
-    if (_gameData["startTime"]["minute"] != _timeMinuteController.text) {
+    if (_thisGameData["startTime"]["minute"] != _timeMinuteController.text) {
       _dirtyList.add("timeMinute");
     }
-    if (_gameData["place"] != _placeController.text) {
+    if (_thisGameData["place"] != _placeController.text) {
       _dirtyList.add("place");
     }
-    if (_gameData["referee"][0] != _referee1Controller.text) {
+    if (_thisGameData["referee"][0] != _referee1Controller.text) {
       _dirtyList.add("referee1");
     }
-    if (_gameData["referee"][1] != _referee2Controller.text) {
+    if (_thisGameData["referee"][1] != _referee2Controller.text) {
       _dirtyList.add("referee2");
     }
-    if (_gameData["referee"][2] != _referee3Controller.text) {
+    if (_thisGameData["referee"][2] != _referee3Controller.text) {
       _dirtyList.add("referee3");
     }
-    if ((_gameData["referee"].length >= 4 && _gameData["referee"][3] != _referee4Controller.text)) {
+    if ((_thisGameData["referee"].length >= 4 && _thisGameData["referee"][3] != _referee4Controller.text)) {
       _dirtyList.add("referee4");
     }
-    if (_gameData["gameStatus"] != _newGameStatus) {
+    if (_thisGameData["gameStatus"] != _newGameStatus) {
       _dirtyList.add("gameStatus");
     }
-    if (_gameData["extraTime"] != _newExtraTime) {
+    if (_thisGameData["extraTime"] != _newExtraTime) {
       _dirtyList.add("extraTime");
     }
-    if (_gameData["score"][0].toString() != _score1Controller.text) {
+    if (_thisGameData["score"][0].toString() != _score1Controller.text) {
       _dirtyList.add("score1");
     }
-    if (_gameData["score"][1].toString() != _score2Controller.text) {
+    if (_thisGameData["score"][1].toString() != _score2Controller.text) {
       _dirtyList.add("score2");
     }
-    if (_gameData["scoreDetail"]["0"][0].toString() != _scoreDetail1Controller.text) {
+    if (_thisGameData["scoreDetail"]["0"][0].toString() != _scoreDetail1Controller.text) {
       _dirtyList.add("scoreDetail1");
     }
-    if (_gameData["scoreDetail"]["0"][1].toString() != _scoreDetail2Controller.text) {
+    if (_thisGameData["scoreDetail"]["0"][1].toString() != _scoreDetail2Controller.text) {
       _dirtyList.add("scoreDetail2");
     }
-    if (_gameData["scoreDetail"]["1"][0].toString() != _scoreDetail3Controller.text) {
+    if (_thisGameData["scoreDetail"]["1"][0].toString() != _scoreDetail3Controller.text) {
       _dirtyList.add("scoreDetail3");
     }
-    if (_gameData["scoreDetail"]["1"][1].toString() != _scoreDetail4Controller.text) {
+    if (_thisGameData["scoreDetail"]["1"][1].toString() != _scoreDetail4Controller.text) {
       _dirtyList.add("scoreDetail4");
     }
-    if (_gameData["scoreDetail"]["2"][0].toString() != _scoreDetail5Controller.text) {
+    if (_thisGameData["scoreDetail"]["2"][0].toString() != _scoreDetail5Controller.text) {
       _dirtyList.add("scoreDetail5");
     }
-    if (_gameData["scoreDetail"]["2"][1].toString() != _scoreDetail6Controller.text) {
+    if (_thisGameData["scoreDetail"]["2"][1].toString() != _scoreDetail6Controller.text) {
       _dirtyList.add("scoreDetail6");
     }
   }
@@ -164,7 +167,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
       } else if (data == "place") {
         newData["place"] = _placeController.text;
       } else if (data.contains("referee")) {
-        newData["referee"] = (_gameData["gameId"].contains("1g")
+        newData["referee"] = (_thisGameId.contains("1g")
             ? [
                 _referee1Controller.text,
                 _referee2Controller.text,
@@ -267,18 +270,18 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
           _toInt(_scoreDetail6Controller.text),
         ],
       },
-      "gameId": _gameData["gameId"],
+      "gameId": _thisGameId,
     };
   }
 
   List<Widget> get _scoreDetailList {
     List<Widget> scoreDetailList = [];
     int count = 1;
-    for (var lable in LableUtilities.scoreDetailLableList(_gameData["sport"])) {
+    for (var label in LabelUtilities.scoreDetailLabelList(_thisGameSportsType)) {
       scoreDetailList.add(
         Row(
           children: [
-            _label("$lable："),
+            _label("$label："),
             if (count == 1)
               _textField(
                 width: 40,
@@ -329,7 +332,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
   Column get _refereeInputColumn {
     List<Widget> refereeDetailList = [];
     int count = 1;
-    for (var lable in LableUtilities.refereeLableList(_gameData["sport"])) {
+    for (var label in LabelUtilities.refereeLabelList(_thisGameSportsType)) {
       late TextEditingController teController;
       if (count == 1) {
         teController = _referee1Controller;
@@ -344,7 +347,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
         _textField(
           width: 180,
           controller: teController,
-          saffixLabel: "($lable)",
+          saffixLabel: "($label)",
         ),
       );
       count++;
@@ -398,7 +401,8 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                         ),
                       ),
                       GameAdminDialogWidget(
-                        gameData: _gameData,
+                        gameData: _thisGameData,
+                        sportType: _thisGameSportsType,
                         isReverse: _isReverse,
                       ),
                       Container(
@@ -423,6 +427,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                       ),
                       GameAdminDialogWidget(
                         gameData: _newDataForDialog,
+                        sportType: _thisGameSportsType,
                         dartyList: _dirtyList,
                         isReverse: _isReverse,
                       ),
@@ -454,7 +459,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                   final Map<String, Object> newData = _newDataForUpdate;
                   await GameDataManager.updateData(
                     ref: ref,
-                    gameId: _gameData["gameId"],
+                    gameId: _thisGameId,
                     newData: newData,
                     teams: {"0": _team1Controller.text, "1": _team2Controller.text},
                   );
@@ -481,45 +486,47 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
   @override
   Widget build(BuildContext context) {
     GameDataToPassAdmin gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPassAdmin;
-    _gameData = gotData.thisGameData;
+    _thisGameData = gotData.thisGameData;
+    _thisGameSportsType = SportsType.values.byName(_thisGameData["sport"]);
+    _thisGameId = _thisGameData["gameId"];
     _isReverse = gotData.isReverse;
 
     if (_isInit) {
-      _team1Controller.text = _gameData["team"]["0"];
-      _team2Controller.text = _gameData["team"]["1"];
-      _timeDateController.text = _gameData["startTime"]["date"];
-      _timeHourController.text = _gameData["startTime"]["hour"];
-      _timeMinuteController.text = _gameData["startTime"]["minute"];
-      _placeController.text = _gameData["place"];
-      _referee1Controller.text = _gameData["referee"][0];
-      _referee2Controller.text = _gameData["referee"][1];
-      _referee3Controller.text = _gameData["referee"][2];
-      if (_gameData["referee"].length >= 4) {
-        _referee4Controller.text = _gameData["referee"][3];
+      _team1Controller.text = _thisGameData["team"]["0"];
+      _team2Controller.text = _thisGameData["team"]["1"];
+      _timeDateController.text = _thisGameData["startTime"]["date"];
+      _timeHourController.text = _thisGameData["startTime"]["hour"];
+      _timeMinuteController.text = _thisGameData["startTime"]["minute"];
+      _placeController.text = _thisGameData["place"];
+      _referee1Controller.text = _thisGameData["referee"][0];
+      _referee2Controller.text = _thisGameData["referee"][1];
+      _referee3Controller.text = _thisGameData["referee"][2];
+      if (_thisGameData["referee"].length >= 4) {
+        _referee4Controller.text = _thisGameData["referee"][3];
       } else {
         _referee4Controller.text = "";
       }
-      _score1Controller.text = _gameData["score"][0].toString();
-      _score2Controller.text = _gameData["score"][1].toString();
-      _scoreDetail1Controller.text = _gameData["scoreDetail"]["0"][0].toString();
-      _scoreDetail2Controller.text = _gameData["scoreDetail"]["0"][1].toString();
-      _scoreDetail3Controller.text = _gameData["scoreDetail"]["1"][0].toString();
-      _scoreDetail4Controller.text = _gameData["scoreDetail"]["1"][1].toString();
-      _scoreDetail5Controller.text = _gameData["scoreDetail"]["2"][0].toString();
-      _scoreDetail6Controller.text = _gameData["scoreDetail"]["2"][1].toString();
+      _score1Controller.text = _thisGameData["score"][0].toString();
+      _score2Controller.text = _thisGameData["score"][1].toString();
+      _scoreDetail1Controller.text = _thisGameData["scoreDetail"]["0"][0].toString();
+      _scoreDetail2Controller.text = _thisGameData["scoreDetail"]["0"][1].toString();
+      _scoreDetail3Controller.text = _thisGameData["scoreDetail"]["1"][0].toString();
+      _scoreDetail4Controller.text = _thisGameData["scoreDetail"]["1"][1].toString();
+      _scoreDetail5Controller.text = _thisGameData["scoreDetail"]["2"][0].toString();
+      _scoreDetail6Controller.text = _thisGameData["scoreDetail"]["2"][1].toString();
 
-      if (_gameData["gameStatus"] == "before") {
+      if (_thisGameData["gameStatus"] == "before") {
         _selectedGameStatus = "試合前";
-      } else if (_gameData["gameStatus"] == "now") {
+      } else if (_thisGameData["gameStatus"] == "now") {
         _selectedGameStatus = "試合中";
-      } else if (_gameData["gameStatus"] == "after") {
+      } else if (_thisGameData["gameStatus"] == "after") {
         _selectedGameStatus = "試合終了";
       }
-      if (_gameData["extraTime"] == _gameData["team"]["0"]) {
-        _selectedExtraTime = _gameData["team"]["0"];
+      if (_thisGameData["extraTime"] == _thisGameData["team"]["0"]) {
+        _selectedExtraTime = _thisGameData["team"]["0"];
         _selectedExtraTimeOnDropButton = "team0";
-      } else if (_gameData["extraTime"] == _gameData["team"]["1"]) {
-        _selectedExtraTime = _gameData["team"]["1"];
+      } else if (_thisGameData["extraTime"] == _thisGameData["team"]["1"]) {
+        _selectedExtraTime = _thisGameData["team"]["1"];
         _selectedExtraTimeOnDropButton = "team1";
       } else {
         _selectedExtraTime = "なし";
@@ -622,13 +629,13 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                                 },
                                 value: _selectedGameStatus,
                               ),
-                              if ((_gameData["sport"] != "volleyball") && (_gameData["gameId"].contains("f") || _gameData["gameId"].contains("l"))) const SizedBox(width: 20),
-                              if ((_gameData["sport"] != "volleyball") && (_gameData["gameId"].contains("f") || _gameData["gameId"].contains("l")))
+                              if ((_thisGameSportsType != SportsType.volleyball) && (_thisGameId.contains("f") || _thisGameId.contains("l"))) const SizedBox(width: 20),
+                              if ((_thisGameSportsType != SportsType.volleyball) && (_thisGameId.contains("f") || _thisGameId.contains("l")))
                                 Text(
-                                  LableUtilities.extraTimeLable(_gameData["sport"]),
+                                  LabelUtilities.extraTimeLabel(_thisGameSportsType),
                                   style: TextStyle(color: Colors.grey.shade700),
                                 ),
-                              if ((_gameData["sport"] != "volleyball") && (_gameData["gameId"].contains("f") || _gameData["gameId"].contains("l")))
+                              if ((_thisGameSportsType != SportsType.volleyball) && (_thisGameId.contains("f") || _thisGameId.contains("l")))
                                 DropdownButton(
                                   items: [
                                     DropdownMenuItem(
@@ -747,10 +754,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
           width: 350,
           child: FilledButton(
             onPressed: (_dirtyList.isEmpty ||
-                    ((_gameData["gameId"].contains("f") || _gameData["gameId"].contains("l")) &&
-                        (_newGameStatus == "after") &&
-                        (_score1Controller.text == _score2Controller.text) &&
-                        (_newExtraTime == "")))
+                    ((_thisGameId.contains("f") || _thisGameId.contains("l")) && (_newGameStatus == "after") && (_score1Controller.text == _score2Controller.text) && (_newExtraTime == "")))
                 ? null
                 : () => showDialog(
                       context: context,

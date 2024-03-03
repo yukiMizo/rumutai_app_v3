@@ -11,7 +11,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'local_data.dart';
 
 import 'providers/game_data_provider.dart';
-import 'providers/rumutai_date_provider.dart';
+import 'providers/init_data_provider.dart';
 
 import 'screens/detail_screen.dart';
 
@@ -183,27 +183,12 @@ class NotificationManager {
     await LocalData.saveLocalData<bool>(gameId, false);
   }
 
-  static String _sport(String sport) {
-    if (sport == "futsal") {
-      return "フットサル";
-    } else if (sport == "volleyball") {
-      return "バレーボール";
-    } else if (sport == "basketball") {
-      return "バスケットボール";
-    } else if (sport == "dodgebee") {
-      return "ドッチビー";
-    } else if (sport == "dodgeball") {
-      return "ドッジボール";
-    }
-    return "";
-  }
-
   //ローカル通知の予約
   static Future<void> registerLocNotification({
     required WidgetRef ref,
     required String place,
     required String gameId,
-    required String sport,
+    required SportsType sportsType,
     required String day,
     required String hour,
     required String minute,
@@ -227,7 +212,7 @@ class NotificationManager {
     //通知設定
     await flnp.zonedSchedule(
       gameId.hashCode,
-      "${team1}vs$team2（${_sport(sport)}）",
+      "${team1}vs$team2（${sportsType.asLongJapanse()}）",
       message,
       date,
       payload: gameId,
