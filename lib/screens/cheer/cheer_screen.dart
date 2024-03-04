@@ -28,10 +28,13 @@ class CheerScreen extends StatefulWidget {
 class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin {
   late DatabaseReference _cheerDatabase;
   late StreamSubscription _streamSubscription;
+
   bool _isInit = true;
   int? _cheerPoint;
   final _random = math.Random();
-  Color _splashColor = Colors.red;
+  late Color _splashColor;
+
+  late int _randomColorMaker;
 
   late Color _backgroundColor;
   late String _classStr;
@@ -46,11 +49,35 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
   }
 
   void _setRandomSplashColor() {
-    final int g = _random.nextInt(101) + 50;
-    final int b = _random.nextInt(101);
+    int r = _random.nextInt(101);
+    int g = _random.nextInt(101);
+    int b = _random.nextInt(101);
     final o = _random.nextDouble() * 0.4 + 0.5;
 
-    _splashColor = Color.fromRGBO(255, g, b, o);
+    if (_randomColorMaker % 3 == 0) {
+      r = 255;
+      if (_randomColorMaker == 3) {
+        g += 50;
+      } else {
+        b += 50;
+      }
+    } else if (_randomColorMaker % 3 == 1) {
+      g = 255;
+      if (_randomColorMaker == 1) {
+        r += 50;
+      } else {
+        b += 50;
+      }
+    } else if (_randomColorMaker % 3 == 2) {
+      b = 255;
+      if (_randomColorMaker == 2) {
+        g += 50;
+      } else {
+        r += 50;
+      }
+    }
+
+    _splashColor = Color.fromRGBO(r, g, b, o);
   }
 
   @override
@@ -68,6 +95,8 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
       _cheerPoint = gotData.currentCheerPoint;
       _cheerDatabase = FirebaseDatabase.instance.ref("cheer");
       _streamSubscription = _cheerDatabase.child(_classStr).onValue.listen(_onCheerPointChanged);
+      _randomColorMaker = _random.nextInt(6);
+      _setRandomSplashColor();
       _isInit = false;
     }
 
@@ -136,15 +165,6 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
                                       ),
                                     ),
                                   ),
-                                  /*
-                                  Opacity(
-                                    opacity: 1,
-                                    child: Icon(
-                                      Icons.local_fire_department,
-                                      color: Colors.deepOrange.shade900,
-                                      size: 50,
-                                    ),
-                                  ),*/
                                   _cheerPoint == null
                                       ? const SizedBox(
                                           width: 20,
@@ -196,22 +216,6 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
           ],
         ),
       ),
-
-      /* floatingActionButton: SizedBox(
-        width: 80,
-        height: 80,
-        child: FloatingActionButton(
-          tooltip: "タップで応援！",
-          backgroundColor: Colors.deepOrange.shade800,
-          onPressed: () {
-            _incrementCount(classStr);
-          },
-          child: const Icon(
-            Icons.local_fire_department,
-            size: 40,
-          ),
-        ),
-      ),*/
     );
   }
 }

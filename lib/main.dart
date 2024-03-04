@@ -13,7 +13,6 @@ import 'themes/app_theme.dart';
 //screens/
 import 'screens/home_screen.dart';
 import 'screens/detail_screen.dart';
-import 'screens/admin/admin_edit_screen.dart';
 import 'screens/rumutai_staff_screen.dart';
 import 'screens/rule_book_screen.dart';
 import 'screens/my_game_screen.dart';
@@ -51,6 +50,8 @@ import 'screens/staff/my_place_game_screen.dart';
 //admin/
 import 'screens/admin/adjust_schedule_screen.dart';
 import 'screens/admin/send_notification_screen.dart';
+import 'screens/admin/admin_edit_screen.dart';
+import 'screens/admin/manage_omikuji_screen.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -86,7 +87,6 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeScreen.routeName: (ctx) => const HomeScreen(),
         DetailScreen.routeName: (ctx) => const DetailScreen(),
-        AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
         RumutaiStaffScreen.routeName: (ctx) => const RumutaiStaffScreen(),
         RuleBookScreen.routeName: (ctx) => const RuleBookScreen(),
         MyGameScreen.routeName: (ctx) => const MyGameScreen(),
@@ -105,7 +105,6 @@ class MyApp extends StatelessWidget {
         PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
         //notification
         NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
-        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
         NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
         //cheer
         PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
@@ -114,17 +113,16 @@ class MyApp extends StatelessWidget {
         PickOmikujiScreen.routeName: (ctx) => const PickOmikujiScreen(),
         DrawOmikujiScreen.routeName: (ctx) => const DrawOmikujiScreen(),
         MakeOmikujiScreen.routeName: (ctx) => const MakeOmikujiScreen(),
-        //award
-        PickAwardScreen.routeName: (ctx) => const PickAwardScreen(),
-        GameAwardScreen.routeName: (ctx) => const GameAwardScreen(),
-        CheerAwardScreen.routeName: (ctz) => const CheerAwardScreen(),
 
         TimelineScreen.routeName: (ctx) => const TimelineScreen(),
         DashboardScreen.routeName: (ctx) => const DashboardScreen(),
         MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
         PublishDriveScreen.routeName: (ctx) => const PublishDriveScreen(),
-
+        //admin
         AdjustScheduleScreen.routeName: (ctx) => const AdjustScheduleScreen(),
+        AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
+        ManagaeOmikujiScreen.routeName: (ctx) => const ManagaeOmikujiScreen(),
+        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
       },
     );
   }

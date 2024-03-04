@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rumutai_app/providers/init_data_provider.dart';
 
 import 'cheer_screen.dart';
 
@@ -6,16 +8,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 
-class PickTeamToCheerScreen extends StatefulWidget {
+class PickTeamToCheerScreen extends ConsumerStatefulWidget {
   static const routeName = "/pick-team-to-cheer-screen";
 
   const PickTeamToCheerScreen({super.key});
 
   @override
-  State<PickTeamToCheerScreen> createState() => _PickTeamToCheerScreenState();
+  ConsumerState<PickTeamToCheerScreen> createState() => _PickTeamToCheerScreenState();
 }
 
-class _PickTeamToCheerScreenState extends State<PickTeamToCheerScreen> {
+class _PickTeamToCheerScreenState extends ConsumerState<PickTeamToCheerScreen> {
   final _cheerPointMap = {};
   bool _isInit = true;
   List _topCheerPointClassList = [];
@@ -84,10 +86,6 @@ class _PickTeamToCheerScreenState extends State<PickTeamToCheerScreen> {
                             ),
                           ),
                         ),
-                        /*Icon(
-                          Icons.local_fire_department,
-                          color: Colors.deepOrange.shade900,
-                        ),*/
                         Text(
                           cheerPoint == null ? "-" : cheerPoint.toString(),
                           style: TextStyle(
@@ -292,10 +290,6 @@ class _PickTeamToCheerScreenState extends State<PickTeamToCheerScreen> {
                       cheerPoint: _cheerPointMap["110"],
                     ),
                     _coloredCard(color: Colors.brown.shade300),
-                    /*_coloredCardWithIcon(
-                      color: Colors.brown.shade300,
-                      icon: Icons.campaign_outlined,
-                    ),*/
                   ],
                 ),
                 GridView.count(
@@ -373,72 +367,78 @@ class _PickTeamToCheerScreenState extends State<PickTeamToCheerScreen> {
                     ),*/
                   ],
                 ),
-                GridView.count(
-                  primary: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  crossAxisCount: 3,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    _coloredCardWithText(text: "3年", color: Colors.brown.shade100),
-                    _coloredCard(color: Colors.brown.shade200),
-                    _coloredCard(color: Colors.brown.shade300),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "301",
-                      color: Colors.brown.shade100,
-                      cheerPoint: _cheerPointMap["301"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "302",
-                      color: Colors.brown.shade200,
-                      cheerPoint: _cheerPointMap["302"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "303",
-                      color: Colors.brown.shade300,
-                      cheerPoint: _cheerPointMap["303"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "304",
-                      color: Colors.brown.shade100,
-                      cheerPoint: _cheerPointMap["304"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "305",
-                      color: Colors.brown.shade200,
-                      cheerPoint: _cheerPointMap["305"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "306",
-                      color: Colors.brown.shade300,
-                      cheerPoint: _cheerPointMap["306"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "307",
-                      color: Colors.brown.shade100,
-                      cheerPoint: _cheerPointMap["307"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "308",
-                      color: Colors.brown.shade200,
-                      cheerPoint: _cheerPointMap["308"],
-                    ),
-                    _teamToCheerWidget(
-                      context: context,
-                      classStr: "309",
-                      color: Colors.brown.shade300,
-                      cheerPoint: _cheerPointMap["309"],
-                    ),
-                  ],
-                ),
+                if (ref.watch(show3rdGradeProvider))
+                  GridView.count(
+                    primary: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    crossAxisCount: 3,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      _coloredCardWithText(text: "3年", color: Colors.brown.shade100),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "301",
+                        color: Colors.brown.shade200,
+                        cheerPoint: _cheerPointMap["301"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "302",
+                        color: Colors.brown.shade300,
+                        cheerPoint: _cheerPointMap["302"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "303",
+                        color: Colors.brown.shade100,
+                        cheerPoint: _cheerPointMap["303"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "304",
+                        color: Colors.brown.shade200,
+                        cheerPoint: _cheerPointMap["304"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "305",
+                        color: Colors.brown.shade300,
+                        cheerPoint: _cheerPointMap["305"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "306",
+                        color: Colors.brown.shade100,
+                        cheerPoint: _cheerPointMap["306"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "307",
+                        color: Colors.brown.shade200,
+                        cheerPoint: _cheerPointMap["307"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "308",
+                        color: Colors.brown.shade300,
+                        cheerPoint: _cheerPointMap["308"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "309",
+                        color: Colors.brown.shade100,
+                        cheerPoint: _cheerPointMap["309"],
+                      ),
+                      _teamToCheerWidget(
+                        context: context,
+                        classStr: "310",
+                        color: Colors.brown.shade200,
+                        cheerPoint: _cheerPointMap["310"],
+                      ),
+                      _coloredCard(color: Colors.brown.shade300),
+                    ],
+                  ),
               ],
             ),
           ),

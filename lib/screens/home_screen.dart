@@ -16,7 +16,6 @@ import 'my_game_screen.dart';
 import 'rule_book_screen.dart';
 import 'admin/adjust_schedule_screen.dart';
 import 'admin/send_notification_screen.dart';
-import 'award/pick_award_screen.dart';
 import 'cheer/pick_team_to_cheer_screen.dart';
 import 'game_result/pick_category_screen.dart';
 import 'staff/dashboard_screen.dart';
@@ -337,14 +336,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onPressed: () => Navigator.of(context).pushNamed(PickTeamToCheerScreen.routeName),
                             ),
                           ],
-                        ),
-                        const SizedBox(height: 15),
-                        _buildSubButton(
-                          text: "表彰",
-                          icon: FontAwesomeIcons.medal,
-                          iconSize: 18,
-                          width: buttonWidth,
-                          onPressed: () => Navigator.of(context).pushNamed(PickAwardScreen.routeName),
                         ),
                         if (ref.watch(isLoggedInRumutaiStaffProvider) || ref.watch(isLoggedInAdminProvider))
                           Column(

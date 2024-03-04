@@ -52,11 +52,6 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
           _gameDataList.add(doc.data() as Map);
         }
       });
-      await FirebaseFirestore.instance.collection(collection).where('rumutaiStaff', isEqualTo: _targetPerson).get().then((QuerySnapshot querySnapshot) {
-        for (var doc in querySnapshot.docs) {
-          _gameDataList.add(doc.data() as Map);
-        }
-      });
       setState(() {
         _isLoading = false;
       });

@@ -552,6 +552,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
                           width: 280,
                           child: Card(
                             elevation: 1,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                             color: Colors.orange.shade50,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -587,7 +588,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 18),
-                                const Divider(),
+                                const Divider(color: Colors.brown),
                                 ListView.builder(
                                   primary: false,
                                   physics: const NeverScrollableScrollPhysics(),
