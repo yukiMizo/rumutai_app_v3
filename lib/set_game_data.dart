@@ -242,27 +242,27 @@ class SetGameData {
   static const List<String> class1jb = ["103", "104", "106", "107", "109", "110b"];
   static const List<String> class1ka = ["101", "102", "105", "108", "110"];
   static const List<String> class1kb = ["103", "104", "106", "107", "109"];
-  static const List<String> class2da = ["201", "202", "205", "208"];
-  static const List<String> class2db = ["203", "204", "206", "207", "209"];
-  static const List<String> class2ja = ["201", "202", "205", "208", "210a"];
-  static const List<String> class2jb = ["203", "204", "206", "207", "209", "210b"];
-  static const List<String> class2ka = ["201", "202", "205", "208", "210"];
-  static const List<String> class2kb = ["203", "204", "206", "207", "209"];
+  static const List<String> class2da = ["201", "202", "204", "207"];
+  static const List<String> class2db = ["203", "205", "206", "208", "209"];
+  static const List<String> class2ja = ["201", "202", "204", "207", "210a"];
+  static const List<String> class2jb = ["203", "205", "206", "208", "209", "210b"];
+  static const List<String> class2ka = ["201", "202", "204", "207", "210"];
+  static const List<String> class2kb = ["203", "205", "206", "208", "209"];
 
   //トーナメントを設定
   static const Map<String, TournamentType> tournamentTypeMap = {
     "1d-f": TournamentType.four,
-    "1d-l": TournamentType.five,
+    "1d-l": TournamentType.five2,
     "1j-f": TournamentType.four,
-    "1j-l": TournamentType.five,
+    "1j-l": TournamentType.seven,
     "1k-f": TournamentType.four,
-    "1k-l": TournamentType.five,
+    "1k-l": TournamentType.six,
     "2d-f": TournamentType.four,
-    "2d-l": TournamentType.five,
+    "2d-l": TournamentType.five2,
     "2j-f": TournamentType.four,
-    "2j-l": TournamentType.five,
+    "2j-l": TournamentType.seven,
     "2k-f": TournamentType.four,
-    "2k-l": TournamentType.five,
+    "2k-l": TournamentType.six,
   };
 
   //確認をして、更新をする
@@ -388,12 +388,74 @@ class SetGameData {
       } else if (gameId.substring(4) == "02") {
         return ["B1", "A2"];
       } else if (gameId.substring(4) == "03") {
-        return ["F1", "F2"];
-      } else if (gameId.substring(4) == "04") {
         return ["f1", "f2"];
+      } else {
+        return ["F1", "F2"];
       }
     } else if (gameId[3] == "l") {
-      return ["A3", "B4"];
+      final TournamentType tournamentType = tournamentTypeMap[gameId.substring(0, 4)]!;
+      switch (tournamentType) {
+        case TournamentType.four:
+          return ["", ""];
+        case TournamentType.four2:
+          if (gameId.substring(4) == "01") {
+            return ["A3", "B4"];
+          } else if (gameId.substring(4) == "02") {
+            return ["B3", "A4"];
+          } else if (gameId.substring(4) == "03") {
+            return ["l1", "l2"];
+          } else {
+            return ["L1", "L2"];
+          }
+        case TournamentType.five:
+          if (gameId.substring(4) == "01") {
+            return ["B5", "A3"];
+          } else if (gameId.substring(4) == "02") {
+            return ["B4", "A4"];
+          } else if (gameId.substring(4) == "03") {
+            return ["L2", "B3"];
+          } else {
+            return ["L1", "L3"];
+          }
+        case TournamentType.five2:
+          if (gameId.substring(4) == "01") {
+            return ["B5", "A3"];
+          } else if (gameId.substring(4) == "02") {
+            return ["B4", "A4"];
+          } else if (gameId.substring(4) == "03") {
+            return ["l1", "l2"];
+          } else if (gameId.substring(4) == "04") {
+            return ["L2", "B3"];
+          } else {
+            return ["L1", "L4"];
+          }
+        case TournamentType.six:
+          if (gameId.substring(4) == "01") {
+            return ["B5", "A4"];
+          } else if (gameId.substring(4) == "02") {
+            return ["B4", "A5"];
+          } else if (gameId.substring(4) == "03") {
+            return ["A3", "L1"];
+          } else if (gameId.substring(4) == "04") {
+            return ["L2", "B3"];
+          } else {
+            return ["L3", "L4"];
+          }
+        case TournamentType.seven:
+          if (gameId.substring(4) == "01") {
+            return ["B6", "A3"];
+          } else if (gameId.substring(4) == "02") {
+            return ["B5", "A4"];
+          } else if (gameId.substring(4) == "03") {
+            return ["B4", "A5"];
+          } else if (gameId.substring(4) == "04") {
+            return ["L1", "L2"];
+          } else if (gameId.substring(4) == "05") {
+            return ["L3", "B3"];
+          } else {
+            return ["L4", "L5"];
+          }
+      }
     }
 
     //リーグの場合

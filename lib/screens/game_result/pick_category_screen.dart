@@ -37,7 +37,55 @@ class PickCategoryScreen extends ConsumerWidget {
             const SizedBox(height: 10),
             Text(
               _getLabelForCategory(ref, categoryToGet),
-              style: TextStyle(color: Colors.brown.shade900, fontWeight: FontWeight.w600, letterSpacing: 0.6, fontSize: 18, fontFamily: "Anton"),
+              style: TextStyle(
+                color: Colors.brown.shade900,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.6,
+                fontSize: 18,
+                fontFamily: "Anton",
+                shadows: const [
+                  Shadow(
+                    offset: Offset(0, 2),
+                    blurRadius: 2,
+                    color: Colors.black38,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSoccerInfoButton({
+    required context,
+    required WidgetRef ref,
+    required GameDataCategory categoryToGet,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(0),
+        backgroundColor: AppColors.themeColor.shade50,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      onPressed: () => Navigator.of(context).pushNamed(GameResultsScreen.routeName, arguments: categoryToGet),
+      child: SizedBox(
+        width: 105,
+        height: 100,
+        child: Stack(
+          children: [
+            Image.asset(
+              "assets/images/soccer.png",
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                _getLabelForCategory(ref, categoryToGet),
+                style: TextStyle(color: Colors.brown.shade900, fontWeight: FontWeight.w600, letterSpacing: 0.6, fontSize: 18, fontFamily: "Anton"),
+              ),
             )
           ],
         ),
@@ -54,11 +102,24 @@ class PickCategoryScreen extends ConsumerWidget {
     final SportsType sportsType = ref.watch(sportsTypeMapProvider)[gameDataCategory.asString]!;
     switch (sportsType) {
       case SportsType.futsal:
-        return Icon(
-          Icons.sports_soccer_outlined,
-          size: 40,
-          color: Colors.brown.shade900,
+        return Container(
+          width: 40,
+          height: 40,
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 2),
+                blurRadius: 2,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Image.asset("assets/images/soccer.png"),
         );
+
       case SportsType.basketball:
         return Icon(
           Icons.sports_basketball_outlined,
@@ -136,7 +197,7 @@ class PickCategoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("試合結果を確認"),
+        title: const Text("試合結果"),
         actions: const [MainPopUpMenu()],
       ),
       backgroundColor: Colors.grey.shade100,
@@ -161,11 +222,7 @@ class PickCategoryScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildGameInfoButton(
-                        context: context,
-                        ref: ref,
-                        categoryToGet: GameDataCategory.d1,
-                      ),
+                      _buildGameInfoButton(context: context, ref: ref, categoryToGet: GameDataCategory.d1),
                       const SizedBox(width: 10),
                       _buildGameInfoButton(
                         context: context,

@@ -10,7 +10,7 @@ enum SportsType {
   basketball(["バスケ", "バスケットボール"]),
   volleyball(["バレー", "バレーボール"]),
   dodgeball(["ドッジボール", "ドッジボール"]),
-  dodgebee(["ドッヂボール", "ドッヂボール"]);
+  dodgebee(["ドッヂビー", "ドッヂビー"]);
 
   final List<String> japaneseList;
   const SportsType(this.japaneseList);
@@ -19,7 +19,7 @@ enum SportsType {
   String asLongJapanse() => japaneseList[1];
 }
 
-enum TournamentType { four, four2, five, six, seven }
+enum TournamentType { four, four2, five, five2, six, seven }
 
 enum Semester { zenki, kouki }
 

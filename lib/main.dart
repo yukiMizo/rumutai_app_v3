@@ -16,10 +16,6 @@ import 'screens/detail_screen.dart';
 import 'screens/rumutai_staff_screen.dart';
 import 'screens/rule_book_screen.dart';
 import 'screens/my_game_screen.dart';
-//award/
-import 'screens/award/pick_award_screen.dart';
-import 'screens/award/game_award_screen.dart';
-import 'screens/award/cheer_award_screen.dart';
 //cheer/
 import 'screens/cheer/pick_team_to_cheer_screen.dart';
 import 'screens/cheer/cheer_screen.dart';

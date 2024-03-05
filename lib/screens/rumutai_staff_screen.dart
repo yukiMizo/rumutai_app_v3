@@ -407,6 +407,17 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
           dataToReturn["${gameData["gameId"].substring(0, 4)}04"] = {"1": winTeam};
         }
         break;
+      case TournamentType.five2:
+        if (gameData["gameId"].substring(4) == "01") {
+          dataToReturn["${gameData["gameId"].substring(0, 4)}05"] = {"0": winTeam};
+          dataToReturn["${gameData["gameId"].substring(0, 4)}03"] = {"0": loseTeam};
+        } else if (gameData["gameId"].substring(4) == "02") {
+          dataToReturn["${gameData["gameId"].substring(0, 4)}04"] = {"0": winTeam};
+          dataToReturn["${gameData["gameId"].substring(0, 4)}03"] = {"1": loseTeam};
+        } else if (gameData["gameId"].substring(4) == "04") {
+          dataToReturn["${gameData["gameId"].substring(0, 4)}05"] = {"1": winTeam};
+        }
+        break;
       case TournamentType.six:
         if (gameData["gameId"].substring(4) == "01") {
           dataToReturn["${gameData["gameId"].substring(0, 4)}00"] = {"0": winTeam};

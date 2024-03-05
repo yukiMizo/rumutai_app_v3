@@ -12,7 +12,6 @@ class TournamentWidget extends ConsumerWidget {
       : _title = title,
         _tournamentData = tournamentData;
 
-//not flexible
   Map _teamMap(Map tournamentData, TournamentType tournamentType) {
     final Map mapToReturn = {};
     switch (tournamentType) {
@@ -51,16 +50,29 @@ class TournamentWidget extends ConsumerWidget {
           }
         });
         return mapToReturn;
+      case TournamentType.five2:
+        tournamentData.forEach((gameId, gameData) {
+          if (gameId.substring(4) == "04") {
+            mapToReturn["4"] = gameData["team"]["1"];
+          } else if (gameId.substring(4) == "01") {
+            mapToReturn["0"] = gameData["team"]["0"];
+            mapToReturn["1"] = gameData["team"]["1"];
+          } else if (gameId.substring(4) == "02") {
+            mapToReturn["2"] = gameData["team"]["0"];
+            mapToReturn["3"] = gameData["team"]["1"];
+          }
+        });
+        return mapToReturn;
       case TournamentType.six:
         tournamentData.forEach((gameId, gameData) {
-          if (gameId.substring(4) == "02") {
+          if (gameId.substring(4) == "03") {
             mapToReturn["0"] = gameData["team"]["0"];
-          } else if (gameId.substring(4) == "03") {
-            mapToReturn["5"] = gameData["team"]["1"];
           } else if (gameId.substring(4) == "04") {
+            mapToReturn["5"] = gameData["team"]["1"];
+          } else if (gameId.substring(4) == "01") {
             mapToReturn["1"] = gameData["team"]["0"];
             mapToReturn["2"] = gameData["team"]["1"];
-          } else if (gameId.substring(4) == "05") {
+          } else if (gameId.substring(4) == "02") {
             mapToReturn["3"] = gameData["team"]["0"];
             mapToReturn["4"] = gameData["team"]["1"];
           }
@@ -68,15 +80,15 @@ class TournamentWidget extends ConsumerWidget {
         return mapToReturn;
       case TournamentType.seven:
         tournamentData.forEach((gameId, gameData) {
-          if (gameId.substring(4) == "03") {
+          if (gameId.substring(4) == "05") {
             mapToReturn["6"] = gameData["team"]["1"];
-          } else if (gameId.substring(4) == "04") {
+          } else if (gameId.substring(4) == "01") {
             mapToReturn["0"] = gameData["team"]["0"];
             mapToReturn["1"] = gameData["team"]["1"];
-          } else if (gameId.substring(4) == "05") {
+          } else if (gameId.substring(4) == "02") {
             mapToReturn["2"] = gameData["team"]["0"];
             mapToReturn["3"] = gameData["team"]["1"];
-          } else if (gameId.substring(4) == "06") {
+          } else if (gameId.substring(4) == "03") {
             mapToReturn["4"] = gameData["team"]["0"];
             mapToReturn["5"] = gameData["team"]["1"];
           }
@@ -387,7 +399,118 @@ class TournamentWidget extends ConsumerWidget {
                     ),
                     const SizedBox(width: 20),
                   ],
-                ), /*
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _tournamentTypeFive2(Map tournamentDataMap, Map teamMap) {
+    return Column(
+      children: [
+        const Row(
+          children: [
+            Text(
+              "５位",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 18),
+          ],
+        ),
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 200),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _teamCard(teamMap["0"]),
+                    const SizedBox(width: 15),
+                    _teamCard(teamMap["1"]),
+                    const SizedBox(width: 25),
+                    _teamCard(teamMap["2"]),
+                    const SizedBox(width: 25),
+                    _teamCard(teamMap["3"]),
+                    const SizedBox(width: 20),
+                    _teamCard(teamMap["4"]),
+                  ],
+                )
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TournamentBlock.normal(
+                      armHeight: 100,
+                      handHeight: 45,
+                      width: 100,
+                      spaceHeight: 40,
+                      otherHeight: 50,
+                      gameData: tournamentDataMap["01"],
+                      buttonHeight: 40,
+                    ),
+                    const SizedBox(width: 60),
+                    Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        TournamentBlock.normal(
+                          armHeight: 50,
+                          handHeight: 45,
+                          width: 100,
+                          spaceHeight: 40,
+                          otherHeight: 50,
+                          gameData: tournamentDataMap["02"],
+                          buttonHeight: 40,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 80),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 50),
+                Row(
+                  children: [
+                    const SizedBox(width: 200),
+                    TournamentBlock.seed(
+                      armHeight: 50,
+                      fingerHeight: 95,
+                      width: 120,
+                      seedBlockSide: SeedBlockSide.right,
+                      gameData: tournamentDataMap["04"],
+                      buttonHeight: 40,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    TournamentBlock.cover(
+                      height: 50,
+                      width: 220,
+                      gameData: tournamentDataMap["05"],
+                      buttonHeight: 40,
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
                 const SizedBox(height: 153),
                 Row(
                   children: [
@@ -395,12 +518,12 @@ class TournamentWidget extends ConsumerWidget {
                       height: 50,
                       width: 163,
                       isDown: true,
-                      gameData: tournamentDataMap["04"],
+                      gameData: tournamentDataMap["03"],
                       buttonHeight: 40,
                     ),
                     const SizedBox(width: 80),
                   ],
-                ),*/
+                ),
               ],
             ),
           ],
@@ -451,7 +574,7 @@ class TournamentWidget extends ConsumerWidget {
                       armHeight: 50,
                       handHeight: 45,
                       width: 100,
-                      gameData: tournamentDataMap["03"],
+                      gameData: tournamentDataMap["01"],
                       buttonHeight: 40,
                     ),
                     const SizedBox(width: 20),
@@ -459,7 +582,7 @@ class TournamentWidget extends ConsumerWidget {
                       armHeight: 50,
                       handHeight: 45,
                       width: 100,
-                      gameData: tournamentDataMap["04"],
+                      gameData: tournamentDataMap["02"],
                       buttonHeight: 40,
                     ),
                   ],
@@ -476,7 +599,7 @@ class TournamentWidget extends ConsumerWidget {
                       fingerHeight: 95,
                       width: 100,
                       seedBlockSide: SeedBlockSide.left,
-                      gameData: tournamentDataMap["01"],
+                      gameData: tournamentDataMap["03"],
                       buttonHeight: 40,
                     ),
                     const SizedBox(width: 120),
@@ -485,7 +608,7 @@ class TournamentWidget extends ConsumerWidget {
                       fingerHeight: 95,
                       width: 100,
                       seedBlockSide: SeedBlockSide.right,
-                      gameData: tournamentDataMap["02"],
+                      gameData: tournamentDataMap["04"],
                       buttonHeight: 40,
                     ),
                   ],
@@ -495,7 +618,7 @@ class TournamentWidget extends ConsumerWidget {
             TournamentBlock.cover(
               height: 50,
               width: 220,
-              gameData: tournamentDataMap["00"],
+              gameData: tournamentDataMap["05"],
               buttonHeight: 40,
             ),
           ],
@@ -552,23 +675,23 @@ class TournamentWidget extends ConsumerWidget {
                       armHeight: 50,
                       handHeight: 45,
                       width: 80,
+                      gameData: tournamentDataMap["01"],
+                      buttonHeight: 40,
+                    ),
+                    const SizedBox(width: 30),
+                    TournamentBlock.normal(
+                      armHeight: 50,
+                      handHeight: 45,
+                      width: 80,
+                      gameData: tournamentDataMap["02"],
+                      buttonHeight: 40,
+                    ),
+                    const SizedBox(width: 30),
+                    TournamentBlock.normal(
+                      armHeight: 50,
+                      handHeight: 45,
+                      width: 80,
                       gameData: tournamentDataMap["03"],
-                      buttonHeight: 40,
-                    ),
-                    const SizedBox(width: 30),
-                    TournamentBlock.normal(
-                      armHeight: 50,
-                      handHeight: 45,
-                      width: 80,
-                      gameData: tournamentDataMap["04"],
-                      buttonHeight: 40,
-                    ),
-                    const SizedBox(width: 30),
-                    TournamentBlock.normal(
-                      armHeight: 50,
-                      handHeight: 45,
-                      width: 80,
-                      gameData: tournamentDataMap["05"],
                       buttonHeight: 40,
                     ),
                     const SizedBox(width: 60),
@@ -586,7 +709,7 @@ class TournamentWidget extends ConsumerWidget {
                     TournamentBlock.cover(
                       height: 50,
                       width: 110,
-                      gameData: tournamentDataMap["01"],
+                      gameData: tournamentDataMap["04"],
                       buttonHeight: 40,
                     ),
                     const SizedBox(width: 110),
@@ -595,7 +718,7 @@ class TournamentWidget extends ConsumerWidget {
                       fingerHeight: 95,
                       width: 90,
                       seedBlockSide: SeedBlockSide.right,
-                      gameData: tournamentDataMap["02"],
+                      gameData: tournamentDataMap["05"],
                       buttonHeight: 40,
                     ),
                   ],
@@ -608,7 +731,7 @@ class TournamentWidget extends ConsumerWidget {
                 TournamentBlock.cover(
                   height: 50,
                   width: 210,
-                  gameData: tournamentDataMap["00"],
+                  gameData: tournamentDataMap["06"],
                   buttonHeight: 40,
                 ),
               ],
@@ -639,6 +762,9 @@ class TournamentWidget extends ConsumerWidget {
         break;
       case TournamentType.five:
         tournament = _tournamentTypeFive(tournamentDataMap, teamMap);
+        break;
+      case TournamentType.five2:
+        tournament = _tournamentTypeFive2(tournamentDataMap, teamMap);
         break;
       case TournamentType.six:
         tournament = _tournamentTypeSix(tournamentDataMap, teamMap);
