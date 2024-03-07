@@ -207,6 +207,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     final String classNumber = ModalRoute.of(context)!.settings.arguments as String;
+
+    ref.watch(gameDataForResultProvider); //データの変更を監視
+
     _loadData(classNumber);
     final List<String> tabStrings = _tabStrings(classNumber);
 
@@ -229,7 +232,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             ],
           ),
         ),
-        backgroundColor: Colors.grey.shade100,
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : TabBarView(

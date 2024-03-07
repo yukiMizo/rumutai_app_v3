@@ -42,10 +42,11 @@ class LeagueBlock extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(3),
                   child: FittedBox(
-                      child: Text(
-                    text!,
-                    style: TextStyle(color: textColor),
-                  )),
+                    child: Text(
+                      text!,
+                      style: TextStyle(color: textColor),
+                    ),
+                  ),
                 ),
               ),
             ),

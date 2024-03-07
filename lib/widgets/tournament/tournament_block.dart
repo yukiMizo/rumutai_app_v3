@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rumutai_app/providers/game_data_provider.dart';
 
 import 'tournament_button.dart';
 
@@ -15,8 +16,7 @@ class TournamentBlock {
   static Widget _verLine({required double length, required Color color}) {
     return SizedBox(
       height: length,
-      child: VerticalDivider(
-          thickness: lineWeight, width: lineWeight, color: color),
+      child: VerticalDivider(thickness: lineWeight, width: lineWeight, color: color),
     );
   }
 
@@ -28,14 +28,14 @@ class TournamentBlock {
   }
 
   static String _gameStatusText(Map gameData) {
-    if (gameData["gameStatus"] == "before") {
-      return "${gameData["startTime"]["hour"]}:${gameData["startTime"]["minute"]}〜\n${gameData["place"]}";
-    } else if (gameData["gameStatus"] == "now") {
-      return "試合中";
-    } else if (gameData["gameStatus"] == "after") {
-      return "試合終了";
+    switch (GameStatus.values.byName(gameData["gameStatus"])) {
+      case GameStatus.before:
+        return "${gameData["startTime"]["hour"]}:${gameData["startTime"]["minute"]}〜\n${gameData["place"]}";
+      case GameStatus.now:
+        return "試合中";
+      case GameStatus.after:
+        return "試合終了";
     }
-    return "";
   }
 
   static WinTeam _winTeam(Map gameData) {
@@ -79,18 +79,14 @@ class TournamentBlock {
           children: [
             _horLine(length: (width + lineWeight) / 2, color: Colors.red),
             const SizedBox(width: lineWeight),
-            _horLine(
-                length: (width + lineWeight) / 2 - (lineWeight * 2),
-                color: normalLineColor),
+            _horLine(length: (width + lineWeight) / 2 - (lineWeight * 2), color: normalLineColor),
           ],
         );
       case WinTeam.right:
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _horLine(
-                length: (width + lineWeight) / 2 - (lineWeight * 2),
-                color: normalLineColor),
+            _horLine(length: (width + lineWeight) / 2 - (lineWeight * 2), color: normalLineColor),
             const SizedBox(width: lineWeight),
             _horLine(length: (width + lineWeight) / 2, color: Colors.red),
           ],

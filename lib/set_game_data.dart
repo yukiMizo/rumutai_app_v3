@@ -2,6 +2,7 @@
 //基本的に次のルム対に向けて新しくgame data を設定する時のみ使用します。
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rumutai_app/providers/game_data_provider.dart';
 
 import 'providers/init_data_provider.dart';
 
@@ -319,7 +320,7 @@ class SetGameData {
           "place": "鯱光館",
           "sport": sport,
           "gameId": gameId,
-          "gameStatus": "before",
+          "gameStatus": GameStatus.before.name,
           "startTime": {"date": "1", "hour": "12", "minute": "00"},
           "extraTime": "",
           "scoreDetail": {

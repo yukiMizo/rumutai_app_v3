@@ -119,7 +119,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
       );
       count++;
     }
-    widgetList.add(const SizedBox(height: 40));
+    widgetList.add(const SizedBox(height: 30));
     List<String> scoreList = _scoreList;
     widgetList.add(
       Stack(
@@ -195,30 +195,30 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
     return int.parse(str);
   }
 
-  Widget _gameStatus(String status) {
-    if (status == "before") {
-      return const Text(
-        "試合前",
-        style: TextStyle(fontSize: 16),
-      );
-    } else if (status == "now") {
-      return Text(
-        "試合中",
-        style: TextStyle(
-          color: Colors.deepPurpleAccent.shade700,
-          fontSize: 16,
-        ),
-      );
-    } else if (status == "after") {
-      return const Text(
-        "試合終了",
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 16,
-        ),
-      );
+  Widget _gameStatus(GameStatus gameStatus) {
+    switch (gameStatus) {
+      case GameStatus.before:
+        return const Text(
+          "試合前",
+          style: TextStyle(fontSize: 16),
+        );
+      case GameStatus.now:
+        return Text(
+          "試合中",
+          style: TextStyle(
+            color: Colors.deepPurpleAccent.shade700,
+            fontSize: 16,
+          ),
+        );
+      case GameStatus.after:
+        return const Text(
+          "試合終了",
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 16,
+          ),
+        );
     }
-    return const Text("");
   }
 
   Widget _scoreDetailPartWidget({
@@ -476,6 +476,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
         SizedBox(
           width: 150,
           child: DropdownButton(
+            dropdownColor: Colors.white,
             style: const TextStyle(fontSize: 20, color: Colors.black),
             isExpanded: true,
             items: [
@@ -980,15 +981,22 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
             child: Column(children: [
               _buildTopSection(),
               const Divider(),
-              Column(
-                children: [
-                  _gameStatus(_thisGameData["gameStatus"]),
-                  const SizedBox(height: 30),
-                  if (_thisGameData["gameStatus"] == "now") _scoreInputWidget(),
-                  const SizedBox(height: 30),
-                  if (_thisGameData["gameStatus"] == "now" && _thisGameSportType != SportsType.volleyball && _isTournament)
-                    _extraTimeInputWidget(team1: _thisGameData["team"]["0"], team2: _thisGameData["team"]["1"]),
-                ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _gameStatus(GameStatus.values.byName(_thisGameData["gameStatus"])),
+                      const SizedBox(height: 30),
+                      if (_thisGameData["gameStatus"] == "now") _scoreInputWidget(),
+                      const SizedBox(height: 20),
+                      if (_thisGameData["gameStatus"] == "now" && _thisGameSportType != SportsType.volleyball && _isTournament)
+                        _extraTimeInputWidget(
+                          team1: _thisGameData["team"]["0"],
+                          team2: _thisGameData["team"]["1"],
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ]),
           ),

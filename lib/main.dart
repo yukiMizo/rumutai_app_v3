@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:rumutai_app/screens/drawer/info_screen.dart';
 import 'firebase_options.dart';
 
 import 'notification_manager.dart';
@@ -25,7 +24,7 @@ import 'screens/drawer/sign_in_screen.dart';
 import 'screens/drawer/privacy_policy_screen.dart';
 import 'screens/drawer/terms_of_service_screen.dart';
 import 'screens/drawer/contact_screen.dart';
-import 'screens/drawer/publish_drive.dart';
+import 'screens/drawer/info_screen.dart';
 //game_result/
 import 'screens/game_result/pick_category_screen.dart';
 import 'screens/game_result/game_results_screen.dart';
@@ -74,18 +73,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       title: 'Rumutai',
-      debugShowCheckedModeBanner: false,
       theme: appTheme(),
       themeMode: ThemeMode.system,
       initialRoute: HomeScreen.routeName,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [Locale("ja")],
+      debugShowCheckedModeBanner: false,
       routes: {
         HomeScreen.routeName: (ctx) => const HomeScreen(),
         DetailScreen.routeName: (ctx) => const DetailScreen(),
         RumutaiStaffScreen.routeName: (ctx) => const RumutaiStaffScreen(),
         RuleBookScreen.routeName: (ctx) => const RuleBookScreen(),
         MyGameScreen.routeName: (ctx) => const MyGameScreen(),
+        //admin
+        AdjustScheduleScreen.routeName: (ctx) => const AdjustScheduleScreen(),
+        AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
+        ManagaeOmikujiScreen.routeName: (ctx) => const ManagaeOmikujiScreen(),
+        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
+        //cheer
+        PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
+        CheerScreen.routeName: (ctx) => const CheerScreen(),
         //drawer
         InfoScreen.routeName: (ctx) => const InfoScreen(),
         SignInScreen.routeName: (ctx) => const SignInScreen(),
@@ -96,29 +103,20 @@ class MyApp extends StatelessWidget {
         //gameResult
         GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
         PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
-        //schedule
-        ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
-        PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
         //notification
         NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
         NotificationsDetailScreen.routeName: (ctx) => const NotificationsDetailScreen(),
-        //cheer
-        PickTeamToCheerScreen.routeName: (ctx) => const PickTeamToCheerScreen(),
-        CheerScreen.routeName: (ctx) => const CheerScreen(),
         //omikuji
         PickOmikujiScreen.routeName: (ctx) => const PickOmikujiScreen(),
         DrawOmikujiScreen.routeName: (ctx) => const DrawOmikujiScreen(),
         MakeOmikujiScreen.routeName: (ctx) => const MakeOmikujiScreen(),
-
-        TimelineScreen.routeName: (ctx) => const TimelineScreen(),
+        //schedule
+        ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
+        PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
+        //staff
         DashboardScreen.routeName: (ctx) => const DashboardScreen(),
         MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
-        PublishDriveScreen.routeName: (ctx) => const PublishDriveScreen(),
-        //admin
-        AdjustScheduleScreen.routeName: (ctx) => const AdjustScheduleScreen(),
-        AdminEditScreen.routeName: (ctx) => const AdminEditScreen(),
-        ManagaeOmikujiScreen.routeName: (ctx) => const ManagaeOmikujiScreen(),
-        SendNotificationScreen.routeName: (ctx) => const SendNotificationScreen(),
+        TimelineScreen.routeName: (ctx) => const TimelineScreen(),
       },
     );
   }

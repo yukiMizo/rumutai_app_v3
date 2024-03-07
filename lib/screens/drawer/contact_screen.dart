@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rumutai_app/themes/app_color.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -33,7 +34,7 @@ class _ContactScreenState extends State<ContactScreen> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: AppColors.scaffoldBackgroundColor,
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

@@ -378,7 +378,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
       builder: (context, setState) => AlertDialog(
         insetPadding: const EdgeInsets.all(10),
         title: _dialogIsLoading ? const Text("試合情報を変更中") : const Text("変更内容を確認"),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: AppColors.scaffoldBackgroundColor,
         content: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Scrollbar(
@@ -606,6 +606,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                             children: [
                               _label("試合状況："),
                               DropdownButton(
+                                dropdownColor: Colors.white,
                                 items: const [
                                   DropdownMenuItem(
                                     value: "試合前",

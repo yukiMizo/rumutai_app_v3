@@ -38,7 +38,7 @@ class PickCategoryScreen extends ConsumerWidget {
             Text(
               _getLabelForCategory(ref, categoryToGet),
               style: TextStyle(
-                color: Colors.brown.shade900,
+                color: AppColors.themeColor.shade900,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.6,
                 fontSize: 18,
@@ -200,14 +200,14 @@ class PickCategoryScreen extends ConsumerWidget {
         title: const Text("試合結果"),
         actions: const [MainPopUpMenu()],
       ),
-      backgroundColor: Colors.grey.shade100,
       body: SingleChildScrollView(
         primary: true,
         child: SizedBox(
           width: double.infinity,
           child: Card(
+            elevation: 1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 50),
               child: Column(
                 children: [
                   Text(

@@ -193,6 +193,108 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     );
   }
 
+  Widget _buildGameStatusWidget(bool isReverse) {
+    switch (GameStatus.values.byName(_thisGameData["gameStatus"])) {
+      case GameStatus.before:
+        return const Text(
+          "試合前",
+          style: TextStyle(fontSize: 16),
+        );
+      case GameStatus.now:
+        return Text(
+          "試合中",
+          style: TextStyle(
+            color: Colors.deepPurpleAccent.shade700,
+            fontSize: 16,
+          ),
+        );
+      case GameStatus.after:
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: !_isExpanded ? 0 : 70,
+                  curve: Curves.linearToEaseOut,
+                  child: SingleChildScrollView(
+                    child: _scoreDetailWidget(isReverse: isReverse),
+                  ),
+                ),
+                Stack(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(
+                              () => _isExpanded = !_isExpanded,
+                            );
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: Icon(
+                            _isExpanded ? Icons.expand_less : Icons.expand_more,
+                          ),
+                          color: Colors.grey.shade800,
+                        ),
+                        const SizedBox(width: 15),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        if (_thisGameData["extraTime"] != "")
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                LabelUtilities.extraTimeLabel(_thisGameSport),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  height: 1.0,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              Text(
+                                _thisGameData["extraTime"],
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                  height: 1.0,
+                                ),
+                              ),
+                              const Text(
+                                " 勝利",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (_thisGameData["extraTime"] != "") const SizedBox(height: 10),
+                        const Center(
+                          child: Text(
+                            "試合終了",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+    }
+  }
+
   Future _loadGameDataByCategory(GameDataToPass gotData) async {
     if (_isInit) {
       setState(() {
@@ -274,14 +376,13 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
               ],
             ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : SizedBox(
               height: double.infinity,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Card(
+                  elevation: 1,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     child: Column(
@@ -347,104 +448,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        StatefulBuilder(
-                          builder: (BuildContext context, StateSetter setState) {
-                            return Column(
-                              children: [
-                                if (_thisGameData["gameStatus"] == "after")
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    height: !_isExpanded ? 0 : 70,
-                                    curve: Curves.linearToEaseOut,
-                                    child: SingleChildScrollView(
-                                      child: _scoreDetailWidget(isReverse: isReverse),
-                                    ),
-                                  ),
-                                if (_thisGameData["gameStatus"] == "before")
-                                  const Text(
-                                    "試合前",
-                                    style: TextStyle(fontSize: 16),
-                                  )
-                                else if (_thisGameData["gameStatus"] == "now")
-                                  Text(
-                                    "試合中",
-                                    style: TextStyle(
-                                      color: Colors.deepPurpleAccent.shade700,
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                else if (_thisGameData["gameStatus"] == "after")
-                                  Stack(
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(
-                                                () => _isExpanded = !_isExpanded,
-                                              );
-                                            },
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            icon: Icon(
-                                              _isExpanded ? Icons.expand_less : Icons.expand_more,
-                                            ),
-                                            color: Colors.grey.shade800,
-                                          ),
-                                          const SizedBox(width: 15),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          if (_thisGameData["extraTime"] != "")
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  LabelUtilities.extraTimeLabel(_thisGameSport),
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                    height: 1.0,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  _thisGameData["extraTime"],
-                                                  style: const TextStyle(
-                                                    fontSize: 23,
-                                                    height: 1.0,
-                                                  ),
-                                                ),
-                                                const Text(
-                                                  " 勝利",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          if (_thisGameData["extraTime"] != "") const SizedBox(height: 10),
-                                          const Center(
-                                            child: Text(
-                                              "試合終了",
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
+                        _buildGameStatusWidget(isReverse),
                         const Divider(),
                         SizedBox(
                           width: double.infinity,

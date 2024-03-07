@@ -58,7 +58,7 @@ class PickScheduleScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         child: Card(
-          elevation: 3,
+          elevation: 1,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             child: Column(children: [
@@ -97,7 +97,6 @@ class PickScheduleScreen extends ConsumerWidget {
         title: const Text("スケジュール"),
         actions: const [MainPopUpMenu()],
       ),
-      backgroundColor: Colors.grey.shade100,
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Column(children: [

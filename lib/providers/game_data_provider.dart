@@ -21,6 +21,8 @@ enum GameDataCategory {
   const GameDataCategory(this.asString);
 } //d:男子, j:女子, k:混合, 数字:学年
 
+enum GameStatus { before, now, after }
+
 //画面遷移時のデータのgameDataのやり取り用
 class GameDataToPass {
   final String gameDataId;
@@ -175,8 +177,19 @@ class GameDataManager {
     }
     //デバイス上のデータ更新
     newData.forEach((key, data) {
-      ref.read(gameDataForResultProvider.notifier).updateOneGameData(gameId: gameId, key: key, data: data);
-      ref.read(gameDataForScheduleProvider.notifier).updateOneGameData(gameId: gameId, key: key, data: data, teams: teams);
+      ref.read(gameDataForResultProvider.notifier).updateOneGameData(
+            gameId: gameId,
+            key: key,
+            data: data,
+            setMerge: setMerge,
+          );
+      ref.read(gameDataForScheduleProvider.notifier).updateOneGameData(
+            gameId: gameId,
+            key: key,
+            data: data,
+            teams: teams,
+            setMerge: setMerge,
+          );
     });
   }
 

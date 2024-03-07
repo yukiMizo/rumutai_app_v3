@@ -227,8 +227,6 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
-
     if (_isInit) {
       _loadData();
       _isInit = false;
@@ -237,31 +235,27 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       appBar: AppBar(title: const Text("通知一覧")),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: (_notifications.isEmpty) ? 0 : _notifications.length + 1,
-              itemBuilder: ((context, index) {
-                index -= 1;
-                if (index == -1) {
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          : _notifications.isEmpty
+              ? const SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                     child: Text(
-                      "※タップで内容を確認できます。",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: AppColors.themeColor.shade700,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      "通知はまだありません",
+                      textAlign: TextAlign.center,
                     ),
-                  );
-                }
-                return _buildNotificationWidget(
-                  notificationData: _notifications[index],
-                  index: index,
-                  isLoggedInAdmin: isLoggedInAdmin,
-                );
-              }),
-            ),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _notifications.length,
+                  itemBuilder: ((context, index) {
+                    return _buildNotificationWidget(
+                      notificationData: _notifications[index],
+                      index: index,
+                      isLoggedInAdmin: ref.watch(isLoggedInAdminProvider),
+                    );
+                  }),
+                ),
     );
   }
 }

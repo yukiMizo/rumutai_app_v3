@@ -266,121 +266,119 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ? const Center(child: CircularProgressIndicator())
           : SizedBox(
               width: double.infinity,
-              child: Scrollbar(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25),
-                    child: Column(
-                      children: [
-                        Text(
-                          "HR対抗",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.themeColor.shade800,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  child: Column(
+                    children: [
+                      Text(
+                        "HR対抗",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.themeColor.shade800,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _getRumutaiDateString(),
+                        style: TextStyle(color: AppColors.themeColor.shade800),
+                      ),
+                      const SizedBox(height: 40),
+                      _buildMainButton(
+                        text: "試合結果",
+                        icon: Icons.scoreboard_outlined,
+                        width: buttonWidth,
+                        onPressed: () => Navigator.of(context).pushNamed(PickCategoryScreen.routeName),
+                      ),
+                      const SizedBox(height: 15),
+                      _buildMainButton(
+                        text: "スケジュール",
+                        icon: Icons.event_note_outlined,
+                        width: buttonWidth,
+                        onPressed: () => Navigator.of(context).pushNamed(PickScheduleScreen.routeName),
+                      ),
+                      const SizedBox(height: 30),
+                      _buildSubButton(
+                        text: "るるぶ",
+                        icon: Icons.description_outlined,
+                        width: buttonWidth,
+                        onPressed: () => Navigator.of(context).pushNamed(RuleBookScreen.routeName),
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTonalButton(text: "担当の試合", icon: Icons.sports_score, width: buttonWidth, onPressed: () => Navigator.of(context).pushNamed(MyGameScreen.routeName)),
+                      const SizedBox(height: 25),
+                      _buildDividerWithText("その他機能"),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSubButton(
+                            text: "おみくじ",
+                            icon: FontAwesomeIcons.wandMagic,
+                            iconSize: 18,
+                            width: buttonWidth / 2 - 5,
+                            onPressed: () => Navigator.of(context).pushNamed(PickOmikujiScreen.routeName),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          _getRumutaiDateString(),
-                          style: TextStyle(color: AppColors.themeColor.shade800),
-                        ),
-                        const SizedBox(height: 40),
-                        _buildMainButton(
-                          text: "試合結果",
-                          icon: Icons.scoreboard_outlined,
-                          width: buttonWidth,
-                          onPressed: () => Navigator.of(context).pushNamed(PickCategoryScreen.routeName),
-                        ),
-                        const SizedBox(height: 15),
-                        _buildMainButton(
-                          text: "スケジュール",
-                          icon: Icons.event_note_outlined,
-                          width: buttonWidth,
-                          onPressed: () => Navigator.of(context).pushNamed(PickScheduleScreen.routeName),
-                        ),
-                        const SizedBox(height: 30),
-                        _buildSubButton(
-                          text: "るるぶ",
-                          icon: Icons.description_outlined,
-                          width: buttonWidth,
-                          onPressed: () => Navigator.of(context).pushNamed(RuleBookScreen.routeName),
-                        ),
-                        const SizedBox(height: 15),
-                        _buildTonalButton(text: "担当の試合", icon: Icons.sports_score, width: buttonWidth, onPressed: () => Navigator.of(context).pushNamed(MyGameScreen.routeName)),
-                        const SizedBox(height: 25),
-                        _buildDividerWithText("その他機能"),
-                        const SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSubButton(
-                              text: "おみくじ",
-                              icon: FontAwesomeIcons.wandMagic,
-                              iconSize: 18,
-                              width: buttonWidth / 2 - 5,
-                              onPressed: () => Navigator.of(context).pushNamed(PickOmikujiScreen.routeName),
-                            ),
-                            const SizedBox(width: 10),
-                            _buildSubButtonWithChild(
-                              text: "応援",
-                              child: SizedBox(
-                                width: 26,
-                                height: 26,
-                                child: Image.asset(
-                                  "assets/images/cheer.png",
-                                  color: Colors.brown.shade700,
-                                ),
+                          const SizedBox(width: 10),
+                          _buildSubButtonWithChild(
+                            text: "応援",
+                            child: SizedBox(
+                              width: 26,
+                              height: 26,
+                              child: Image.asset(
+                                "assets/images/cheer.png",
+                                color: AppColors.themeColor.shade700,
                               ),
-                              width: buttonWidth / 2 - 5,
-                              onPressed: () => Navigator.of(context).pushNamed(PickTeamToCheerScreen.routeName),
+                            ),
+                            width: buttonWidth / 2 - 5,
+                            onPressed: () => Navigator.of(context).pushNamed(PickTeamToCheerScreen.routeName),
+                          ),
+                        ],
+                      ),
+                      if (ref.watch(isLoggedInRumutaiStaffProvider) || ref.watch(isLoggedInAdminProvider))
+                        Column(
+                          children: [
+                            const SizedBox(height: 25),
+                            _buildDividerWithText("スタッフ機能"),
+                            const SizedBox(height: 15),
+                            _buildTonalButton(
+                              text: "タイムライン",
+                              icon: Icons.view_timeline_outlined,
+                              width: buttonWidth,
+                              onPressed: () => Navigator.of(context).pushNamed(TimelineScreen.routeName),
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTonalButton(
+                              text: "人手確認",
+                              icon: Icons.map,
+                              width: buttonWidth,
+                              onPressed: () => Navigator.of(context).pushNamed(DashboardScreen.routeName),
+                            )
+                          ],
+                        ),
+                      if (ref.watch(isLoggedInAdminProvider))
+                        Column(
+                          children: [
+                            const SizedBox(height: 25),
+                            _buildDividerWithText("管理者機能"),
+                            const SizedBox(height: 15),
+                            _buildTonalButton(
+                              text: "通知を送る",
+                              icon: Icons.send_outlined,
+                              width: buttonWidth,
+                              onPressed: () => Navigator.of(context).pushNamed(SendNotificationScreen.routeName),
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTonalButton(
+                              text: "日程",
+                              icon: Icons.date_range,
+                              width: buttonWidth,
+                              onPressed: () => Navigator.of(context).pushNamed(AdjustScheduleScreen.routeName),
                             ),
                           ],
                         ),
-                        if (ref.watch(isLoggedInRumutaiStaffProvider) || ref.watch(isLoggedInAdminProvider))
-                          Column(
-                            children: [
-                              const SizedBox(height: 25),
-                              _buildDividerWithText("スタッフ機能"),
-                              const SizedBox(height: 15),
-                              _buildTonalButton(
-                                text: "タイムライン",
-                                icon: Icons.view_timeline_outlined,
-                                width: buttonWidth,
-                                onPressed: () => Navigator.of(context).pushNamed(TimelineScreen.routeName),
-                              ),
-                              const SizedBox(height: 15),
-                              _buildTonalButton(
-                                text: "人手確認",
-                                icon: Icons.map,
-                                width: buttonWidth,
-                                onPressed: () => Navigator.of(context).pushNamed(DashboardScreen.routeName),
-                              )
-                            ],
-                          ),
-                        if (ref.watch(isLoggedInAdminProvider))
-                          Column(
-                            children: [
-                              const SizedBox(height: 25),
-                              _buildDividerWithText("管理者機能"),
-                              const SizedBox(height: 15),
-                              _buildTonalButton(
-                                text: "通知を送る",
-                                icon: Icons.send_outlined,
-                                width: buttonWidth,
-                                onPressed: () => Navigator.of(context).pushNamed(SendNotificationScreen.routeName),
-                              ),
-                              const SizedBox(height: 15),
-                              _buildTonalButton(
-                                text: "日程",
-                                icon: Icons.date_range,
-                                width: buttonWidth,
-                                onPressed: () => Navigator.of(context).pushNamed(AdjustScheduleScreen.routeName),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),

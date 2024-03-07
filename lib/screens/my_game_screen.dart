@@ -261,10 +261,10 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
       width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.brown.shade100,
-        border: Border(
+        color: AppColors.themeColor.shade100,
+        border: const Border(
           bottom: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
+            color: AppColors.themeColor,
             width: 2,
           ),
         ),
@@ -299,7 +299,7 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
                           child: Text(
                             "審判は自分が担当の試合を\n確認できます。\n\nHR番号を入力してください。",
                             style: TextStyle(
-                              color: Colors.brown.shade900,
+                              color: AppColors.themeColor.shade900,
                               fontSize: 18,
                             ),
                           ),

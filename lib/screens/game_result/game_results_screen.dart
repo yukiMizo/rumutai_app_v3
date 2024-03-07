@@ -70,6 +70,7 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
     final categoryToGet = ModalRoute.of(context)!.settings.arguments;
 
     ref.watch(gameDataForResultProvider); //データの変更を監視
+
     _loadData(categoryToGet as GameDataCategory);
 
     return DefaultTabController(
