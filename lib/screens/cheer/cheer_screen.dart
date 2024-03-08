@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:rumutai_app/providers/can_cheer_provider.dart';
 
 class DataToPassCheer {
   final Color backgroundColor;
@@ -17,15 +19,15 @@ class DataToPassCheer {
   });
 }
 
-class CheerScreen extends StatefulWidget {
+class CheerScreen extends ConsumerStatefulWidget {
   static const routeName = "/cheer-screen";
   const CheerScreen({super.key});
 
   @override
-  State<CheerScreen> createState() => _CheerScreenState();
+  ConsumerState<CheerScreen> createState() => _CheerScreenState();
 }
 
-class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin {
+class _CheerScreenState extends ConsumerState<CheerScreen> with TickerProviderStateMixin {
   late DatabaseReference _cheerDatabase;
   late StreamSubscription _streamSubscription;
 
@@ -99,6 +101,7 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
       _setRandomSplashColor();
       _isInit = false;
     }
+    final bool canCheer = ref.watch(canCheerProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text("応援")),
@@ -125,10 +128,17 @@ class _CheerScreenState extends State<CheerScreen> with TickerProviderStateMixin
                       splashFactory: InkRipple.splashFactory,
                       borderRadius: BorderRadius.circular(8),
                       onTap: () {
-                        _incrementCount(_classStr);
-                        setState(() {
-                          _setRandomSplashColor();
-                        });
+                        if (canCheer) {
+                          _incrementCount(_classStr);
+                          setState(() {
+                            _setRandomSplashColor();
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("応援機能停止中です")),
+                          );
+                        }
                       },
                       splashColor: _splashColor,
                       child: Padding(

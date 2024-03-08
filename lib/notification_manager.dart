@@ -118,7 +118,6 @@ class NotificationManager {
       flnp.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
     }
 
-    // ignore: unused_local_variable
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initSettingsIOS,

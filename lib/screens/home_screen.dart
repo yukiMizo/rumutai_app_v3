@@ -301,7 +301,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(height: 30),
                       _buildSubButton(
                         text: "るるぶ",
-                        icon: Icons.description_outlined,
+                        icon: Icons.book_outlined,
                         width: buttonWidth,
                         onPressed: () => Navigator.of(context).pushNamed(RuleBookScreen.routeName),
                       ),
