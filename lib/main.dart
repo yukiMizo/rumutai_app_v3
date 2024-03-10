@@ -12,7 +12,7 @@ import 'themes/app_theme.dart';
 //screens/
 import 'screens/home_screen.dart';
 import 'screens/detail_screen.dart';
-import 'screens/rumutai_staff_screen.dart';
+import 'screens/staff/rumutai_staff_screen.dart';
 import 'screens/rule_book_screen.dart';
 import 'screens/my_game_screen.dart';
 //cheer/

@@ -4,7 +4,7 @@ import 'package:rumutai_app/providers/sign_in_data_provider.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 
 import 'admin/admin_edit_screen.dart';
-import 'rumutai_staff_screen.dart';
+import 'staff/rumutai_staff_screen.dart';
 import '../providers/game_data_provider.dart';
 import '../providers/init_data_provider.dart';
 

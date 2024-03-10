@@ -223,7 +223,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             indicatorSize: TabBarIndicatorSize.tab,
             unselectedLabelColor: AppColors.lightText1.withOpacity(0.5),
             labelColor: AppColors.lightText1,
-            isScrollable: true,
+            labelPadding: const EdgeInsets.all(3),
             tabs: [
               Tab(text: tabStrings[0]),
               Tab(text: tabStrings[1]),

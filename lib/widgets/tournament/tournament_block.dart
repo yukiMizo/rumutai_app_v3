@@ -14,16 +14,38 @@ class TournamentBlock {
   static Color normalLineColor = Colors.grey.shade800;
 
   static Widget _verLine({required double length, required Color color}) {
-    return SizedBox(
+    return Container(
       height: length,
-      child: VerticalDivider(thickness: lineWeight, width: lineWeight, color: color),
+      width: lineWeight,
+      decoration: BoxDecoration(
+        color: color,
+        boxShadow: const [
+          BoxShadow(
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(1, 1),
+            color: Colors.black12,
+          ),
+        ],
+      ),
     );
   }
 
   static Widget _horLine({required double length, required Color color}) {
-    return SizedBox(
+    return Container(
+      height: lineWeight,
       width: length,
-      child: Divider(thickness: lineWeight, height: lineWeight, color: color),
+      decoration: BoxDecoration(
+        color: color,
+        boxShadow: const [
+          BoxShadow(
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(1, 1),
+            color: Colors.black12,
+          ),
+        ],
+      ),
     );
   }
 

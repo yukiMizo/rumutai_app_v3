@@ -133,6 +133,13 @@ class TournamentWidget extends ConsumerWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              )
+            ],
           ),
         ),
         Stack(
@@ -206,7 +213,17 @@ class TournamentWidget extends ConsumerWidget {
         ),
         const Text(
           "３位",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -220,6 +237,13 @@ class TournamentWidget extends ConsumerWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              )
+            ],
           ),
         ),
         Stack(
@@ -293,7 +317,17 @@ class TournamentWidget extends ConsumerWidget {
         ),
         const Text(
           "７位",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -309,6 +343,13 @@ class TournamentWidget extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.black26,
+                  )
+                ],
               ),
             ),
             SizedBox(width: 18),
@@ -418,6 +459,13 @@ class TournamentWidget extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.black26,
+                  )
+                ],
               ),
             ),
             SizedBox(width: 18),
@@ -540,6 +588,13 @@ class TournamentWidget extends ConsumerWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              )
+            ],
           ),
         ),
         Stack(
@@ -638,6 +693,13 @@ class TournamentWidget extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                    color: Colors.black26,
+                  )
+                ],
               ),
             ),
           ],
