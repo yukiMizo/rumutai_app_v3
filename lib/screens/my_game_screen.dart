@@ -311,15 +311,6 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
       padding: EdgeInsets.zero,
       child: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.themeColor.shade100,
-          border: Border(
-            top: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-              width: 2,
-            ),
-          ),
-        ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: FilledButton.icon(
           onPressed: () {
