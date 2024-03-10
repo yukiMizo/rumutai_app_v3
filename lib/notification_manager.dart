@@ -85,7 +85,7 @@ class NotificationManager {
       );
     });
     //topic設定
-    fbm.subscribeToTopic("notification-all");
+    fbm.subscribeToTopic("notification");
   }
 
   //許可を要求

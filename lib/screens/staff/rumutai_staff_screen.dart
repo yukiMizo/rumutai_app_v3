@@ -9,7 +9,6 @@ import 'package:rumutai_app/utilities/label_utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../providers/init_data_provider.dart';
-
 import '../../providers/game_data_provider.dart';
 
 class RumutaiStaffScreen extends ConsumerStatefulWidget {
