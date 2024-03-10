@@ -242,7 +242,7 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
                             _isDirty = true;
                           }
                         });
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                       },
                 child: const Text("決定"),

@@ -100,7 +100,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                                 _contentsController.text = "";
                                 _titleController.text = "";
                                 _isLoading = false;
-                                if (!mounted) return;
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("通知を送信しました"),

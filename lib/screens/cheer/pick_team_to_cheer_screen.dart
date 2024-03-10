@@ -214,7 +214,7 @@ class _PickTeamToCheerScreenState extends ConsumerState<PickTeamToCheerScreen> {
                             ref.read(canCheerProvider.notifier).state = true;
                           }
                           _dialogIsLoading = false;
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

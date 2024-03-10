@@ -655,7 +655,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                           setState(() {
                             _isLoadingDialog = false;
                           });
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(currentGameStatus == "after" ? '試合中に戻しました。' : "試合前に戻しました。"),
@@ -758,7 +758,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                             setState(() {
                               _isLoadingDialog = false;
                             });
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("試合を開始しました。")),
                             );
@@ -937,7 +937,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                   setState(() {
                                     _isLoadingDialog = false;
                                   });
-                                  if (!mounted) return;
+                                  if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text("試合を終了しました。")),
                                   );

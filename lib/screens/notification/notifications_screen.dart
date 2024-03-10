@@ -208,7 +208,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                     ref.read(allNotificationIdProvider.notifier).removeData(notificationId);
 
                     dialogIsLoading = false;
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("通知を消去しました。")),
                     );

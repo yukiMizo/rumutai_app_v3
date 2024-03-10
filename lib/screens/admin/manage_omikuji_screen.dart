@@ -291,7 +291,7 @@ class _ManagaeOmikujiScreenState extends State<ManagaeOmikujiScreen> {
                     _reportedOmikujiDataList.remove(omikujiData);
                   });
                   _dialogIsLoading = false;
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('おみくじの報告を取り消しました'),
@@ -347,7 +347,7 @@ class _ManagaeOmikujiScreenState extends State<ManagaeOmikujiScreen> {
                     _reportedOmikujiDataList.remove(omikujiData);
                   });
                   _dialogIsLoading = false;
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('おみくじを削除しました'),

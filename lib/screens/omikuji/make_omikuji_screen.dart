@@ -666,7 +666,7 @@ class _MakeOmikujiScreenState extends State<MakeOmikujiScreen> {
                   });
                   await FirebaseFirestore.instance.collection('omikujiData').add(data);
 
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('おみくじを投稿しました。'),
