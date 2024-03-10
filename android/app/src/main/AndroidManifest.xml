@@ -2,6 +2,8 @@
     package="com.kokosai.rumutai_app">
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
    <application
         android:label="HR対抗"
         android:name="${applicationName}"
