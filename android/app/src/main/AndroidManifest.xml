@@ -12,10 +12,8 @@
            android:exported="false">
            <intent-filter>
                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-               <!-- 2021.05.27 再起動時のローカル通知継続用設定を追加 -->
                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-               <!-- 2021.05.27 -->
 
                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
            </intent-filter>
