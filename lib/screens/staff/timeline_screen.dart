@@ -196,7 +196,16 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Scrollbar(
-              child: ListView.builder(
+              child: (_timelines.isEmpty)? const SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "試合の開始終了情報はまだありません",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ): ListView.builder(
                 itemCount: (_timelines.isEmpty) ? 0 : _timelines.length + 1,
                 itemBuilder: ((context, index) {
                   index -= 1;
