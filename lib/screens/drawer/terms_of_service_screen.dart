@@ -57,7 +57,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                     "2. 知的財産権",
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  _indentedText("a.", "本アプリの著作権、商標権、特許権、その他の知的財産権は、著作者である溝口優生、石原裕己に帰属します。"),
+                  _indentedText("a.", "本アプリの著作権、商標権、特許権、その他の知的財産権は、その制作者であるアプリ委員会に帰属します。"),
                   _indentedText("b.", "ユーザーは、本アプリ内で表示される情報やコンテンツを個人的な目的で利用することができますが、これらの情報やコンテンツを商業的な目的で利用することはできません。"),
                   const SizedBox(height: 5),
                   const Text(
@@ -75,6 +75,13 @@ class TermsOfServiceScreen extends StatelessWidget {
                   _indentedText("a.", "利用規約は、事前の通知なしに変更されることがあります。"),
                   _indentedText("b.", "利用規約が変更された場合、本アプリでユーザーへ通知します。"),
                   _indentedText("c.", "利用規約が変更された場合、変更後の利用規約が適用されるものとします。"),
+                  const Text(
+                    "5. 制定日",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  _indentedText("a.", "制定 2023年3月2日"),
+                  _indentedText("b.", "変更(1) 2024年3月9日"),
+                  const SizedBox(height: 5),
                 ],
               ),
             ),

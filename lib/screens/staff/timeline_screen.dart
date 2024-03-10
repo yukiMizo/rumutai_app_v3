@@ -62,8 +62,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
           insetPadding: const EdgeInsets.all(10),
           title: const Text("確認"),
           content: SizedBox(
-            height: 200,
-            width: 200,
+            height: 100,
             child: dialogIsLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
@@ -83,26 +82,18 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
           actions: <Widget>[
             if (!dialogIsLoading)
               SizedBox(
-                width: 140,
+                width: 120,
                 height: 40,
                 child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
                   onPressed: () => Navigator.pop(context),
                   child: const Text("キャンセル"),
                 ),
               ),
             if (!dialogIsLoading)
               SizedBox(
-                width: 140,
+                width: 120,
                 height: 40,
                 child: FilledButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
                   child: const Text("消去"),
                   onPressed: () async {
                     setStateInDialog(() {

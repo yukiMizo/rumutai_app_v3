@@ -25,6 +25,7 @@ import 'screens/drawer/privacy_policy_screen.dart';
 import 'screens/drawer/terms_of_service_screen.dart';
 import 'screens/drawer/contact_screen.dart';
 import 'screens/drawer/info_screen.dart';
+import 'screens/drawer/place_schedule_screen.dart';
 //game_result/
 import 'screens/game_result/pick_category_screen.dart';
 import 'screens/game_result/game_results_screen.dart';
@@ -39,9 +40,7 @@ import 'screens/omikuji/make_omikuji_screen.dart';
 import 'screens/schedule/schedule_screen.dart';
 import 'screens/schedule/pick_schedule_screen.dart';
 //staff/
-import 'screens/staff/dashboard_screen.dart';
 import 'screens/staff/timeline_screen.dart';
-import 'screens/staff/my_place_game_screen.dart';
 //admin/
 import 'screens/admin/adjust_schedule_screen.dart';
 import 'screens/admin/send_notification_screen.dart';
@@ -96,10 +95,11 @@ class MyApp extends StatelessWidget {
         //drawer
         InfoScreen.routeName: (ctx) => const InfoScreen(),
         SignInScreen.routeName: (ctx) => const SignInScreen(),
-        MapScreen.routeName: (ctx) => MapScreen(),
+        MapScreen.routeName: (ctx) => const MapScreen(),
         PrivacyPolicyScreen.routeName: (ctx) => const PrivacyPolicyScreen(),
         TermsOfServiceScreen.routeName: (ctx) => const TermsOfServiceScreen(),
         ContactScreen.routeName: (ctx) => const ContactScreen(),
+        PlaceScheduleScreen.routeName: (ctx) => const PlaceScheduleScreen(),
         //gameResult
         GameResultsScreen.routeName: (ctx) => const GameResultsScreen(),
         PickCategoryScreen.routeName: (ctx) => const PickCategoryScreen(),
@@ -114,8 +114,6 @@ class MyApp extends StatelessWidget {
         ScheduleScreen.routeName: (ctx) => const ScheduleScreen(),
         PickScheduleScreen.routeName: (ctx) => const PickScheduleScreen(),
         //staff
-        DashboardScreen.routeName: (ctx) => const DashboardScreen(),
-        MyPlaceGameScreen.routeName: (ctx) => const MyPlaceGameScreen(),
         TimelineScreen.routeName: (ctx) => const TimelineScreen(),
       },
     );

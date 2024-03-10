@@ -7,10 +7,10 @@ import 'package:rumutai_app/providers/game_data_provider.dart';
 import 'providers/init_data_provider.dart';
 
 class SetGameData {
-  //学期を設定（重要！！！！）
+  //①学期を登録（重要！！！！）
   static const semester = Semester.zenki;
 
-  //sport を設定
+  //②種目を登録
   static const Map<String, SportsType> sportsTypeMap = {
     "1d": SportsType.futsal,
     "1j": SportsType.basketball,
@@ -20,7 +20,7 @@ class SetGameData {
     "2k": SportsType.volleyball
   };
 
-  //gameIdを設定
+  //③gameIdを登録
   static const List<String> gameIdList1d = [
     //a
     "1d-a01",
@@ -236,7 +236,7 @@ class SetGameData {
     "2k-l05",
   ];
 
-  //classを設定
+  //④クラスを登録
   static const List<String> class1da = ["101", "102", "105", "108"];
   static const List<String> class1db = ["103", "104", "106", "107", "109"];
   static const List<String> class1ja = ["101", "102", "105", "108", "110a"];
@@ -250,7 +250,7 @@ class SetGameData {
   static const List<String> class2ka = ["201", "202", "204", "207", "210"];
   static const List<String> class2kb = ["203", "205", "206", "208", "209"];
 
-  //トーナメントを設定
+  //⑤トーナメントの種類を登録
   static const Map<String, TournamentType> tournamentTypeMap = {
     "1d-f": TournamentType.four,
     "1d-l": TournamentType.five2,
@@ -266,10 +266,10 @@ class SetGameData {
     "2k-l": TournamentType.six,
   };
 
-  //るるぶを設定
+  //⑥るるぶのurlを登録
   static const String ruleBookUrl = "https://drive.google.com/file/d/1HfpSZllBCBqBdM83IjzWRk536gN0qrPn/view?usp=sharing";
 
-  //確認をして、更新をする
+  //⑦確認をして、更新をする
   static const updateInitData = false;
   static const updateGameData = false;
 
