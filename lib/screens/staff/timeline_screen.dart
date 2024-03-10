@@ -101,7 +101,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
                     });
                     await FirebaseFirestore.instance.collection("Timeline").doc(timelineData["id"]).delete();
                     dialogIsLoading = false;
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('タイムラインを消去しました。'),
@@ -196,29 +196,31 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Scrollbar(
-              child: (_timelines.isEmpty)? const SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "試合の開始終了情報はまだありません",
-                      textAlign: TextAlign.center,
+              child: (_timelines.isEmpty)
+                  ? const SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "試合の開始終了情報はまだありません",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: (_timelines.isEmpty) ? 0 : _timelines.length + 1,
+                      itemBuilder: ((context, index) {
+                        index -= 1;
+                        if (index == -1) {
+                          return Container(width: double.infinity, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5));
+                        }
+                        return _timelineWidget(
+                          timelineData: _timelines[index],
+                          index: index,
+                          isLoggedInAdmin: isLoggedInAdmin,
+                        );
+                      }),
                     ),
-                  ),
-                ): ListView.builder(
-                itemCount: (_timelines.isEmpty) ? 0 : _timelines.length + 1,
-                itemBuilder: ((context, index) {
-                  index -= 1;
-                  if (index == -1) {
-                    return Container(width: double.infinity, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5));
-                  }
-                  return _timelineWidget(
-                    timelineData: _timelines[index],
-                    index: index,
-                    isLoggedInAdmin: isLoggedInAdmin,
-                  );
-                }),
-              ),
             ),
     );
   }

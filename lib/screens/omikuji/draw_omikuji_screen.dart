@@ -152,7 +152,7 @@ class _DrawOmikujiScreenState extends State<DrawOmikujiScreen> {
     }
   }
 
-  Widget _buildFavoriteButton() {
+/*  Widget _buildFavoriteButton() {
     return Stack(
       alignment: Alignment.centerRight,
       children: [
@@ -167,7 +167,7 @@ class _DrawOmikujiScreenState extends State<DrawOmikujiScreen> {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _buildReportButton(String id) {
     return IconButton(

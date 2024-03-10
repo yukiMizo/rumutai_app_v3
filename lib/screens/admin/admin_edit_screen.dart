@@ -465,7 +465,7 @@ class _AdminEditScreenState extends ConsumerState<AdminEditScreen> {
                   );
 
                   _dialogIsLoading = false;
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('試合情報を変更しました。'),

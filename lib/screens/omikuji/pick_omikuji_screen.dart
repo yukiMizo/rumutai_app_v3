@@ -68,7 +68,6 @@ class PickOmikujiScreen extends ConsumerWidget {
   Widget _buildTonalButton({
     required String text,
     required void Function() onPressed,
-    double? iconSize,
   }) {
     return SizedBox(
       width: 250,

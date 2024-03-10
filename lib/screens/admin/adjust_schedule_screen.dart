@@ -123,7 +123,7 @@ class _AdjustScheduleScreenState extends ConsumerState<AdjustScheduleScreen> {
                               _isLoading = false;
                             });
                             ref.read(semesterProvider.notifier).state = newSemester;
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("変更しました")),
                             );
