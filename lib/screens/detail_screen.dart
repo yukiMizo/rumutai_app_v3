@@ -325,6 +325,135 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     }
   }
 
+  Widget _buildGameResultSection(bool isReverse) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            "試合結果",
+            style: TextStyle(color: Colors.grey.shade700),
+          ),
+        ),
+        const SizedBox(height: 25),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 60,
+                  height: 38,
+                  child: FittedBox(
+                    child: Text(
+                      _thisGameData["team"][isReverse ? "1" : "0"],
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 90,
+              child: Text(
+                _thisGameData["score"][isReverse ? 1 : 0].toString(),
+                style: const TextStyle(fontSize: 45),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const Text(
+              "-",
+              style: TextStyle(fontSize: 40),
+            ),
+            SizedBox(
+              width: 90,
+              child: Text(
+                _thisGameData["score"][isReverse ? 0 : 1].toString(),
+                style: const TextStyle(fontSize: 45),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 60,
+                  height: 38,
+                  child: FittedBox(
+                    child: Text(
+                      _thisGameData["team"][isReverse ? "0" : "1"],
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildGameStatusWidget(isReverse),
+      ],
+    );
+  }
+
+  Widget _buildGameInfoSection() {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            "試合情報",
+            style: TextStyle(color: Colors.grey.shade700),
+          ),
+        ),
+        const SizedBox(height: 35),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _label("日時："),
+                Text(
+                  "${_thisGameData["startTime"]["date"]}",
+                  style: const TextStyle(fontSize: 25, height: 1),
+                ),
+                const Text("日目　", style: TextStyle(fontSize: 16, height: 1.25)),
+                Text(
+                  "${_thisGameData["startTime"]["hour"]}:${_thisGameData["startTime"]["minute"]}〜",
+                  style: const TextStyle(fontSize: 25, height: 1.0),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                _label("場所："),
+                Text("${_thisGameData["place"]}", style: const TextStyle(fontSize: 20)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                _label("競技："),
+                Text(_thisGameSport.asLongJapanse(), style: const TextStyle(fontSize: 20)),
+              ],
+            ),
+            const SizedBox(height: 35),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _label("審判："),
+                _refereesAsColumn(),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     GameDataToPass gotData = ModalRoute.of(context)!.settings.arguments as GameDataToPass;
@@ -388,118 +517,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            "試合結果",
-                            style: TextStyle(color: Colors.grey.shade700),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    _thisGameData["team"][isReverse ? "1" : "0"],
-                                    style: const TextStyle(fontSize: 25),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 90,
-                              child: Text(
-                                _thisGameData["score"][isReverse ? 1 : 0].toString(),
-                                style: const TextStyle(fontSize: 45),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const Text(
-                              "-",
-                              style: TextStyle(fontSize: 40),
-                            ),
-                            SizedBox(
-                              width: 90,
-                              child: Text(
-                                _thisGameData["score"][isReverse ? 0 : 1].toString(),
-                                style: const TextStyle(fontSize: 45),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    _thisGameData["team"][isReverse ? "0" : "1"],
-                                    style: const TextStyle(fontSize: 25),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        _buildGameStatusWidget(isReverse),
+                        _buildGameResultSection(isReverse),
                         const Divider(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            "試合情報",
-                            style: TextStyle(color: Colors.grey.shade700),
-                          ),
-                        ),
-                        const SizedBox(height: 35),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                _label("日時："),
-                                Text(
-                                  "${_thisGameData["startTime"]["date"]}",
-                                  style: const TextStyle(fontSize: 25, height: 1),
-                                ),
-                                const Text("日目　", style: TextStyle(fontSize: 16, height: 1.25)),
-                                Text(
-                                  "${_thisGameData["startTime"]["hour"]}:${_thisGameData["startTime"]["minute"]}〜",
-                                  style: const TextStyle(fontSize: 25, height: 1.0),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                _label("場所："),
-                                Text("${_thisGameData["place"]}", style: const TextStyle(fontSize: 20)),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                _label("競技："),
-                                Text(_thisGameSport.asLongJapanse(), style: const TextStyle(fontSize: 20)),
-                              ],
-                            ),
-                            const SizedBox(height: 35),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _label("審判："),
-                                _refereesAsColumn(),
-                              ],
-                            ),
-                          ],
-                        ),
+                        _buildGameInfoSection(),
                         const SizedBox(height: 25),
                       ],
                     ),

@@ -94,63 +94,59 @@ class _GameResultsScreenState extends ConsumerState<GameResultsScreen> {
             ? const Center(child: CircularProgressIndicator())
             : TabBarView(
                 children: [
-                  Scrollbar(
-                    child: SingleChildScrollView(
-                      child: InteractiveViewer(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                LeagueWidget(
-                                  title: "リーグA",
-                                  leagueData: _gameDataForThisCategory["a"],
+                  SingleChildScrollView(
+                    child: InteractiveViewer(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            children: [
+                              LeagueWidget(
+                                title: "リーグA",
+                                leagueData: _gameDataForThisCategory["a"],
+                              ),
+                              const SizedBox(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 5),
+                                  child: Divider(),
                                 ),
-                                const SizedBox(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 5),
-                                    child: Divider(),
-                                  ),
-                                ),
-                                LeagueWidget(
-                                  title: "リーグB",
-                                  leagueData: _gameDataForThisCategory["b"],
-                                ),
-                              ],
-                            ),
+                              ),
+                              LeagueWidget(
+                                title: "リーグB",
+                                leagueData: _gameDataForThisCategory["b"],
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  Scrollbar(
-                    child: SingleChildScrollView(
-                      child: InteractiveViewer(
-                        child: Card(
-                          child: Column(
-                            children: [
-                              TournamentWidget(
-                                title: "決勝",
-                                tournamentData: _gameDataForThisCategory["f"],
+                  SingleChildScrollView(
+                    child: InteractiveViewer(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            TournamentWidget(
+                              title: "決勝",
+                              tournamentData: _gameDataForThisCategory["f"],
+                            ),
+                            if (_gameDataForThisCategory["l"] != null)
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Divider(),
+                                    ),
+                                  ),
+                                  TournamentWidget(
+                                    title: "下位",
+                                    tournamentData: _gameDataForThisCategory["l"],
+                                  ),
+                                  const SizedBox(height: 30),
+                                ],
                               ),
-                              if (_gameDataForThisCategory["l"] != null)
-                                Column(
-                                  children: [
-                                    const SizedBox(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                        child: Divider(),
-                                      ),
-                                    ),
-                                    TournamentWidget(
-                                      title: "下位",
-                                      tournamentData: _gameDataForThisCategory["l"],
-                                    ),
-                                    const SizedBox(height: 30),
-                                  ],
-                                ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
                     ),

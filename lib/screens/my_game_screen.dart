@@ -235,8 +235,6 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
                     ? null
                     : () async {
                         await LocalData.saveLocalData<String>("pickedPersonForMyGame", _targetPersonController.text);
-
-                        if (!mounted) return;
                         await PickedPersonDataManager.setPickedPersonDataFromLocal(ref);
                         setState(() {
                           _targetPerson = _targetPersonController.text;
@@ -283,33 +281,26 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
   }
 
   Widget _buildMiddleSection() {
-    return SizedBox(
-      width: double.infinity,
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              children: _targetPerson == null
-                  ? [
-                      const SizedBox(height: 50),
-                      FittedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            "審判は自分が担当の試合を\n確認できます。\n\nHR番号を入力してください。",
-                            style: TextStyle(
-                              color: AppColors.themeColor.shade900,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        children: _targetPerson == null
+            ? [
+                const SizedBox(height: 50),
+                FittedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      "審判は自分が担当の試合を\n確認できます。\n\nHR番号を入力してください。",
+                      style: TextStyle(
+                        color: AppColors.themeColor.shade900,
+                        fontSize: 18,
                       ),
-                    ]
-                  : _myGameListWidget(gameDataList: _gameDataList),
-            ),
-          ),
-        ),
+                    ),
+                  ),
+                ),
+              ]
+            : _myGameListWidget(gameDataList: _gameDataList),
       ),
     );
   }
@@ -352,6 +343,12 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
     );
   }
 
+  Future _onRefresh() async {
+    setState(() {
+      _isDirty = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _loadData();
@@ -360,12 +357,20 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
         title: const Text("担当の試合"),
         actions: const [MainPopUpMenu()],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(children: [
-              _buildTopSection(),
-              _buildMiddleSection(),
-            ]),
+      body: Column(children: [
+        _buildTopSection(),
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: _buildMiddleSection(),
+                  ),
+                ),
+        ),
+      ]),
       bottomNavigationBar: _buildBottomSection(),
     );
   }

@@ -73,6 +73,8 @@ class TournamentTypeMapNotifier extends StateNotifier<Map<String, TournamentType
 final sportsTypeMapProvider = StateNotifierProvider<SportsTypeMapNotifier, Map<String, SportsType>>((ref) => SportsTypeMapNotifier());
 final tournamentTypeMapProvider = StateNotifierProvider<TournamentTypeMapNotifier, Map<String, TournamentType>>((ref) => TournamentTypeMapNotifier());
 
+final ruleBookUrlProvider = StateProvider<String>((ref) => "");
+
 final semesterProvider = StateProvider<Semester>((ref) => Semester.zenki);
 
 final day1dateProvider = StateProvider<DateTime>((ref) => DateTime(2024, 3, 13));
@@ -96,6 +98,9 @@ class InitDataManager {
     try {
       debugPrint("loadedDateData");
       final gotData = await FirebaseFirestore.instance.collection("dataForInit").doc("dataForInitDoc").get();
+
+      //るるぶ関連
+      ref.read(ruleBookUrlProvider.notifier).state = gotData["ruleBookUrl"];
 
       //sports,tournament 関連
       final List<String> sportsIdList = [];

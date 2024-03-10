@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_picker/flutter_picker.dart';
 import 'package:rumutai_app/themes/app_color.dart';
 import 'package:rumutai_app/utilities/label_utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -604,9 +603,17 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
               builder: (context, setState) => AlertDialog(
                 insetPadding: const EdgeInsets.all(10),
                 title: const Text("確認"),
-                content: _isLoadingDialog
-                    ? const SizedBox(height: 180, child: Center(child: CircularProgressIndicator()))
-                    : (currentGameStatus == "now" ? const Text("試合前に戻します。") : const Text("試合中に戻します。")),
+                content: SizedBox(
+                  height: 80,
+                  child: Center(
+                    child: _isLoadingDialog
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            currentGameStatus == "now" ? "試合前に戻します" : "試合中に戻します",
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                  ),
+                ),
                 actionsAlignment: MainAxisAlignment.center,
                 actions: <Widget>[
                   if (!_isLoadingDialog)
@@ -686,9 +693,14 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                             child: CircularProgressIndicator(),
                           ),
                         )
-                      : SizedBox(
-                          height: 100,
-                          child: Column(
+                      : const SizedBox(
+                          height: 80,
+                          child: Center(
+                            child: Text(
+                              "試合を開始します。",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ), /* Column(
                             children: [
                               const Text("試合を開始します。"),
                               Text("開始時刻 ${dateTime.hour.toString()}時${dateTime.minute.toString()}分"),
@@ -708,7 +720,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                         }).showModal(context);
                                   })
                             ],
-                          ),
+                          ),*/
                         ),
                   actionsAlignment: MainAxisAlignment.center,
                   actions: <Widget>[
@@ -813,8 +825,11 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                       if (_selectedExtraTime != "") _extraTimeWidget(),
                                       const Divider(),
                                       const SizedBox(height: 10),
-                                      const Text("試合を終了します。"),
-                                      Text("終了時刻 ${dateTime.hour.toString()}時${dateTime.minute.toString()}分"),
+                                      const Text(
+                                        "試合を終了します",
+                                        style: TextStyle(fontWeight: FontWeight.w500),
+                                      ),
+                                      /*                Text("終了時刻 ${dateTime.hour.toString()}時${dateTime.minute.toString()}分"),
                                       TextButton(
                                         style: TextButton.styleFrom(
                                           textStyle: const TextStyle(fontSize: 15),
@@ -831,6 +846,7 @@ class _RumutaiStaffScreenState extends ConsumerState<RumutaiStaffScreen> {
                                         },
                                         child: const Text("終了時刻変更"),
                                       ),
+                           */
                                     ],
                                   ),
                                 ),

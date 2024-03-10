@@ -1,14 +1,14 @@
 //game data 全体の更新用のファイルです。
 //基本的に次のルム対に向けて新しくgame data を設定する時のみ使用します。
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:rumutai_app/providers/game_data_provider.dart';
 
 import 'providers/init_data_provider.dart';
 
 class SetGameData {
   //学期を設定（重要！！！！）
-  static const semester = Semester.kouki;
+  static const semester = Semester.zenki;
 
   //sport を設定
   static const Map<String, SportsType> sportsTypeMap = {
@@ -266,8 +266,12 @@ class SetGameData {
     "2k-l": TournamentType.six,
   };
 
+  //るるぶを設定
+  static const String ruleBookUrl = "https://drive.google.com/file/d/1HfpSZllBCBqBdM83IjzWRk536gN0qrPn/view?usp=sharing";
+
   //確認をして、更新をする
-  static const updateOk = false;
+  static const updateInitData = false;
+  static const updateGameData = false;
 
   static const List<String> allGameIdList = [
     ...gameIdList1d,
@@ -288,9 +292,10 @@ class SetGameData {
     tournamentTypeMap.forEach((id, tournamentType) {
       tournamentMapToSet[id] = tournamentType.name;
     });
-    if (updateOk) {
+    if (updateInitData) {
       await FirebaseFirestore.instance.collection("dataForInit").doc("dataForInitDoc").set(
         {
+          "ruleBookUrl": ruleBookUrl,
           "sports": sportsMapToSet,
           "tournament": tournamentMapToSet,
         },
@@ -303,7 +308,7 @@ class SetGameData {
     final String collectionToDelete1 = semester == Semester.zenki ? "gameDataToReadZenki" : "gameDataToReadKouki";
     final String collectionToDelete2 = semester == Semester.zenki ? "classGameDataToReadZenki" : "classGameDataToReadKouki";
 
-    if (updateOk) {
+    if (updateGameData) {
       //今あるcollectionを消去
       _deleteColection(collection);
       _deleteColection(collectionToDelete1);
@@ -389,9 +394,9 @@ class SetGameData {
       } else if (gameId.substring(4) == "02") {
         return ["B1", "A2"];
       } else if (gameId.substring(4) == "03") {
-        return ["f1", "f2"];
+        return ["F01L", "F02L"];
       } else {
-        return ["F1", "F2"];
+        return ["F01L", "F02L"];
       }
     } else if (gameId[3] == "l") {
       final TournamentType tournamentType = tournamentTypeMap[gameId.substring(0, 4)]!;
@@ -404,9 +409,9 @@ class SetGameData {
           } else if (gameId.substring(4) == "02") {
             return ["B3", "A4"];
           } else if (gameId.substring(4) == "03") {
-            return ["l1", "l2"];
+            return ["L01L", "L02L"];
           } else {
-            return ["L1", "L2"];
+            return ["L01L", "L02L"];
           }
         case TournamentType.five:
           if (gameId.substring(4) == "01") {
@@ -414,9 +419,9 @@ class SetGameData {
           } else if (gameId.substring(4) == "02") {
             return ["B4", "A4"];
           } else if (gameId.substring(4) == "03") {
-            return ["L2", "B3"];
+            return ["L02W", "B3"];
           } else {
-            return ["L1", "L3"];
+            return ["L01W", "L03W"];
           }
         case TournamentType.five2:
           if (gameId.substring(4) == "01") {
@@ -424,11 +429,11 @@ class SetGameData {
           } else if (gameId.substring(4) == "02") {
             return ["B4", "A4"];
           } else if (gameId.substring(4) == "03") {
-            return ["l1", "l2"];
+            return ["L01L", "L02L"];
           } else if (gameId.substring(4) == "04") {
-            return ["L2", "B3"];
+            return ["L02W", "B3"];
           } else {
-            return ["L1", "L4"];
+            return ["L01W", "L04W"];
           }
         case TournamentType.six:
           if (gameId.substring(4) == "01") {
@@ -436,11 +441,11 @@ class SetGameData {
           } else if (gameId.substring(4) == "02") {
             return ["B4", "A5"];
           } else if (gameId.substring(4) == "03") {
-            return ["A3", "L1"];
+            return ["A3", "L01W"];
           } else if (gameId.substring(4) == "04") {
-            return ["L2", "B3"];
+            return ["L02W", "B3"];
           } else {
-            return ["L3", "L4"];
+            return ["L03W", "L04W"];
           }
         case TournamentType.seven:
           if (gameId.substring(4) == "01") {
@@ -450,11 +455,11 @@ class SetGameData {
           } else if (gameId.substring(4) == "03") {
             return ["B4", "A5"];
           } else if (gameId.substring(4) == "04") {
-            return ["L1", "L2"];
+            return ["L01W", "L02W"];
           } else if (gameId.substring(4) == "05") {
-            return ["L3", "B3"];
+            return ["L03W", "B3"];
           } else {
-            return ["L4", "L5"];
+            return ["L04W", "L05W"];
           }
       }
     }

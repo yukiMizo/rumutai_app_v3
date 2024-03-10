@@ -92,7 +92,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       ];
     }
 
-    List<Widget> scheduleList = [];
+    List<Widget> scheduleWidgetList = [];
     List day1sortedGameData = [];
     List day2sortedGameData = [];
     gameData.forEach((gameId, data) {
@@ -140,7 +140,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     day1sortedGameData.sort((a, b) => a['createdAt'].compareTo(b['createdAt']));
     day2sortedGameData.sort((a, b) => a['createdAt'].compareTo(b['createdAt']));
 
-    scheduleList.add(
+    scheduleWidgetList.add(
       Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -154,33 +154,33 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         ),
       ),
     );
-    scheduleList.add(_dividerWithText("1日目"));
+    scheduleWidgetList.add(_dividerWithText("1日目"));
     for (var element in day1sortedGameData) {
       bool isReverse = false;
       if (classNumber != element["data"]["team"]["0"]) {
         isReverse = true;
       }
-      scheduleList.add(ScheduleWidget(
+      scheduleWidgetList.add(ScheduleWidget(
         gameData: element["data"],
         classNumber: classNumber,
         isReverse: isReverse,
       ));
     }
 
-    scheduleList.add(_dividerWithText("2日目"));
+    scheduleWidgetList.add(_dividerWithText("2日目"));
     for (var element in day2sortedGameData) {
       bool isReverse = false;
       if (classNumber != element["data"]["team"]["0"]) {
         isReverse = true;
       }
-      scheduleList.add(ScheduleWidget(
+      scheduleWidgetList.add(ScheduleWidget(
         gameData: element["data"],
         classNumber: classNumber,
         isReverse: isReverse,
       ));
     }
 
-    return scheduleList;
+    return scheduleWidgetList;
   }
 
   List<String> _tabStrings(String classNumber) {
