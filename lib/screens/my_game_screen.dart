@@ -310,6 +310,7 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
       height: 60,
       padding: EdgeInsets.zero,
       child: Container(
+        color: AppColors.scaffoldBackgroundColor,
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: FilledButton.icon(

@@ -500,7 +500,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     backgroundColor: AppColors.accentColor,
                     onPressed: () => Navigator.of(context).pushNamed(AdminEditScreen.routeName, arguments: GameDataToPassAdmin(thisGameData: _thisGameData, isReverse: isReverse)),
                     icon: const Icon(Icons.edit),
-                    label: const Text("試合"),
+                    label: const Text("編集"),
                   ),
               ],
             ),
