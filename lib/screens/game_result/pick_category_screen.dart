@@ -95,15 +95,7 @@ class PickCategoryScreen extends ConsumerWidget {
       case SportsType.dodgeball:
         return _iconWidget("assets/images/dodgeball.jpg");
       case SportsType.dodgebee:
-        return Column(
-          children: [
-            Image.asset(
-              "assets/images/frisbee_icon.png",
-              scale: 12.6,
-              color: Colors.brown.shade900,
-            ),
-          ],
-        );
+        return _iconWidget("assets/images/dodgebee.jpg");
     }
   }
 
