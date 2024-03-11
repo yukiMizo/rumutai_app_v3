@@ -356,9 +356,8 @@ class _MyGameScreenState extends ConsumerState<MyGameScreen> {
               ? const Center(child: CircularProgressIndicator())
               : RefreshIndicator(
                   onRefresh: _onRefresh,
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: _buildMiddleSection(),
+                  child: ListView(
+                    children: [_buildMiddleSection()],
                   ),
                 ),
         ),
