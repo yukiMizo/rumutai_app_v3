@@ -18,11 +18,12 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
   bool _isLoading = false;
 
-  Widget _buildTextField({required String title, required TextEditingController controller}) {
+  Widget _buildTextField({required String title, required TextEditingController controller, bool isMultiLine = false}) {
     return SizedBox(
       width: 300,
       child: TextField(
         controller: controller,
+        maxLines: isMultiLine ? null : 1,
         onChanged: (value) => setState(() {}),
         decoration: InputDecoration(label: Text(title)),
       ),
@@ -152,7 +153,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
                 const SizedBox(height: 30),
                 _buildTextField(title: "タイトル", controller: _titleController),
                 const SizedBox(height: 20),
-                _buildTextField(title: "内容", controller: _contentsController),
+                _buildTextField(title: "内容", controller: _contentsController, isMultiLine: true),
                 const SizedBox(height: 25),
                 _buildSendButton(),
               ],

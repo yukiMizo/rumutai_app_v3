@@ -11,7 +11,7 @@ class LeagueBlock extends StatelessWidget {
   final Map? gameData;
   final double blockSize;
   final bool isReverse;
-  final bool? doShade;
+  final bool doShade;
   final Color? textColor;
 
   const LeagueBlock({
