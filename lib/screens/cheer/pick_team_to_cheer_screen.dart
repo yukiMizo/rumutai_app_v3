@@ -525,6 +525,7 @@ class _PickTeamToCheerScreenState extends ConsumerState<PickTeamToCheerScreen> {
                     _coloredCard(color: Colors.brown.shade300),
                   ],
                 ),
+              const SizedBox(height: 50),
             ],
           ),
         ),

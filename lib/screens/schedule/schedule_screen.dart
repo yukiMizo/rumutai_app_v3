@@ -259,15 +259,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   ),
                   Scrollbar(
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: _scheduleList(
+                      child: Column(children: [
+                        ..._scheduleList(
                           classNumber: classNumber,
                           gameData: {}
                             ..addAll(_gameDataForThisClass["d"] ?? {})
                             ..addAll(_gameDataForThisClass["j"] ?? {})
                             ..addAll(_gameDataForThisClass["k"] ?? {}),
                         ),
-                      ),
+                        const SizedBox(height: 60),
+                      ]),
                     ),
                   ),
                 ],

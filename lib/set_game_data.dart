@@ -1,6 +1,7 @@
 //game data 全体の更新用のファイルです。
 //基本的に次のルム対に向けて新しくgame data を設定する時のみ使用します。
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:rumutai_app/providers/game_data_provider.dart';
 
@@ -13,11 +14,14 @@ class SetGameData {
   //②種目を登録
   static const Map<String, SportsType> sportsTypeMap = {
     "1d": SportsType.futsal,
-    "1j": SportsType.basketball,
-    "1k": SportsType.volleyball,
-    "2d": SportsType.basketball,
-    "2j": SportsType.dodgeball,
-    "2k": SportsType.volleyball
+    "1j": SportsType.volleyball,
+    "1k": SportsType.dodgeball,
+    "2d": SportsType.futsal,
+    "2j": SportsType.basketball,
+    "2k": SportsType.volleyball,
+    "3d": SportsType.futsal,
+    "3j": SportsType.dodgebee,
+    "3k": SportsType.volleyball,
   };
 
   //③gameIdを登録
@@ -46,11 +50,11 @@ class SetGameData {
     "1d-f03",
     "1d-f04",
     //l
-    "1d-l01",
-    "1d-l02",
-    "1d-l03",
-    "1d-l04",
-    "1d-l05",
+    // "1d-l01",
+    // "1d-l02",
+    // "1d-l03",
+    // "1d-l04",
+    // "1d-l05",
   ];
   static const List<String> gameIdList1j = [
     //a
@@ -86,12 +90,12 @@ class SetGameData {
     "1j-f03",
     "1j-f04",
     //l
-    "1j-l01",
-    "1j-l02",
-    "1j-l03",
-    "1j-l04",
-    "1j-l05",
-    "1j-l06",
+    // "1j-l01",
+    // "1j-l02",
+    // "1j-l03",
+    // "1j-l04",
+    // "1j-l05",
+    // "1j-l06",
   ];
   static const List<String> gameIdList1k = [
     //a
@@ -122,11 +126,11 @@ class SetGameData {
     "1k-f03",
     "1k-f04",
     //l
-    "1k-l01",
-    "1k-l02",
-    "1k-l03",
-    "1k-l04",
-    "1k-l05",
+    // "1k-l01",
+    // "1k-l02",
+    // "1k-l03",
+    // "1k-l04",
+    // "1k-l05",
   ];
   static const List<String> gameIdList2d = [
     //a
@@ -153,11 +157,11 @@ class SetGameData {
     "2d-f03",
     "2d-f04",
     //l
-    "2d-l01",
-    "2d-l02",
-    "2d-l03",
-    "2d-l04",
-    "2d-l05",
+    // "2d-l01",
+    // "2d-l02",
+    // "2d-l03",
+    // "2d-l04",
+    // "2d-l05",
   ];
   static const List<String> gameIdList2j = [
     //a
@@ -182,23 +186,23 @@ class SetGameData {
     "2j-b08",
     "2j-b09",
     "2j-b10",
-    "2j-b11",
-    "2j-b12",
-    "2j-b13",
-    "2j-b14",
-    "2j-b15",
+    // "2j-b11",
+    // "2j-b12",
+    // "2j-b13",
+    // "2j-b14",
+    // "2j-b15",
     //f
     "2j-f01",
     "2j-f02",
     "2j-f03",
     "2j-f04",
     //l
-    "2j-l01",
-    "2j-l02",
-    "2j-l03",
-    "2j-l04",
-    "2j-l05",
-    "2j-l06",
+    // "2j-l01",
+    // "2j-l02",
+    // "2j-l03",
+    // "2j-l04",
+    // "2j-l05",
+    // "2j-l06",
   ];
   static const List<String> gameIdList2k = [
     //a
@@ -229,41 +233,157 @@ class SetGameData {
     "2k-f03",
     "2k-f04",
     //l
-    "2k-l01",
-    "2k-l02",
-    "2k-l03",
-    "2k-l04",
-    "2k-l05",
+    // "2k-l01",
+    // "2k-l02",
+    // "2k-l03",
+    // "2k-l04",
+    // "2k-l05",
+  ];
+  static const List<String> gameIdList3d = [
+    //a
+    "3d-a01",
+    "3d-a02",
+    "3d-a03",
+    "3d-a04",
+    "3d-a05",
+    "3d-a06",
+    "3d-a07",
+    "3d-a08",
+    "3d-a09",
+    "3d-a10",
+    //b
+    "3d-b01",
+    "3d-b02",
+    "3d-b03",
+    "3d-b04",
+    "3d-b05",
+    "3d-b06",
+    //f
+    "3d-f01",
+    "3d-f02",
+    "3d-f03",
+    "3d-f04",
+    //l
+    // "3d-l01",
+    // "3d-l02",
+    // "3d-l03",
+    // "3d-l04",
+    // "3d-l05",
+  ];
+  static const List<String> gameIdList3j = [
+    //a
+    "3j-a01",
+    "3j-a02",
+    "3j-a03",
+    "3j-a04",
+    "3j-a05",
+    "3j-a06",
+    "3j-a07",
+    "3j-a08",
+    "3j-a09",
+    "3j-a10",
+    //b
+    "3j-b01",
+    "3j-b02",
+    "3j-b03",
+    "3j-b04",
+    "3j-b05",
+    "3j-b06",
+    "3j-b07",
+    "3j-b08",
+    "3j-b09",
+    "3j-b10",
+    // "3j-b11",
+    // "3j-b12",
+    // "3j-b13",
+    // "3j-b14",
+    // "3j-b15",
+    //f
+    "3j-f01",
+    "3j-f02",
+    "3j-f03",
+    "3j-f04",
+    //l
+    // "3j-l01",
+    // "3j-l02",
+    // "3j-l03",
+    // "3j-l04",
+    // "3j-l05",
+    // "3j-l06",
+  ];
+  static const List<String> gameIdList3k = [
+    //a
+    "3k-a01",
+    "3k-a02",
+    "3k-a03",
+    "3k-a04",
+    "3k-a05",
+    "3k-a06",
+    "3k-a07",
+    "3k-a08",
+    "3k-a09",
+    "3k-a10",
+    //b
+    "3k-b01",
+    "3k-b02",
+    "3k-b03",
+    "3k-b04",
+    "3k-b05",
+    "3k-b06",
+    //f
+    "3k-f01",
+    "3k-f02",
+    "3k-f03",
+    "3k-f04",
+    //l
+    // "3k-l01",
+    // "3k-l02",
+    // "3k-l03",
+    // "3k-l04",
+    // "3k-l05",
   ];
 
   //④クラスを登録
-  static const List<String> class1da = ["101", "102", "105", "108"];
-  static const List<String> class1db = ["103", "104", "106", "107", "109"];
-  static const List<String> class1ja = ["101", "102", "105", "108", "110a"];
-  static const List<String> class1jb = ["103", "104", "106", "107", "109", "110b"];
-  static const List<String> class1ka = ["101", "102", "105", "108", "110"];
-  static const List<String> class1kb = ["103", "104", "106", "107", "109"];
-  static const List<String> class2da = ["201", "202", "204", "207"];
-  static const List<String> class2db = ["203", "205", "206", "208", "209"];
-  static const List<String> class2ja = ["201", "202", "204", "207", "210a"];
-  static const List<String> class2jb = ["203", "205", "206", "208", "209", "210b"];
-  static const List<String> class2ka = ["201", "202", "204", "207", "210"];
-  static const List<String> class2kb = ["203", "205", "206", "208", "209"];
+  static const List<String> class1da = ["103", "104", "105", "109"];
+  static const List<String> class1db = ["101", "102", "106", "107", "108"];
+  static const List<String> class1ja = ["103", "104", "105", "109", "110a"];
+  static const List<String> class1jb = ["101", "102", "106", "107", "108", "110b"];
+  static const List<String> class1ka = ["103", "104", "105", "109", "110"];
+  static const List<String> class1kb = ["101", "102", "106", "107", "108"];
+  static const List<String> class2da = ["201", "202", "203", "205"];
+  static const List<String> class2db = ["204", "206", "207", "208", "209"];
+  static const List<String> class2ja = ["201", "203", "204", "208", "209a"];
+  static const List<String> class2jb = ["202", "205", "206", "207", "209b"];
+  static const List<String> class2ka = ["201", "202", "203", "205", "210"];
+  static const List<String> class2kb = ["204", "206", "207", "208", "209"];
+
+  static const List<String> class3da = ["303", "304", "305", "306", "309"];
+  static const List<String> class3db = ["301", "302", "307", "308"];
+  static const List<String> class3ja = ["303", "304", "305", "306", "309a"];
+  static const List<String> class3jb = ["301", "302", "307", "308", "309b"];
+  static const List<String> class3ka = ["303", "304", "305", "306", "309"];
+  static const List<String> class3kb = ["301", "302", "307", "308"];
 
   //⑤トーナメントの種類を登録
   static const Map<String, TournamentType> tournamentTypeMap = {
     "1d-f": TournamentType.four,
-    "1d-l": TournamentType.five2,
+    // "1d-l": TournamentType.five2,
     "1j-f": TournamentType.four,
-    "1j-l": TournamentType.seven,
+    // "1j-l": TournamentType.seven,
     "1k-f": TournamentType.four,
-    "1k-l": TournamentType.six,
+    // "1k-l": TournamentType.six,
     "2d-f": TournamentType.four,
-    "2d-l": TournamentType.five2,
+    // "2d-l": TournamentType.five2,
     "2j-f": TournamentType.four,
-    "2j-l": TournamentType.seven,
+    // "2j-l": TournamentType.seven,
     "2k-f": TournamentType.four,
-    "2k-l": TournamentType.six,
+    // "2k-l": TournamentType.six,
+    "3d-f": TournamentType.four,
+    // "3d-l": TournamentType.five2,
+    "3j-f": TournamentType.four,
+    // "3j-l": TournamentType.seven,
+    "3k-f": TournamentType.four,
+    // "3k-l": TournamentType.six,
   };
 
   //⑥るるぶのurlを登録
@@ -280,9 +400,17 @@ class SetGameData {
     ...gameIdList2d,
     ...gameIdList2j,
     ...gameIdList2k,
+    ...gameIdList3d,
+    ...gameIdList3j,
+    ...gameIdList3k,
   ];
 
   static Future<void> setData() async {
+    //debug時のみ実行
+    if (!kDebugMode) {
+      return;
+    }
+
     //dataForInit関連
     final Map<String, String> sportsMapToSet = {};
     sportsTypeMap.forEach((id, sportsType) {
@@ -293,11 +421,13 @@ class SetGameData {
       tournamentMapToSet[id] = tournamentType.name;
     });
     if (updateInitData) {
+      final String sportsKey = semester == Semester.zenki ? "sportsZenki" : "sportsKouki";
+      final String tournamentKey = semester == Semester.zenki ? "tournamentZenki" : "tournamentKouki";
       await FirebaseFirestore.instance.collection("dataForInit").doc("dataForInitDoc").set(
         {
           "ruleBookUrl": ruleBookUrl,
-          "sports": sportsMapToSet,
-          "tournament": tournamentMapToSet,
+          sportsKey: sportsMapToSet,
+          tournamentKey: tournamentMapToSet,
         },
         SetOptions(merge: true),
       );
@@ -310,9 +440,9 @@ class SetGameData {
 
     if (updateGameData) {
       //今あるcollectionを消去
-      _deleteColection(collection);
-      _deleteColection(collectionToDelete1);
-      _deleteColection(collectionToDelete2);
+      await _deleteColection(collection);
+      await _deleteColection(collectionToDelete1);
+      await _deleteColection(collectionToDelete2);
 
       for (String gameId in allGameIdList) {
         final List<String> classList = _getClassList(gameId);
@@ -382,6 +512,18 @@ class SetGameData {
       return class2ka;
     } else if (block == "2k-b") {
       return class2kb;
+    } else if (block == "3d-a") {
+      return class3da;
+    } else if (block == "3d-b") {
+      return class3db;
+    } else if (block == "3j-a") {
+      return class3ja;
+    } else if (block == "3j-b") {
+      return class3jb;
+    } else if (block == "3k-a") {
+      return class3ka;
+    } else if (block == "3k-b") {
+      return class3kb;
     }
     return [];
   }

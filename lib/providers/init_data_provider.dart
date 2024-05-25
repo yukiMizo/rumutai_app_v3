@@ -103,15 +103,19 @@ class InitDataManager {
       ref.read(ruleBookUrlProvider.notifier).state = gotData["ruleBookUrl"];
 
       //sports,tournament 関連
+      final String semesterString = gotData["semester"];
+      final String sportsKey = semesterString == Semester.zenki.name ? "sportsZenki" : "sportsKouki";
+      final String tournamentKey = semesterString == Semester.zenki.name ? "tournamentZenki" : "tournamentKouki";
+
       final List<String> sportsIdList = [];
       final List<String> sportsList = [];
       final List<String> tournamentIdList = [];
       final List<String> tournamentList = [];
-      gotData["sports"].forEach((id, sport) {
+      gotData[sportsKey].forEach((id, sport) {
         sportsIdList.add(id);
         sportsList.add(sport);
       });
-      gotData["tournament"].forEach((id, tournament) {
+      gotData[tournamentKey].forEach((id, tournament) {
         tournamentIdList.add(id);
         tournamentList.add(tournament);
       });
@@ -124,7 +128,6 @@ class InitDataManager {
       _setSportsAndTournamentFromLocal(ref);
 
       //dateData 関連
-      final String semesterString = gotData["semester"];
 
       final day1data = gotData["day1"];
       final day2data = gotData["day2"];
