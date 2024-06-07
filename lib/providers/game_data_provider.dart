@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'init_data_provider.dart';
 
-//gameId:試合後のに割り振られた、試合を特定するためのID 例：1d-a01　→ 一年男子、Aブロック1番の試合
+//gameId:試合ごとに割り振られた、試合を特定するためのID 例：1d-a01　→ 一年男子、Aブロック1番の試合
 
 enum GameDataCategory {
   d1("1d"),

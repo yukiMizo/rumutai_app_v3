@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rumutai_app/providers/sign_in_data_provider.dart';
 
+import '../../themes/app_color.dart';
 import '../home_screen.dart';
 
 class TimelineDataToPass {
@@ -31,6 +33,8 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
   bool _isLoading = false;
   bool _isInit = true;
   final List<Map> _timelines = [];
+
+  bool _dialogIsLoading = false;
 
   Future _loadData() async {
     setState(() {
@@ -183,6 +187,87 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
     );
   }
 
+  static Future<void> _deleteColection() async {
+    final collection = FirebaseFirestore.instance.collection("Timeline");
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return collection.get().then((querySnapshot) {
+      for (var document in querySnapshot.docs) {
+        batch.delete(document.reference);
+      }
+
+      return batch.commit();
+    });
+  }
+
+  Widget _buildFAB() {
+    return FloatingActionButton.extended(
+      onPressed: () => showDialog(
+          context: context,
+          builder: (_) {
+            return StatefulBuilder(
+              builder: (context, setStateInDialog) {
+                return AlertDialog(
+                  insetPadding: const EdgeInsets.all(10),
+                  title: const Text("確認"),
+                  content: SizedBox(
+                    height: 150,
+                    width: 270,
+                    child: Center(
+                      child: _dialogIsLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              "タイムラインのデータを全て消去します。\n一度消去したデータは元に戻せません。",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
+                  actions: <Widget>[
+                    if (!_dialogIsLoading)
+                      SizedBox(
+                        width: 120,
+                        height: 40,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("キャンセル"),
+                        ),
+                      ),
+                    if (!_dialogIsLoading)
+                      SizedBox(
+                        width: 120,
+                        height: 40,
+                        child: FilledButton(
+                          child: const Text("消去"),
+                          onPressed: () async {
+                            setStateInDialog(() {
+                              _dialogIsLoading = true;
+                            });
+                            await _deleteColection();
+
+                            _dialogIsLoading = false;
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("タイムラインを消去しました。")),
+                            );
+                            Navigator.popUntil(
+                              context,
+                              ModalRoute.withName(HomeScreen.routeName),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                );
+              },
+            );
+          }),
+      label: const Text("全て消去"),
+      backgroundColor: AppColors.accentColor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool isLoggedInAdmin = ref.watch(isLoggedInAdminProvider);
@@ -222,6 +307,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen> {
                       }),
                     ),
             ),
+      floatingActionButton: isLoggedInAdmin ? _buildFAB() : null,
     );
   }
 }
